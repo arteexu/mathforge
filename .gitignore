@@ -1,0 +1,29 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Local env / secrets (never commit API keys)
+.env
+.env.local
+.env.*.local
+# .vscode/settings.json holds the Trilogy gateway token
+.vscode/
+
+# Distill loop scratch
+candidates.json
+verdicts.json
+
+# macOS
+.DS_Store
