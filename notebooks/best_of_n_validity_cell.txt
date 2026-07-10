@@ -1,0 +1,127 @@
+# ============================================================================
+# BEST-OF-N + Opus validity gate.  Over-generate candidates, keep only the
+# ones Opus judges WELL-POSED + non-trivial, rank survivors by elegance, and
+# report the well-posedness hit-rate. Turns a ~10% raw hit-rate into usable output.
+# Prereqs: A100/L4 runtime; Drive mounted; gateway token set (see TOKEN below).
+# ============================================================================
+import os, re, json, random, contextlib, urllib.request, statistics, torch
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import PeftModel
+
+BASE_MODEL   = 'Qwen/Qwen2.5-Math-7B-Instruct'
+OUT          = '/content/drive/MyDrive/mathforge-qlora-7b'   # your 7B adapter
+N_CANDIDATES = 8            # candidates generated per spec
+KEEP_PER_SPEC = 2           # how many survivors to keep per spec (ranked by elegance)
+JUDGE_MODEL  = 'claude-opus-4-8'
+BASE_URL     = os.environ.get('ANTHROPIC_BASE_URL', 'https://tfy.promptlens.trilogy.com')
+TOKEN        = os.environ.get('ANTHROPIC_AUTH_TOKEN', '')     # <-- REQUIRED for the gate
+JUDGE_WORKERS = 6
+
+# specs to generate for: (topic, difficulty, target elegance)
+SPECS = [('Number Theory',6.0,4.5), ('Combinatorics',5.5,4.4), ('Algebra',6.0,4.3),
+         ('Geometry',5.5,4.5), ('Number Theory',5.0,4.6), ('Combinatorics',6.5,4.4)]
+
+assert TOKEN, "Set os.environ['ANTHROPIC_AUTH_TOKEN'] first — the gate needs it."
+
+# ---- load base + adapter (reuse if already a PeftModel in memory) ----
+if not ('model' in dir() and hasattr(model, 'disable_adapter')):
+    tok = AutoTokenizer.from_pretrained(BASE_MODEL)
+    if tok.pad_token is None: tok.pad_token = tok.eos_token
+    bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4',
+                             bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
+    base = AutoModelForCausalLM.from_pretrained(BASE_MODEL, quantization_config=bnb,
+                                                device_map='auto', torch_dtype=torch.bfloat16)
+    model = PeftModel.from_pretrained(base, OUT)
+model.config.use_cache = True; model.eval()
+
+def build(topic, diff, pe, nonce):
+    return ('Compose one original, elegant, and genuinely difficult AIME/olympiad-level '
+            'competition math problem built on ONE deep, non-obvious insight (a crux). '
+            'The statement must be fully self-contained, unambiguous, and have a single '
+            f'well-defined answer. Topic: {topic}. Target difficulty (AoPS 1-10): {diff}. '
+            f'Target problem-elegance (0-5): {pe}. Give the statement, then the key idea. '
+            f'(variation #{nonce})')
+
+def generate(prompt):
+    inp = tok.apply_chat_template([{'role':'user','content':prompt}], add_generation_prompt=True,
+                                  return_tensors='pt', return_dict=True).to(model.device)
+    with torch.no_grad():
+        out = model.generate(**inp, max_new_tokens=900, do_sample=True, temperature=1.0,
+                             top_p=0.95, repetition_penalty=1.1, eos_token_id=tok.eos_token_id)
+    return tok.decode(out[0][inp['input_ids'].shape[1]:], skip_special_tokens=True)
+
+# ---- Opus validity + quality gate ----
+def _judge(prompt, mx=500):
+    body = {'model': JUDGE_MODEL, 'max_tokens': mx, 'messages':[{'role':'user','content':prompt}]}
+    req = urllib.request.Request(BASE_URL.rstrip('/')+'/v1/messages', data=json.dumps(body).encode(),
+            method='POST', headers={'content-type':'application/json','anthropic-version':'2023-06-01',
+                                    'authorization': f'Bearer {TOKEN}'})
+    with urllib.request.urlopen(req, timeout=150) as r: d = json.load(r)
+    return ''.join(b.get('text','') for b in d.get('content',[]) if b.get('type')=='text')
+def _tag(n,t): m=re.search(rf'<{n}>\s*(.*?)\s*</{n}>',t or '',re.S|re.I); return m.group(1).strip() if m else None
+def _num(x,lo,hi):
+    if not x: return None
+    m=re.search(r'-?\d+(\.\d+)?',x); v=float(m.group()) if m else None
+    return v if (v is not None and lo<=v<=hi) else None
+
+GATE = """You are a strict competition-math editor. Judge the MODEL-GENERATED problem below.
+A problem PASSES only if it is well-posed: every object/term is defined, the statement is
+unambiguous and self-contained, it is not self-contradictory, and it has a single well-defined
+answer (or a clearly-specified determination). Reject trivial/degenerate/empty problems.
+
+{cand}
+
+Output EXACTLY:
+<well_posed>0 or 1</well_posed>
+<nontrivial>0 or 1</nontrivial>
+<problem_elegance>0.0-5.0</problem_elegance>
+<difficulty>AoPS 1-10, one decimal</difficulty>
+<reason>one short sentence</reason>"""
+
+def gate(cand):
+    try:
+        t = _judge(GATE.format(cand=cand['text'][:6000]))
+        cand.update(well_posed=_num(_tag('well_posed',t),0,1), nontrivial=_num(_tag('nontrivial',t),0,1),
+                    pe=_num(_tag('problem_elegance',t),0,5), diff=_num(_tag('difficulty',t),1,10),
+                    reason=_tag('reason',t))
+    except Exception as e:
+        cand.update(well_posed=0, nontrivial=0, pe=None, diff=None, reason=f'gate error: {e}')
+    return cand
+
+# ---- generate all candidates (GPU, sequential) ----
+cands = []
+for si, (topic, diff, pe) in enumerate(SPECS):
+    for j in range(N_CANDIDATES):
+        text = generate(build(topic, diff, pe, random.randint(1, 10**6)))
+        cands.append(dict(spec=si, topic=topic, diff_t=diff, pe_t=pe, text=text))
+    print(f'generated spec {si+1}/{len(SPECS)} ({N_CANDIDATES} candidates)')
+
+# ---- gate all candidates (concurrent) ----
+done = []
+with ThreadPoolExecutor(max_workers=JUDGE_WORKERS) as ex:
+    for f in as_completed([ex.submit(gate, c) for c in cands]):
+        done.append(f.result())
+        if len(done) % 8 == 0: print(f'gated {len(done)}/{len(cands)}')
+
+# ---- select survivors, report hit-rate ----
+passed = [c for c in done if c.get('well_posed')==1 and c.get('nontrivial')==1]
+rate = 100*len(passed)/len(done) if done else 0
+print(f'\n=== WELL-POSEDNESS HIT-RATE: {len(passed)}/{len(done)} = {rate:.0f}% ===')
+if passed:
+    print(f'mean elegance of survivors: {statistics.mean([c["pe"] for c in passed if c["pe"] is not None]):.2f}')
+
+kept = []
+for si in range(len(SPECS)):
+    surv = sorted([c for c in passed if c['spec']==si], key=lambda c:-(c['pe'] or 0))[:KEEP_PER_SPEC]
+    kept.extend(surv)
+
+# ---- save + download the kept problems ----
+with open('kept_problems.txt','w') as f:
+    f.write(f'well-posed hit-rate: {len(passed)}/{len(done)} = {rate:.0f}%\n\n')
+    for c in kept:
+        f.write('='*80+f'\n[{c["topic"]}] elegance={c["pe"]} difficulty={c["diff"]}  ({c["reason"]})\n'+'='*80+'\n')
+        f.write(c['text'].strip()+'\n\n')
+from google.colab import files
+files.download('kept_problems.txt')
+print(f'\nkept {len(kept)} problems -> kept_problems.txt (downloaded)')
