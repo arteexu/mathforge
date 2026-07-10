@@ -35,7 +35,7 @@ def _env(name, default, cast=str):
 
 
 # --- config (all overridable via env) -------------------------------------- #
-BASE_MODEL = _env("BASE_MODEL", "Qwen/Qwen2.5-1.5B-Instruct")  # 3B on A100/L4
+BASE_MODEL = _env("BASE_MODEL", "Qwen/Qwen2.5-Math-7B-Instruct")  # math-specialized 7B; needs A100/L4
 # Default to the elegance+difficulty-WEIGHTED set (scripts/export_weighted.py):
 # curated to elegant+hard problems and oversampled by priority, with the crux/idea
 # foregrounded and correctness de-emphasized. Curation is baked in, so no PE re-filter.
@@ -45,10 +45,10 @@ MIN_PROBLEM_ELEGANCE = _env("MIN_PROBLEM_ELEGANCE", 0.0, float)
 ANSWER_TYPE = _env("ANSWER_TYPE", "")                # "integer" to keep AIME-style only
 EPOCHS = _env("EPOCHS", 3, float)
 LR = _env("LR", 2e-4, float)
-MAX_SEQ_LEN = _env("MAX_SEQ_LEN", 2048, int)
+MAX_SEQ_LEN = _env("MAX_SEQ_LEN", 1536, int)   # crux-first completions are short
 BATCH = _env("BATCH", 1, int)
 GRAD_ACCUM = _env("GRAD_ACCUM", 8, int)
-LORA_R = _env("LORA_R", 16, int)
+LORA_R = _env("LORA_R", 32, int)               # rank 32 for the 7B base
 EVAL_FRACTION = _env("EVAL_FRACTION", 0.03, float)
 SAVE_STEPS = _env("SAVE_STEPS", 50, int)
 SEED = _env("SEED", 42, int)
