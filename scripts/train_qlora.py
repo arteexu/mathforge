@@ -36,9 +36,12 @@ def _env(name, default, cast=str):
 
 # --- config (all overridable via env) -------------------------------------- #
 BASE_MODEL = _env("BASE_MODEL", "Qwen/Qwen2.5-1.5B-Instruct")  # 3B on A100/L4
-DATA = _env("DATA", "data/train.jsonl")
+# Default to the elegance+difficulty-WEIGHTED set (scripts/export_weighted.py):
+# curated to elegant+hard problems and oversampled by priority, with the crux/idea
+# foregrounded and correctness de-emphasized. Curation is baked in, so no PE re-filter.
+DATA = _env("DATA", "data/train_elegant.jsonl")
 OUT = _env("OUT", "mathforge-qlora")                 # set to a Drive path to persist
-MIN_PROBLEM_ELEGANCE = _env("MIN_PROBLEM_ELEGANCE", 3.5, float)
+MIN_PROBLEM_ELEGANCE = _env("MIN_PROBLEM_ELEGANCE", 0.0, float)
 ANSWER_TYPE = _env("ANSWER_TYPE", "")                # "integer" to keep AIME-style only
 EPOCHS = _env("EPOCHS", 3, float)
 LR = _env("LR", 2e-4, float)
