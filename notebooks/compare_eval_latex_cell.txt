@@ -1,0 +1,151 @@
+import contextlib, gc, re, os, json, random, statistics, urllib.request, torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import PeftModel
+from google.colab import files
+
+BASE_MODEL = 'Qwen/Qwen2.5-1.5B-Instruct'
+OUT = '/content/drive/MyDrive/mathforge-qlora'          # your saved adapter dir
+JUDGE_MODEL = 'claude-opus-4-8'
+BASE_URL = os.environ.get('ANTHROPIC_BASE_URL', 'https://tfy.promptlens.trilogy.com')
+TOKEN    = os.environ.get('ANTHROPIC_AUTH_TOKEN', '')   # set to enable the LLM judge
+
+# ---- load base + trained adapter -> a real PeftModel (has disable_adapter) ----
+for _n in ['model', 'base', 'trainer']:
+    if _n in dir():
+        try: exec(f'del {_n}')
+        except Exception: pass
+gc.collect(); torch.cuda.empty_cache()
+
+tok = AutoTokenizer.from_pretrained(BASE_MODEL)
+if tok.pad_token is None:
+    tok.pad_token = tok.eos_token
+bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4',
+                         bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
+base = AutoModelForCausalLM.from_pretrained(BASE_MODEL, quantization_config=bnb,
+                                            device_map='auto', torch_dtype=torch.bfloat16)
+model = PeftModel.from_pretrained(base, OUT)
+model.config.use_cache = True
+model.eval()
+print('is PeftModel:', hasattr(model, 'disable_adapter'))
+
+def build(topic, diff, pe):
+    return ('Compose one original, elegant AIME/olympiad-level competition math problem '
+            'with a single integer answer in [0, 999]. '
+            f'Topic: {topic}. Target difficulty (AoPS 1-10): {diff}. '
+            f'Target problem-elegance (0-5): {pe}. '
+            'Give the statement, then a clean solution ending in the integer answer.')
+
+def generate(prompt, use_adapter=True):
+    inp = tok.apply_chat_template([{'role':'user','content':prompt}], add_generation_prompt=True,
+                                  return_tensors='pt', return_dict=True).to(model.device)
+    ctx = contextlib.nullcontext() if use_adapter else model.disable_adapter()
+    with torch.no_grad(), ctx:
+        out = model.generate(**inp, max_new_tokens=1200, do_sample=True, temperature=0.8,
+                             top_p=0.95, repetition_penalty=1.05, eos_token_id=tok.eos_token_id)
+    return tok.decode(out[0][inp['input_ids'].shape[1]:], skip_special_tokens=True)
+
+def latexify(raw):
+    s = re.sub(r'\*\*(.+?)\*\*', r'\\textbf{\1}', raw.strip(), flags=re.S)   # **bold** -> \textbf
+    s = re.sub(r'(?m)^\s*#{1,6}\s*', '', s)                                  # drop ### headings
+    s = re.sub(r'(?m)^\s*---\s*$', r'\\medskip', s)                          # --- -> \medskip
+    for op, cl in [('\\[', '\\]'), ('\\(', '\\)')]:                          # close dangling math
+        n = s.count(op) - s.count(cl)
+        if n > 0: s += (' \\ldots ' + cl) * n
+    if s.replace('$$', '').count('$') % 2: s += '$'
+    if s.count('{') > s.count('}'): s += '}' * (s.count('{') - s.count('}'))
+    return s
+
+# ---------------- evaluation helpers ----------------
+def extract_answer(g):
+    for pat in [r'Answer[:\s]*\$?\\boxed\{?\s*(-?\d{1,4})', r'Answer[:\s]*(-?\d{1,4})',
+                r'\\boxed\{\s*(-?\d{1,4})\s*\}']:
+        m = list(re.finditer(pat, g))
+        if m: return int(m[-1].group(1))
+    return None
+
+def structural(g):
+    a = extract_answer(g); toks = g.split()
+    degen = len(toks) >= 40 and len(set(toks))/len(toks) < 0.35
+    return dict(parseable=bool(re.search(r'(Problem|Statement)', g)) and 'Solution' in g,
+                valid_answer=(a is not None and 0 <= a <= 999), degenerate=degen, chars=len(g))
+
+def _judge(prompt, mx=600):
+    body = {'model': JUDGE_MODEL, 'max_tokens': mx, 'messages':[{'role':'user','content':prompt}]}
+    req = urllib.request.Request(BASE_URL.rstrip('/')+'/v1/messages', data=json.dumps(body).encode(),
+            method='POST', headers={'content-type':'application/json','anthropic-version':'2023-06-01',
+                                    'authorization': f'Bearer {TOKEN}'})
+    with urllib.request.urlopen(req, timeout=150) as r: d = json.load(r)
+    return ''.join(b.get('text','') for b in d.get('content',[]) if b.get('type')=='text')
+
+def _tag(n,t): m=re.search(rf'<{n}>\s*(.*?)\s*</{n}>',t,re.S|re.I); return m.group(1).strip() if m else None
+def _num(x,lo,hi):
+    if not x: return None
+    m=re.search(r'-?\d+(\.\d+)?',x); v=float(m.group()) if m else None
+    return v if (v is not None and lo<=v<=hi) else None
+
+def rate(g):
+    t=_judge("Grade this MODEL-GENERATED competition problem (with its solution).\n"+g[:6000]+
+        "\nOutput EXACTLY:\n<well_posed>0 or 1</well_posed>\n<answer_correct>0 or 1</answer_correct>"
+        "\n<problem_elegance>0-5</problem_elegance>\n<solution_elegance>0-5</solution_elegance>")
+    return dict(well_posed=_num(_tag('well_posed',t),0,1), answer_correct=_num(_tag('answer_correct',t),0,1),
+                pe=_num(_tag('problem_elegance',t),0,5), se=_num(_tag('solution_elegance',t),0,5))
+
+def pairwise(req, slm, bas):
+    flip = random.random()<0.5; A,B=(bas,slm) if flip else (slm,bas)
+    w=(_tag('winner',_judge(f"Pick the better competition problem (elegant, correct, well-posed).\n"
+        f"[REQUEST] {req}\n[A] {A[:4000]}\n[B] {B[:4000]}\n"
+        "Reply ONLY <winner>A</winner>, <winner>B</winner>, or <winner>tie</winner>.", 20)) or 'tie').lower()
+    if w not in ('a','b','tie'): w='tie'
+    if w=='tie': return 'tie'
+    return 'slm' if ((w=='b') if flip else (w=='a')) else 'base'
+
+# ---------------- run the 5-problem test ----------------
+specs = [('Number Theory',6.5,4.5), ('Combinatorics',5.5,4.4), ('Algebra',6.0,4.3),
+         ('Geometry',5.5,4.5), ('Number Theory',5.0,4.6)]
+doc = [r'\documentclass[11pt]{article}',
+       r'\usepackage[margin=1in]{geometry}\usepackage{amsmath,amssymb}\usepackage{parskip}',
+       r'\setlength{\parindent}{0pt}\begin{document}',
+       r'\section*{MathForge: fine-tuned SLM vs.\ baseline (Qwen2.5-1.5B-Instruct)}']
+rows = {'slm':[], 'base':[]}; votes = {'slm':0,'base':0,'tie':0}
+
+torch.manual_seed(0)
+for i, (topic, diff, pe) in enumerate(specs, 1):
+    req = build(topic, diff, pe)
+    slm, bas = generate(req, True), generate(req, False)
+    doc += [rf'\section*{{Problem {i} --- {topic} (difficulty {diff}, target elegance {pe})}}',
+            r'\subsection*{Fine-tuned SLM}', latexify(slm),
+            r'\subsection*{Baseline}', latexify(bas)]
+    s_slm, s_bas = structural(slm), structural(bas)
+    if TOKEN:
+        try: s_slm.update(rate(slm)); s_bas.update(rate(bas)); votes[pairwise(req, slm, bas)] += 1
+        except Exception as e: print('judge error:', e)
+    rows['slm'].append(s_slm); rows['base'].append(s_bas)
+    print(f'done problem {i}/{len(specs)}')
+
+# ---------------- strength table (appended into the PDF) ----------------
+def pct(rs,k): return round(100*sum(bool(r.get(k)) for r in rs)/len(rs))
+def avg(rs,k):
+    v=[r[k] for r in rs if r.get(k) is not None]; return round(statistics.mean(v),2) if v else None
+
+tbl = [r'\section*{Strength: SLM vs baseline}', r'\begin{tabular}{lrr}',
+       r'metric & SLM & baseline \\ \hline']
+for lbl,fn,k in [('parseable \\%',pct,'parseable'), ('valid integer answer \\%',pct,'valid_answer'),
+                 ('degenerate \\%',pct,'degenerate'), ('avg length (chars)',avg,'chars')]:
+    tbl.append(f'{lbl} & {fn(rows["slm"],k)} & {fn(rows["base"],k)} \\\\')
+if TOKEN:
+    for lbl,k in [('well-posed mean','well_posed'), ('answer-correct mean','answer_correct'),
+                  ('problem elegance mean','pe'), ('solution elegance mean','se')]:
+        tbl.append(f'{lbl} & {avg(rows["slm"],k)} & {avg(rows["base"],k)} \\\\')
+tbl.append(r'\end{tabular}')
+if TOKEN:
+    tot=sum(votes.values()) or 1
+    tbl += [r'\medskip', rf'pairwise win-rate: SLM {100*votes["slm"]/tot:.0f}\%, '
+            rf'baseline {100*votes["base"]/tot:.0f}\%, tie {100*votes["tie"]/tot:.0f}\%']
+else:
+    tbl += [r'\medskip', r'(set ANTHROPIC\_AUTH\_TOKEN to add correctness / elegance / win-rate)']
+
+doc += tbl
+doc.append(r'\end{document}')
+open('mathforge_compare.tex','w').write('\n\n'.join(doc))
+files.download('mathforge_compare.tex')
+print('\nwrote + downloaded mathforge_compare.tex')

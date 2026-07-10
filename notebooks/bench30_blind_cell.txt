@@ -1,0 +1,127 @@
+# ============================================================================
+# 30-pair BLIND benchmark: fine-tuned SLM vs baseline, judged by Opus 4.8.
+# Generates fresh problems (diversity fixes: no fixed seed, temp 1.0, prompt
+# nonce), then Opus rates each ANONYMIZED problem and picks a pairwise winner
+# with randomized A/B order. Prints a citable win-rate + saves a .txt.
+# Prereqs: run the mount cell; set your gateway token (below); PeftModel loaded.
+# ============================================================================
+import os, re, json, random, contextlib, urllib.request, statistics, torch
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import PeftModel
+
+BASE_MODEL = 'Qwen/Qwen2.5-Math-7B-Instruct'
+OUT = '/content/drive/MyDrive/mathforge-qlora-7b'         # your 7B adapter dir
+N_PAIRS  = 30
+JUDGE_MODEL = 'claude-opus-4-8'
+BASE_URL = os.environ.get('ANTHROPIC_BASE_URL', 'https://tfy.promptlens.trilogy.com')
+TOKEN    = os.environ.get('ANTHROPIC_AUTH_TOKEN', '')     # <-- set to enable judging
+JUDGE_WORKERS = 6
+
+# ---- load base + adapter (skip if `model` already a PeftModel) ----
+if not ('model' in dir() and hasattr(model, 'disable_adapter')):
+    tok = AutoTokenizer.from_pretrained(BASE_MODEL)
+    if tok.pad_token is None: tok.pad_token = tok.eos_token
+    bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4',
+                             bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
+    base = AutoModelForCausalLM.from_pretrained(BASE_MODEL, quantization_config=bnb,
+                                                device_map='auto', torch_dtype=torch.bfloat16)
+    model = PeftModel.from_pretrained(base, OUT)
+model.config.use_cache = True; model.eval()
+
+TOPICS = ['Number Theory','Combinatorics','Algebra','Geometry','Precalculus']
+specs = [(TOPICS[i % len(TOPICS)], [5.0,5.5,6.0,6.5][i % 4], [4.3,4.4,4.5,4.6][i % 4])
+         for i in range(N_PAIRS)]
+
+def build(topic, diff, pe, nonce):
+    return ('Compose one original, elegant, and genuinely difficult AIME/olympiad-level '
+            'competition math problem built on ONE deep, non-obvious insight (a crux). '
+            f'Topic: {topic}. Target difficulty (AoPS 1-10): {diff}. '
+            f'Target problem-elegance (0-5): {pe}. '
+            'Give the problem statement, then the key idea it turns on. '
+            f'(variation #{nonce})')
+
+def generate(prompt, use_adapter):
+    inp = tok.apply_chat_template([{'role':'user','content':prompt}], add_generation_prompt=True,
+                                  return_tensors='pt', return_dict=True).to(model.device)
+    ctx = contextlib.nullcontext() if use_adapter else model.disable_adapter()
+    with torch.no_grad(), ctx:
+        out = model.generate(**inp, max_new_tokens=900, do_sample=True, temperature=1.0,
+                             top_p=0.95, repetition_penalty=1.1, eos_token_id=tok.eos_token_id)
+    return tok.decode(out[0][inp['input_ids'].shape[1]:], skip_special_tokens=True)
+
+# ---- generate all pairs first (GPU, sequential) ----
+gens = []
+for i, (t, d, pe) in enumerate(specs):
+    req = build(t, d, pe, random.randint(1, 10**6))
+    gens.append(dict(no=i+1, topic=t, req=req, slm=generate(req, True), base=generate(req, False)))
+    print(f'generated {i+1}/{N_PAIRS}')
+
+# ---- Opus judge (blind) ----
+def _judge(prompt, mx=500):
+    body = {'model': JUDGE_MODEL, 'max_tokens': mx, 'messages':[{'role':'user','content':prompt}]}
+    req = urllib.request.Request(BASE_URL.rstrip('/')+'/v1/messages', data=json.dumps(body).encode(),
+            method='POST', headers={'content-type':'application/json','anthropic-version':'2023-06-01',
+                                    'authorization': f'Bearer {TOKEN}'})
+    with urllib.request.urlopen(req, timeout=150) as r: d = json.load(r)
+    return ''.join(b.get('text','') for b in d.get('content',[]) if b.get('type')=='text')
+def _tag(n,t): m=re.search(rf'<{n}>\s*(.*?)\s*</{n}>',t or '',re.S|re.I); return m.group(1).strip() if m else None
+def _num(x,lo,hi):
+    if not x: return None
+    m=re.search(r'-?\d+(\.\d+)?',x); v=float(m.group()) if m else None
+    return v if (v is not None and lo<=v<=hi) else None
+
+def rate(text):
+    t=_judge("Rigorously judge this MODEL-GENERATED competition problem (verify the math).\n"+text[:7000]+
+        "\nOutput EXACTLY:\n<well_posed>0 or 1</well_posed>\n<answer_correct>0 or 1</answer_correct>"
+        "\n<difficulty>1-10</difficulty>\n<problem_elegance>0.0-5.0</problem_elegance>"
+        "\n<solution_elegance>0.0-5.0</solution_elegance>")
+    return dict(well_posed=_num(_tag('well_posed',t),0,1), answer_correct=_num(_tag('answer_correct',t),0,1),
+                difficulty=_num(_tag('difficulty',t),1,10), pe=_num(_tag('problem_elegance',t),0,5),
+                se=_num(_tag('solution_elegance',t),0,5))
+def pairwise(req, slm, base):
+    flip=random.random()<0.5; A,B=(base,slm) if flip else (slm,base)
+    w=(_tag('winner',_judge(f"Two problems written for the same request. Pick the better (elegant, "
+        f"correct, well-posed, appropriately hard).\n[REQUEST]{req}\n[A]{A[:5000]}\n[B]{B[:5000]}\n"
+        "Reply ONLY <winner>A</winner>, <winner>B</winner>, or <winner>tie</winner>.",20)) or 'tie').lower()[:1]
+    return 'tie' if w not in ('a','b') else (('base' if flip else 'slm') if w=='a' else ('slm' if flip else 'base'))
+
+def work(g):
+    out = {'no': g['no']}
+    if TOKEN:
+        try: out['slm']=rate(g['slm']); out['base']=rate(g['base']); out['win']=pairwise(g['req'],g['slm'],g['base'])
+        except Exception as e: out['err']=str(e)
+    return out
+
+results = []
+if TOKEN:
+    with ThreadPoolExecutor(max_workers=JUDGE_WORKERS) as ex:
+        for r in as_completed([ex.submit(work, g) for g in gens]):
+            results.append(r.result()); print(f'judged {len(results)}/{N_PAIRS}')
+
+# ---- aggregate ----
+def agg(side, k):
+    v=[r[side][k] for r in results if side in r and r[side].get(k) is not None]
+    return round(statistics.mean(v),2) if v else None
+print('\n===============  BLIND OPUS-4.8 BENCHMARK ('+str(N_PAIRS)+' pairs)  ===============')
+if TOKEN:
+    print(f'{"metric":26}{"SLM":>8}{"BASELINE":>10}')
+    for lbl,k in [('well-posed','well_posed'),('answer-correct','answer_correct'),
+                  ('problem elegance','pe'),('solution elegance','se'),('difficulty','difficulty')]:
+        print(f'{lbl:26}{str(agg("slm",k)):>8}{str(agg("base",k)):>10}')
+    from collections import Counter
+    c=Counter(r.get('win') for r in results if 'win' in r); tot=sum(c.values()) or 1
+    print(f'\npairwise win-rate:  SLM {100*c["slm"]/tot:.0f}%   BASELINE {100*c["base"]/tot:.0f}%   '
+          f'tie {100*c["tie"]/tot:.0f}%   (n={tot})')
+else:
+    print('(set ANTHROPIC_AUTH_TOKEN to enable Opus judging)')
+
+# ---- save everything ----
+with open('mathforge_bench30.txt','w') as f:
+    for g in gens:
+        f.write(f'\n{"="*80}\nPROBLEM {g["no"]} [{g["topic"]}]\n{"="*80}\n')
+        f.write('----- SLM -----\n'+g['slm']+'\n----- BASELINE -----\n'+g['base']+'\n')
+    f.write('\n\nRESULTS:\n'+json.dumps(results, indent=1))
+from google.colab import files
+files.download('mathforge_bench30.txt')
+print('saved + downloaded mathforge_bench30.txt')
