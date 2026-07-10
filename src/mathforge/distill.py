@@ -102,10 +102,10 @@ def _rotate_target(i: int, topics: list[str]) -> str:
     )
 
 
-def _avoid_block(recent: list[str]) -> str:
+def _avoid_block(recent: list[str], window: int = 28) -> str:
     if not recent:
         return "(none yet — this is the first problem)"
-    return "\n".join(f"- {sig}" for sig in recent[-8:])
+    return "\n".join(f"- {sig}" for sig in recent[-window:])
 
 
 def is_banned_template(statement: Optional[str]) -> bool:

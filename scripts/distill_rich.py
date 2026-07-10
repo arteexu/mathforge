@@ -106,8 +106,20 @@ def _int_answer(raw):
     return v if 0 <= v <= 999 else None
 
 
+def _generate_one(client, prompt: str) -> str:
+    """Issue one max-thinking generation. Returns raw text, or an __ERR__ marker."""
+    try:
+        return client.complete(prompt, purpose="distill-rich", effort="high").text
+    except Exception as e:  # noqa: BLE001 - report and keep the pool going
+        return f"__ERR__{type(e).__name__}: {e}"
+
+
 def main() -> None:
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 8
+    # Optional second arg = number of concurrent in-flight requests. The gateway
+    # serves parallel calls, so this multiplies throughput ~linearly; dedup and
+    # DB writes still happen serially in the main thread, so no locks are needed.
+    workers = int(sys.argv[2]) if len(sys.argv) > 2 else 1
     db.init_db()
     client = LLMClient(
         model=MODEL,
@@ -118,43 +130,59 @@ def main() -> None:
     with db.session_scope() as ses:
         seen = set(ses.exec(select(Problem.statement_hash)).all())
         seen_sigs = [token_set(s) for s in ses.exec(select(Problem.statement)).all() if s]
+        # Cross-run idea-level dedup: pull the cruxes of every problem already in
+        # the DB so a fresh run knows what has been done (the lexical statement
+        # filter can't catch a reworded parking/concatenation problem, but the
+        # crux "rotational symmetry -> each spot equally likely" is near-identical).
+        existing = ses.exec(select(Problem)).all()
+        seen_crux_sigs: list = []
+        seed_avoid: list[str] = []
+        for p in existing:
+            crux_p = (p.provenance or {}).get("crux") or ""
+            if crux_p:
+                seen_crux_sigs.append(token_set(crux_p))
+                seed_avoid.append(f"[{p.topic}] {crux_p}")
 
-    recent: list[str] = []
+    # Show the model the accumulated cruxes so it steers into UNUSED territory.
+    recent: list[str] = seed_avoid
     stored = 0
-    i = 0
-    while stored < n and i < n * 3:
-        target = _rotate_target(i, DIVERSITY_TOPICS)
-        i += 1
-        prompt = PROMPT.format(target=target, avoid=_avoid_block(recent))
-        try:
-            resp = client.complete(prompt, purpose="distill-rich", effort="high")
-        except Exception as e:
-            print(f"[{i}] gen error: {type(e).__name__}: {e}", flush=True)
-            continue
-        t = resp.text
+
+    def _consume(t: str, target: str, label: str) -> bool:
+        """Filter/dedup/store one raw generation. Runs only in the main thread."""
+        nonlocal stored
+        if t.startswith("__ERR__"):
+            print(f"{label} gen error: {t[7:]}", flush=True)
+            return False
         stmt = _tag("statement", t)
         ans = _int_answer(_tag("answer", t))
         sol = _tag("solution", t)
         if not (stmt and sol) or ans is None:
-            print(f"[{i}] parse fail / answer out of range", flush=True)
-            continue
+            print(f"{label} parse fail / answer out of range", flush=True)
+            return False
         if is_banned_template(stmt) or is_garbled(stmt):
-            print(f"[{i}] banned/garbled, skipped", flush=True)
+            print(f"{label} banned/garbled, skipped", flush=True)
             recent.append(f"[{_tag('topic', t)}] {stmt[:100]}")
-            continue
+            return False
         sig = token_set(stmt)
         if is_near_duplicate(sig, seen_sigs):
-            print(f"[{i}] near-duplicate, skipped", flush=True)
+            print(f"{label} near-duplicate (statement), skipped", flush=True)
             recent.append(f"[{_tag('topic', t)}] {stmt[:100]}")
-            continue
+            return False
         sh = statement_hash(stmt)
         if sh in seen:
-            print(f"[{i}] duplicate, skipped", flush=True)
-            continue
+            print(f"{label} duplicate, skipped", flush=True)
+            return False
 
         topic = _tag("topic", t)
         difficulty = _num(_tag("difficulty", t), 1, 10)
         crux = _tag("crux", t) or ""
+        # Idea-level dedup: cruxes are short and semantic, so a lower Jaccard
+        # threshold reliably catches "same insight, different wording" dupes.
+        crux_sig = token_set(crux)
+        if crux and is_near_duplicate(crux_sig, seen_crux_sigs, threshold=0.55):
+            print(f"{label} near-duplicate (crux), skipped :: {crux[:70]}", flush=True)
+            recent.append(f"[{topic}] {crux}")
+            return False
         pe = _num(_tag("problem_elegance", t), 0, 5)
         pe_reason = _tag("problem_elegance_reason", t) or ""
         se = _num(_tag("solution_elegance", t), 0, 5)
@@ -162,7 +190,9 @@ def main() -> None:
 
         seen.add(sh)
         seen_sigs.append(sig)
-        recent.append(f"[{topic}] {stmt[:100]}")
+        if crux_sig:
+            seen_crux_sigs.append(crux_sig)
+        recent.append(f"[{topic}] {crux or stmt[:100]}")
 
         pid = f"distill-rich-{uuid.uuid4().hex[:8]}"
         with db.session_scope() as ses:
@@ -190,7 +220,37 @@ def main() -> None:
                     evaluator=EVALUATOR,
                     rationale=f"problem_elegance={pe} ({pe_reason}); solution_elegance={se} ({se_reason})"[:500]))
         stored += 1
-        print(f"[{i}] STORED {pid} ans={ans} d={difficulty} PE={pe} SE={se} [{topic}] :: {stmt[:64]}", flush=True)
+        print(f"{label} STORED {pid} ans={ans} d={difficulty} PE={pe} SE={se} [{topic}] :: {stmt[:64]}", flush=True)
+        return True
+
+    # ------------------------------------------------------------------ driver #
+    max_attempts = n * 4  # allow headroom for dedup/parse rejects
+    if workers <= 1:
+        i = 0
+        while stored < n and i < max_attempts:
+            target = _rotate_target(i, DIVERSITY_TOPICS)
+            prompt = PROMPT.format(target=target, avoid=_avoid_block(recent))
+            _consume(_generate_one(client, prompt), target, f"[{i + 1}]")
+            i += 1
+    else:
+        from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
+
+        i = 0
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            inflight: dict = {}
+            while stored < n and (i < max_attempts or inflight):
+                # keep the pool full while we still have attempts left
+                while len(inflight) < workers and i < max_attempts and stored < n:
+                    target = _rotate_target(i, DIVERSITY_TOPICS)
+                    prompt = PROMPT.format(target=target, avoid=_avoid_block(recent))
+                    inflight[ex.submit(_generate_one, client, prompt)] = (i + 1, target)
+                    i += 1
+                if not inflight:
+                    break
+                done, _ = wait(list(inflight), return_when=FIRST_COMPLETED)
+                for fut in done:
+                    idx, target = inflight.pop(fut)
+                    _consume(fut.result(), target, f"[{idx}]")
 
     print(f"done: stored {stored} rich problems", flush=True)
 

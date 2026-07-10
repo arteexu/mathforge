@@ -13,6 +13,7 @@ prompt/completion). Run: PYTHONPATH=src python scripts/export_dataset.py
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from sqlmodel import select
@@ -56,30 +57,61 @@ def build_completion(stmt, solution, answer) -> str:
     return "\n".join(parts)
 
 
+def _source_tag(p) -> str:
+    if p.id.startswith("omni-math"):
+        return "omni-math"
+    if p.id.startswith("distill-rich"):
+        return "rich"
+    if p.id.startswith("distill"):
+        return "distill"
+    if p.id.startswith("opus"):
+        return "opus"
+    if p.id.startswith("aime"):
+        return "aime"
+    return str(p.source).split(".")[-1].lower() if p.source else "other"
+
+
+def _answer_type(answer) -> str:
+    if answer is None:
+        return "none"
+    a = str(answer).strip()
+    if re.fullmatch(r"-?\d+", a):
+        v = int(a)
+        return "integer" if 0 <= v <= 999 else "integer_other"
+    return "symbolic"
+
+
 def main() -> None:
     db.init_db()
     OUT_DIR.mkdir(exist_ok=True)
     chat_rows, pt_rows = [], []
     with db.session_scope() as ses:
         problems = ses.exec(select(Problem)).all()
+        # Preload solutions + evaluations once (avoids per-problem queries over ~5k rows).
+        sols: dict = {}
+        for s in ses.exec(select(Solution)).all():
+            sols.setdefault(s.problem_id, s)  # first solution per problem
+        evals_by: dict = {}
+        for e in ses.exec(select(Evaluation)).all():
+            evals_by.setdefault(e.problem_id, []).append(e)
+
         for p in problems:
             status = p.review_status.value if p.review_status else ""
             is_rich = p.id.startswith("distill-rich-")
-            # keep accepted problems, plus the rich (thinking) problems even while pending
-            if not (status == "accepted" or is_rich):
+            sol = sols.get(p.id)
+            pe, se = _elegance(p.provenance or {}, evals_by.get(p.id, []))
+            has_elegance = pe is not None or se is not None
+            # Include: accepted problems, the rich set, and any problem we have both
+            # an elegance label AND a written solution for (the labeled Omni-Math etc).
+            keep = status == "accepted" or is_rich or (has_elegance and sol is not None)
+            if not keep or sol is None:
                 continue
-            sol = ses.exec(
-                select(Solution).where(Solution.problem_id == p.id)
-            ).first()
-            evals = ses.exec(
-                select(Evaluation).where(Evaluation.problem_id == p.id)
-            ).all()
-            pe, se = _elegance(p.provenance or {}, evals)
             prompt = build_prompt(p.topic, p.difficulty, pe, se)
             completion = build_completion(p.statement, sol.text if sol else None, p.answer)
-            meta = {"id": p.id, "topic": p.topic, "difficulty": p.difficulty,
-                    "problem_elegance": pe, "solution_elegance": se,
-                    "answer": p.answer, "rich": is_rich}
+            meta = {"id": p.id, "source": _source_tag(p), "topic": p.topic,
+                    "difficulty": p.difficulty, "problem_elegance": pe,
+                    "solution_elegance": se, "answer": p.answer,
+                    "answer_type": _answer_type(p.answer), "rich": is_rich}
             chat_rows.append({"messages": [
                 {"role": "user", "content": prompt},
                 {"role": "assistant", "content": completion}], "meta": meta})
@@ -90,10 +122,14 @@ def main() -> None:
     (OUT_DIR / "train_pt.jsonl").write_text(
         "\n".join(json.dumps(r, ensure_ascii=False) for r in pt_rows), encoding="utf-8")
 
-    rich = sum(1 for r in chat_rows if r["meta"]["rich"])
+    from collections import Counter
+    by_src = Counter(r["meta"]["source"] for r in chat_rows)
+    by_atype = Counter(r["meta"]["answer_type"] for r in chat_rows)
     with_pe = sum(1 for r in chat_rows if r["meta"]["problem_elegance"] is not None)
     print(f"exported {len(chat_rows)} examples -> data/train.jsonl (+ train_pt.jsonl)")
-    print(f"  rich (thinking) examples: {rich}; with problem-elegance label: {with_pe}")
+    print(f"  by source: {dict(by_src)}")
+    print(f"  by answer_type: {dict(by_atype)}")
+    print(f"  with problem-elegance label: {with_pe}")
 
 
 if __name__ == "__main__":
