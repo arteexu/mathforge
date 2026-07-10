@@ -143,12 +143,13 @@ def main() -> None:
               "with a single integer answer in [0, 999]. Topic: Number Theory. "
               "Target difficulty (AoPS 1-10): 6.5. Target problem-elegance (0-5): 4.5. "
               "Give the statement, then a clean solution ending in the integer answer.")
-    ids = tok.apply_chat_template(
+    inputs = tok.apply_chat_template(
         [{"role": "user", "content": prompt}],
-        add_generation_prompt=True, return_tensors="pt",
+        add_generation_prompt=True, return_tensors="pt", return_dict=True,
     ).to(model.device)
-    out = model.generate(ids, max_new_tokens=600, do_sample=True, temperature=0.9, top_p=0.95)
-    print("\n=== SAMPLE GENERATION ===\n" + tok.decode(out[0][ids.shape[1]:], skip_special_tokens=True))
+    out = model.generate(**inputs, max_new_tokens=600, do_sample=True, temperature=0.9, top_p=0.95)
+    gen = out[0][inputs["input_ids"].shape[1]:]
+    print("\n=== SAMPLE GENERATION ===\n" + tok.decode(gen, skip_special_tokens=True))
 
 
 if __name__ == "__main__":
