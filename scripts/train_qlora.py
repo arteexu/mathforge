@@ -112,7 +112,7 @@ def main() -> None:
         metric_for_best_model="eval_loss",
         greater_is_better=False,
         bf16=True,
-        max_seq_length=MAX_SEQ_LEN,
+        max_length=MAX_SEQ_LEN,
         packing=False,
         dataset_text_field="text",
         gradient_checkpointing=True,
