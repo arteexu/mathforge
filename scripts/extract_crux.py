@@ -44,7 +44,10 @@ def _tag(name, t):
     return m.group(1).strip() if m else None
 
 
-def _select(limit):
+def _select(limit, prefix=None):
+    """Targets = problems with a solution and no crux. With ``prefix`` (e.g. 'math',
+    'olymp'), select imported competition problems regardless of elegance; otherwise
+    fall back to the curated elegant+hard band (PE/DIFF floors)."""
     with db.session_scope() as ses:
         sols = {s.problem_id: s.text for s in ses.exec(select(Solution)).all()}
         pe_diff = {}
@@ -56,15 +59,17 @@ def _select(limit):
                 d.setdefault("diff", e.difficulty_score)
         targets = []
         for p in ses.exec(select(Problem)).all():
-            if p.id not in sols:
+            if p.id not in sols or (p.provenance or {}).get("crux"):
                 continue
-            prov = p.provenance or {}
-            if prov.get("crux"):
-                continue
-            pe = (prov.get("elegance") or {}).get("problem") or pe_diff.get(p.id, {}).get("pe")
-            diff = p.difficulty if p.difficulty is not None else pe_diff.get(p.id, {}).get("diff")
-            if pe is None or diff is None or pe < PE_FLOOR or diff < DIFF_FLOOR:
-                continue
+            if prefix:
+                if not p.id.startswith(prefix):
+                    continue
+            else:
+                prov = p.provenance or {}
+                pe = (prov.get("elegance") or {}).get("problem") or pe_diff.get(p.id, {}).get("pe")
+                diff = p.difficulty if p.difficulty is not None else pe_diff.get(p.id, {}).get("diff")
+                if pe is None or diff is None or pe < PE_FLOOR or diff < DIFF_FLOOR:
+                    continue
             targets.append((p.id, p.statement, sols[p.id]))
     return targets if limit <= 0 else targets[:limit]
 
@@ -103,8 +108,9 @@ def main():
     client = LLMClient(model=MODEL,
                        backend=make_anthropic_backend(MODEL, max_output_tokens=300, timeout=120.0),
                        purpose="extract-crux")
-    targets = _select(limit)
-    print(f"extracting crux for {len(targets)} problems with {workers} workers", flush=True)
+    prefix = sys.argv[3] if len(sys.argv) > 3 else None
+    targets = _select(limit, prefix)
+    print(f"extracting crux for {len(targets)} problems (prefix={prefix}) with {workers} workers", flush=True)
     done = 0
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = [ex.submit(_extract, client, pid, stmt, sol) for pid, stmt, sol in targets]
