@@ -50,14 +50,24 @@ def compatible(a, b):
     return bool(shared) and a.get("mechanism") != b.get("mechanism")
 
 
+def _novelty(t):
+    """Prefer under-used techniques so generation fills coverage gaps (from the audit)."""
+    return 1.0 / (1.0 + t.get("source_count", 0))
+
+
+def _wchoice(pool):
+    return random.choices(pool, weights=[_novelty(t) for t in pool], k=1)[0]
+
+
 def sample_combo(max_k):
-    """Pick 2 compatible techniques (3 with prob 0.25 if a mutually-compatible third exists)."""
+    """Pick 2 compatible techniques (3 with prob 0.25 if a mutually-compatible third exists),
+    weighted toward under-represented techniques to increase diversity."""
     for _ in range(200):
-        t1 = random.choice(TECHS)
+        t1 = _wchoice(TECHS)
         cands = [t for t in TECHS if t["id"] != t1["id"] and compatible(t1, t)]
         if not cands:
             continue
-        t2 = random.choice(cands)
+        t2 = _wchoice(cands)
         combo = [t1, t2]
         if max_k >= 3 and random.random() < 0.25:
             third = [t for t in cands if t["id"] != t2["id"] and compatible(t2, t)]

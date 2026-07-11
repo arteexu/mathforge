@@ -62,7 +62,7 @@ def _select(limit, prefix=None):
             if p.id not in sols or (p.provenance or {}).get("crux"):
                 continue
             if prefix:
-                if not p.id.startswith(prefix):
+                if not any(p.id.startswith(pf) for pf in prefix.split(",")):
                     continue
             else:
                 prov = p.provenance or {}
