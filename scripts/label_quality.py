@@ -12,6 +12,7 @@ e.g.  PYTHONPATH=src python scripts/label_quality.py 0 12 math,olymp,aime
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -21,6 +22,8 @@ from sqlmodel import select
 from mathforge import db
 from mathforge.llm import LLMClient, make_anthropic_backend
 from mathforge.schema import Evaluation, Problem, Solution
+
+MIN_PE = float(os.environ.get("MIN_PE", 0))   # only (re)label problems already this elegant
 
 MODEL = "claude-opus-4-8"
 EVALUATOR = "opus-4.8-quality"
@@ -62,6 +65,8 @@ def _num(x, lo, hi):
 def _select(limit, prefixes):
     with db.session_scope() as ses:
         sols = {s.problem_id: s.text for s in ses.exec(select(Solution)).all()}
+        pe_eval = {e.problem_id: e.elegance_score for e in ses.exec(select(Evaluation)).all()
+                   if e.elegance_score is not None}
         rows = []
         for p in ses.exec(select(Problem)).all():
             prov = p.provenance or {}
@@ -69,6 +74,10 @@ def _select(limit, prefixes):
                 continue
             if prefixes and not any(p.id.startswith(pf) for pf in prefixes):
                 continue
+            if MIN_PE > 0:                                     # target only the already-elegant
+                pe = (prov.get("elegance") or {}).get("problem") or pe_eval.get(p.id)
+                if pe is None or pe < MIN_PE:
+                    continue
             rows.append((p.id, p.statement, prov["crux"], sols[p.id]))
     return rows if limit <= 0 else rows[:limit]
 

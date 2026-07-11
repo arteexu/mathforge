@@ -39,7 +39,7 @@ BASE_MODEL = _env("BASE_MODEL", "Qwen/Qwen2.5-Math-7B-Instruct")  # math-special
 # Default to the elegance+difficulty-WEIGHTED set (scripts/export_weighted.py):
 # curated to elegant+hard problems and oversampled by priority, with the crux/idea
 # foregrounded and correctness de-emphasized. Curation is baked in, so no PE re-filter.
-DATA = _env("DATA", "data/train_elegant.jsonl")
+DATA = _env("DATA", "data/train_creative.jsonl")
 OUT = _env("OUT", "mathforge-qlora")                 # set to a Drive path to persist
 MIN_PROBLEM_ELEGANCE = _env("MIN_PROBLEM_ELEGANCE", 0.0, float)
 ANSWER_TYPE = _env("ANSWER_TYPE", "")                # "integer" to keep AIME-style only
