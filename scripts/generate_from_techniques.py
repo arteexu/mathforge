@@ -120,10 +120,11 @@ def main():
             t = gen.complete(GEN.format(techlist=techlist), purpose="combo-gen", effort="high").text
         except Exception as e:
             print(f"[{attempts}] gen error: {e}", flush=True); continue
-        stmt, ans = _tag("statement", t), _int(_tag("answer", t))
-        sol, crux = _tag("solution", t), _tag("crux", t) or ""
-        if not (stmt and sol) or ans is None:
-            print(f"[{attempts}] parse fail  ({'+'.join(ids)})", flush=True); continue
+        stmt, sol, crux = _tag("statement", t), _tag("solution", t), _tag("crux", t) or ""
+        ans = _tag("answer", t)          # accept any answer (symbolic combos are fine)
+        if not (stmt and sol and ans):
+            miss = [k for k, v in [("stmt", stmt), ("sol", sol), ("ans", ans)] if not v]
+            print(f"[{attempts}] parse fail missing={miss} ({'+'.join(ids)})", flush=True); continue
         # validity gate
         g = judge.complete(GATE.format(cand=(stmt + "\n\nSolution:\n" + sol)[:6000]), purpose="combo-gate").text
         if not (_num(_tag("well_posed", g), 0, 1) == 1 and _num(_tag("nontrivial", g), 0, 1) == 1):
