@@ -83,7 +83,7 @@ def main() -> None:
     with db.session_scope() as ses:
         accepted = {
             p.id: p
-            for p in ses.exec(select(Problem)).all()
+            for p in ses.exec(db.training_problems_select()).all()
             if p.id.startswith("distill-")
             and p.review_status
             and p.review_status.value == "accepted"

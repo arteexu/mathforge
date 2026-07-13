@@ -1,0 +1,79 @@
+{
+  "database": {
+    "problems": 7730,
+    "unique_statement_hashes": 7730,
+    "canonical_duplicate_groups": 33,
+    "canonical_duplicate_extra_rows": 33,
+    "reviewed_dedup_rows": 103,
+    "reviewed_dedup_groups": 61,
+    "frozen": 240,
+    "eval": 240
+  },
+  "exports": {
+    "data/train.jsonl": {
+      "rows": 2956,
+      "unique_ids": 2956,
+      "duplicate_ids": [],
+      "duplicate_statement_hashes": [],
+      "duplicate_canonical_hashes": [],
+      "missing_ids": [],
+      "non_train_ids": [],
+      "frozen_ids": [],
+      "invalid_aime_answer_ids": [],
+      "unverified_synthetic_ids": [],
+      "manual_duplicate_groups": [],
+      "quarantined_ids": [],
+      "ok": true,
+      "sha256": "79a4b898d433d9e8517dfb85f3049fd67139a1156550c4caa071ec8ade8e2759"
+    },
+    "data/train_pt.jsonl": {
+      "rows": 2956,
+      "unique_ids": 2956,
+      "duplicate_ids": [],
+      "duplicate_statement_hashes": [],
+      "duplicate_canonical_hashes": [],
+      "missing_ids": [],
+      "non_train_ids": [],
+      "frozen_ids": [],
+      "invalid_aime_answer_ids": [],
+      "unverified_synthetic_ids": [],
+      "manual_duplicate_groups": [],
+      "quarantined_ids": [],
+      "ok": true,
+      "sha256": "b7639fde6f68008199fee27e4ce259d52cd313879fb9173ded314fa25aadbd00"
+    },
+    "data/train_elegant.jsonl": {
+      "rows": 165,
+      "unique_ids": 165,
+      "duplicate_ids": [],
+      "duplicate_statement_hashes": [],
+      "duplicate_canonical_hashes": [],
+      "missing_ids": [],
+      "non_train_ids": [],
+      "frozen_ids": [],
+      "invalid_aime_answer_ids": [],
+      "unverified_synthetic_ids": [],
+      "manual_duplicate_groups": [],
+      "quarantined_ids": [],
+      "ok": true,
+      "sha256": "25b1618491076abe9a3aa8f04e0eb16f405641f3c25452fc30c1f65383434ed9"
+    },
+    "data/train_creative.jsonl": {
+      "rows": 205,
+      "unique_ids": 205,
+      "duplicate_ids": [],
+      "duplicate_statement_hashes": [],
+      "duplicate_canonical_hashes": [],
+      "missing_ids": [],
+      "non_train_ids": [],
+      "frozen_ids": [],
+      "invalid_aime_answer_ids": [],
+      "unverified_synthetic_ids": [],
+      "manual_duplicate_groups": [],
+      "quarantined_ids": [],
+      "ok": true,
+      "sha256": "d59c0c83d6a9ccb8e4a84e18f063dd86e4f61a386ffb6fb6a0bf0dad9f25e6ae"
+    }
+  },
+  "ok": true
+}

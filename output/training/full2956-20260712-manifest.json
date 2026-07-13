@@ -1,0 +1,16 @@
+{
+  "run_id": "full2956-20260712-v1",
+  "dataset": "data/train.jsonl",
+  "dataset_sha256": "79a4b898d433d9e8517dfb85f3049fd67139a1156550c4caa071ec8ade8e2759",
+  "rows": 2956,
+  "unique_problem_ids": 2956,
+  "integrity_audit": "pass",
+  "base_model": "Qwen/Qwen2.5-Math-7B-Instruct",
+  "epochs": 1,
+  "max_sequence_length": 1536,
+  "lora_rank": 32,
+  "learning_rate": 0.0002,
+  "seed": 42,
+  "save_and_eval_steps": 50,
+  "output_directory": "/content/drive/MyDrive/mathforge-qlora-7b-full2956-20260712-v1"
+}

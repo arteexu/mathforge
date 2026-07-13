@@ -186,19 +186,55 @@ def apply_verdicts(
 
 
 def judge_wellposedness(
-    judge: LLMClient, statement: str, answer: Optional[str]
+    judge: LLMClient,
+    statement: str,
+    answer: Optional[str],
+    ambiguity_notes: str = "",
 ) -> dict:
-    resp = judge.complete(
-        render_prompt(
-            WELLPOSEDNESS_V1,
-            statement=statement,
-            answer=answer if answer is not None else "unknown",
-            ambiguity_notes="",
-        ),
-        purpose="qa-wellposedness",
-        temperature=0.0,
-    )
-    return {"data": _extract_json(resp.text), "cost": resp.cost_usd}
+    def evaluate(notes: str):
+        response = judge.complete(
+            render_prompt(
+                WELLPOSEDNESS_V1,
+                statement=statement,
+                answer=answer if answer is not None else "unknown",
+                ambiguity_notes=notes,
+            ),
+            system=(
+                "You are a JSON-only competition rules evaluator. Return exactly "
+                "the requested JSON object. Do not solve in prose before the JSON."
+            ),
+            purpose="qa-wellposedness",
+            temperature=0.0,
+        )
+        return _extract_json(response.text), response.cost_usd
+
+    data, cost = evaluate(ambiguity_notes)
+
+    def inconsistent(value: Optional[dict]) -> bool:
+        if not value:
+            return True
+        fatal = any(issue.get("severity") == "fatal" for issue in value.get("issues", []))
+        return value.get("verdict") == "accept" and fatal
+
+    if inconsistent(data):
+        retry_note = " ".join(
+            part for part in (
+                ambiguity_notes,
+                "A prior evaluation was missing or internally inconsistent. Return JSON only; "
+                "accept requires zero fatal issues, and any fatal issue requires reject.",
+            ) if part
+        )
+        retry, retry_cost = evaluate(retry_note)
+        cost += retry_cost
+        if retry:
+            data = retry
+
+    # Fail closed if the retry still contradicts its own issue severities.
+    if data and data.get("verdict") == "accept" and any(
+        issue.get("severity") == "fatal" for issue in data.get("issues", [])
+    ):
+        data = {**data, "verdict": "reject", "normalized_from_inconsistent_accept": True}
+    return {"data": data, "cost": cost}
 
 
 @dataclass
@@ -224,6 +260,7 @@ def run_agent_qa(
     statuses: tuple[str, ...] = ("pending", "needs_edit"),
     limit: Optional[int] = None,
     overwrite: bool = False,
+    id_prefixes: Optional[tuple[str, ...]] = None,
 ) -> AgentQAReport:
     """Run strong solver agents + quality judges over synthetic candidates."""
     judge = judge or solver
@@ -238,6 +275,7 @@ def run_agent_qa(
                 select(Problem).where(Problem.source == ProblemSource.SYNTHETIC)
             ).all()
             if p.review_status in wanted
+            and (not id_prefixes or any(p.id.startswith(prefix) for prefix in id_prefixes))
         ]
         if limit is not None:
             candidates = candidates[:limit]
@@ -258,18 +296,25 @@ def run_agent_qa(
 
             if consensus is None:
                 report.no_consensus += 1
-                verified = False
+                answer_verified = False
             elif problem.answer is not None and check_answer(consensus, problem.answer):
                 report.verified_correct += 1
-                verified = True
+                answer_verified = True
             else:
                 report.answer_mismatch += 1
-                verified = False
+                answer_verified = False
 
             best_solution = _solution_for(vr, consensus)
 
             # --- quality: well-posedness + difficulty + elegance ----------- #
-            wp = judge_wellposedness(judge, problem.statement, problem.answer)
+            ambiguity_notes = "; ".join(
+                str(verdict.get("ambiguity_note") or "").strip()
+                for verdict in vr.get("verdicts", [])
+                if verdict.get("ambiguity_flag") or verdict.get("ambiguity_note")
+            )
+            wp = judge_wellposedness(
+                judge, problem.statement, problem.answer, ambiguity_notes=ambiguity_notes
+            )
             dj = judge_difficulty(
                 judge, problem.statement, best_solution,
                 solve_rates=f"strong agents {int(agreement * k)}/{k}",
@@ -282,6 +327,7 @@ def run_agent_qa(
                 report.ill_posed += 1
             difficulty = (dj["data"] or {}).get("difficulty") or problem.difficulty
             elegance = (ej["data"] or {}).get("overall")
+            verified = answer_verified and wp_verdict == "accept"
 
             # --- persist --------------------------------------------------- #
             problem.verified = verified
@@ -295,6 +341,7 @@ def run_agent_qa(
                 "agreement": agreement,
                 "answers": vr["answers"],
                 "verified": verified,
+                "answer_verified": answer_verified,
                 "wellposedness": wp["data"],
                 "difficulty": dj["data"],
                 "elegance": ej["data"],

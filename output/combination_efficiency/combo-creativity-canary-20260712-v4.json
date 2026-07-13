@@ -1,0 +1,490 @@
+{
+  "report_type": "combination_efficiency",
+  "generated_at": "2026-07-13T16:55:27.738809+00:00",
+  "run_id": "combo-creativity-canary-20260712-v4",
+  "profile": "confirmation-3",
+  "thresholds": {
+    "expected_jobs": 3,
+    "max_exhausted": 0,
+    "max_pending": 0,
+    "max_manual_retry_resets": 0,
+    "max_stale_lease_recoveries": 0,
+    "max_max_token_stops": 1,
+    "max_parse_failures": 1,
+    "max_output_exhausted_failures": 1,
+    "max_transport_failures": 0,
+    "max_internal_failures": 0,
+    "max_failed_call_token_share": 0.15,
+    "max_total_tokens": 400000,
+    "min_compose_jobs": 1,
+    "min_blind_audit_jobs": 1,
+    "max_missing_call_ids": 0,
+    "max_unlinked_calls": 0,
+    "max_lineage_mismatches": 0,
+    "max_unattributed_failure_events": 0,
+    "require_pilot_v2_config": false,
+    "require_novelty_gate": false,
+    "min_novelty_required_rounds": 0,
+    "min_novelty_coverage": 0.0,
+    "max_novelty_storage_bypasses": 0
+  },
+  "overall_pass": true,
+  "failed_gates": [],
+  "run_window": {
+    "created_at": "2026-07-12T22:30:06.952909+00:00",
+    "updated_at": "2026-07-12T22:48:27.154910+00:00"
+  },
+  "totals": {
+    "jobs": 3,
+    "stored": 1,
+    "rejected": 2,
+    "exhausted": 0,
+    "pending": 0,
+    "calls": 14,
+    "retry_calls": 1,
+    "prompt_tokens": 62223,
+    "completion_tokens": 88336,
+    "total_tokens": 150559,
+    "model_minutes": 18.321,
+    "cost_usd": 0.0,
+    "max_token_stops": 0,
+    "failed_calls": 1,
+    "failed_call_tokens": 17296,
+    "failed_call_token_share": 0.114879,
+    "failed_call_token_attribution_complete": true,
+    "unlinked_calls": 0,
+    "unlinked_call_tokens": 0,
+    "parse_failures": 1,
+    "output_exhausted_failures": 0,
+    "transport_failures": 0,
+    "internal_failures": 0,
+    "manual_retry_resets": 0,
+    "stale_lease_recoveries": 0,
+    "unattributed_failure_events": 0,
+    "compose_jobs": 1,
+    "blind_audit_jobs": 1,
+    "novelty_audit_jobs": 0
+  },
+  "failure_kinds": {
+    "parse": 1
+  },
+  "auditability": {
+    "mode": "legacy_or_nonpilot",
+    "pilot_compatible_jobs": 0,
+    "pipeline_versions": {
+      "v2": 3
+    },
+    "effort_policy_versions": {
+      "combo-stage-effort-v1": 3
+    },
+    "novelty_gate_versions": {
+      "<missing>": 3
+    },
+    "generator_max_output_tokens": {
+      "48000": 3
+    },
+    "issues": [
+      {
+        "job_id": "86f117eced48266f9ffc8c8f2fedfc13",
+        "ordinal": 1,
+        "fields": [
+          "novelty_gate_version"
+        ]
+      },
+      {
+        "job_id": "a3eeae83e1a0071c680a1648da4b46ee",
+        "ordinal": 2,
+        "fields": [
+          "novelty_gate_version"
+        ]
+      },
+      {
+        "job_id": "7e482d3fdbb5b3cd8ef51b2dbdd85525",
+        "ordinal": 3,
+        "fields": [
+          "novelty_gate_version"
+        ]
+      }
+    ]
+  },
+  "novelty": {
+    "enabled_jobs": 0,
+    "required_jobs": 0,
+    "audited_jobs": 0,
+    "passing_jobs": 0,
+    "required_rounds": 0,
+    "retrieved_rounds": 0,
+    "audited_rounds": 0,
+    "passing_rounds": 0,
+    "retrieval_coverage": null,
+    "coverage": null,
+    "storage_bypass_job_ids": [],
+    "rounds": []
+  },
+  "lineage": {
+    "missing_call_ids": [],
+    "unlinked_call_ids": [],
+    "mismatches": [],
+    "unattributed_failure_events": 0
+  },
+  "gates": [
+    {
+      "name": "expected_job_count",
+      "category": "completion",
+      "value": 3,
+      "operator": "==",
+      "threshold": 3,
+      "passed": true
+    },
+    {
+      "name": "exhausted_jobs",
+      "category": "completion",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "pending_jobs",
+      "category": "completion",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "manual_retry_resets",
+      "category": "reliability",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "stale_lease_recoveries",
+      "category": "reliability",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "max_token_stops",
+      "category": "reliability",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 1,
+      "passed": true
+    },
+    {
+      "name": "parse_failures",
+      "category": "reliability",
+      "value": 1,
+      "operator": "<=",
+      "threshold": 1,
+      "passed": true
+    },
+    {
+      "name": "output_exhausted_failures",
+      "category": "reliability",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 1,
+      "passed": true
+    },
+    {
+      "name": "transport_failures",
+      "category": "reliability",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "internal_failures",
+      "category": "reliability",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "failed_call_token_share",
+      "category": "efficiency",
+      "value": 0.114879,
+      "operator": "<=",
+      "threshold": 0.15,
+      "passed": true
+    },
+    {
+      "name": "total_tokens",
+      "category": "efficiency",
+      "value": 150559,
+      "operator": "<=",
+      "threshold": 400000,
+      "passed": true
+    },
+    {
+      "name": "compose_jobs",
+      "category": "coverage",
+      "value": 1,
+      "operator": ">=",
+      "threshold": 1,
+      "passed": true
+    },
+    {
+      "name": "blind_audit_jobs",
+      "category": "coverage",
+      "value": 1,
+      "operator": ">=",
+      "threshold": 1,
+      "passed": true
+    },
+    {
+      "name": "missing_call_ids",
+      "category": "lineage",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "unlinked_calls",
+      "category": "lineage",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "lineage_mismatches",
+      "category": "lineage",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    },
+    {
+      "name": "unattributed_failure_events",
+      "category": "lineage",
+      "value": 0,
+      "operator": "<=",
+      "threshold": 0,
+      "passed": true
+    }
+  ],
+  "stages": [
+    {
+      "stage": "bridge_proposal",
+      "calls": 3,
+      "prompt_tokens": 4108,
+      "completion_tokens": 15003,
+      "total_tokens": 19111,
+      "model_minutes": 3.208,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "high": 3
+      }
+    },
+    {
+      "stage": "bridge_judgment",
+      "calls": 3,
+      "prompt_tokens": 9959,
+      "completion_tokens": 6308,
+      "total_tokens": 16267,
+      "model_minutes": 1.33,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "medium": 3
+      }
+    },
+    {
+      "stage": "shell_proposal",
+      "calls": 1,
+      "prompt_tokens": 2828,
+      "completion_tokens": 21343,
+      "total_tokens": 24171,
+      "model_minutes": 4.595,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "medium": 1
+      }
+    },
+    {
+      "stage": "shell_judgment",
+      "calls": 2,
+      "prompt_tokens": 17451,
+      "completion_tokens": 11970,
+      "total_tokens": 29421,
+      "model_minutes": 2.264,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 1,
+      "failed_call_tokens": 17296,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "low": 1,
+        "medium": 1
+      }
+    },
+    {
+      "stage": "compose",
+      "calls": 1,
+      "prompt_tokens": 4368,
+      "completion_tokens": 6018,
+      "total_tokens": 10386,
+      "model_minutes": 1.136,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "medium": 1
+      }
+    },
+    {
+      "stage": "blind_audit_r0",
+      "calls": 1,
+      "prompt_tokens": 1837,
+      "completion_tokens": 2266,
+      "total_tokens": 4103,
+      "model_minutes": 0.416,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "medium": 1
+      }
+    },
+    {
+      "stage": "creativity_repair",
+      "calls": 1,
+      "prompt_tokens": 10108,
+      "completion_tokens": 21603,
+      "total_tokens": 31711,
+      "model_minutes": 4.64,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "medium": 1
+      }
+    },
+    {
+      "stage": "blind_audit_r1",
+      "calls": 1,
+      "prompt_tokens": 1917,
+      "completion_tokens": 2511,
+      "total_tokens": 4428,
+      "model_minutes": 0.452,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "medium": 1
+      }
+    },
+    {
+      "stage": "preflight_repair",
+      "calls": 1,
+      "prompt_tokens": 9647,
+      "completion_tokens": 1314,
+      "total_tokens": 10961,
+      "model_minutes": 0.281,
+      "cost_usd": 0.0,
+      "max_token_stops": 0,
+      "failed_calls": 0,
+      "failed_call_tokens": 0,
+      "unlinked_calls": 0,
+      "unlinked_call_tokens": 0,
+      "efforts": {
+        "medium": 1
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "id": "86f117eced48266f9ffc8c8f2fedfc13",
+      "ordinal": 1,
+      "pair_key": "co.linearity+tp.geometric-complex-sum",
+      "status": "stored",
+      "stage": "stored",
+      "problem_id": "distill-combo-a5de74f74ab8",
+      "rejection_reason": null,
+      "calls": 10,
+      "total_tokens": 126250,
+      "retry_calls": 1,
+      "failure_kinds": {
+        "parse": 1
+      },
+      "novelty_gate_enabled": false,
+      "novelty_required_rounds": [],
+      "novelty_audited_rounds": [],
+      "novelty_audited": false,
+      "novelty_passed": false
+    },
+    {
+      "id": "a3eeae83e1a0071c680a1648da4b46ee",
+      "ordinal": 2,
+      "pair_key": "alg.cauchy_schwarz+alg.partial_fractions",
+      "status": "rejected",
+      "stage": "bridges_judged",
+      "problem_id": null,
+      "rejection_reason": "bridge_rejected: no proposal passed hard gates",
+      "calls": 2,
+      "total_tokens": 12566,
+      "retry_calls": 0,
+      "failure_kinds": {},
+      "novelty_gate_enabled": false,
+      "novelty_required_rounds": [],
+      "novelty_audited_rounds": [],
+      "novelty_audited": false,
+      "novelty_passed": false
+    },
+    {
+      "id": "7e482d3fdbb5b3cd8ef51b2dbdd85525",
+      "ordinal": 3,
+      "pair_key": "geo.ptolemy+geo.rotation",
+      "status": "rejected",
+      "stage": "bridges_judged",
+      "problem_id": null,
+      "rejection_reason": "bridge_rejected: no proposal passed hard gates",
+      "calls": 2,
+      "total_tokens": 11743,
+      "retry_calls": 0,
+      "failure_kinds": {},
+      "novelty_gate_enabled": false,
+      "novelty_required_rounds": [],
+      "novelty_audited_rounds": [],
+      "novelty_audited": false,
+      "novelty_passed": false
+    }
+  ]
+}

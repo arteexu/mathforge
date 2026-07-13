@@ -58,7 +58,7 @@ def _select(limit, prefix=None):
             if e.difficulty_score is not None:
                 d.setdefault("diff", e.difficulty_score)
         targets = []
-        for p in ses.exec(select(Problem)).all():
+        for p in ses.exec(db.training_problems_select()).all():
             if p.id not in sols or (p.provenance or {}).get("crux"):
                 continue
             if prefix:

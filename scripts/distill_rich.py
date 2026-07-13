@@ -128,13 +128,21 @@ def main() -> None:
     )
 
     with db.session_scope() as ses:
-        seen = set(ses.exec(select(Problem.statement_hash)).all())
-        seen_sigs = [token_set(s) for s in ses.exec(select(Problem.statement)).all() if s]
+        train_rows = ses.exec(db.training_problems_select()).all()
+        seen = {p.statement_hash for p in train_rows if p.statement_hash}
+        # Protect held-out items by hash without exposing their statements/cruxes
+        # to the generator prompt.
+        seen.update(
+            h for h in ses.exec(
+                select(Problem.statement_hash).where(Problem.frozen == True)  # noqa: E712
+            ).all() if h
+        )
+        seen_sigs = [token_set(p.statement) for p in train_rows if p.statement]
         # Cross-run idea-level dedup: pull the cruxes of every problem already in
         # the DB so a fresh run knows what has been done (the lexical statement
         # filter can't catch a reworded parking/concatenation problem, but the
         # crux "rotational symmetry -> each spot equally likely" is near-identical).
-        existing = ses.exec(select(Problem)).all()
+        existing = train_rows
         seen_crux_sigs: list = []
         seed_avoid: list[str] = []
         for p in existing:

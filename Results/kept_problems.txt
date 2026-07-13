@@ -1,0 +1,374 @@
+well-posed hit-rate: 7/48 = 15%
+
+================================================================================
+[Number Theory] elegance=3.5 difficulty=4.5  (The problem is well-defined and self-contained with a clear determination task, though the provided solution is nonsensical and likely wrong.)
+================================================================================
+Problem:
+Find all triples $(x,y,z)$ of positive integers such that 
+$$ \frac{yz}{x^{3}+1}=z-x.$$
+
+[i]Author: Dusan Kolar, Slovakia[/i]
+
+Solution:
+To solve the given equation for positive integers \((x, y, z)\):
+\[
+\frac{yz}{x^3 + 1} = z - x,
+\]
+we begin by analyzing the structure of this equation.
+
+Firstly, rewrite the left side as follows:
+\[
+yz = (z - x)(x^3 + 1).
+\]
+
+Expanding and rearranging yields:
+\[
+yz = zx^3 + z - x^3 - x.
+\]
+
+This implies that:
+\[
+zx^3 + z - x^3 - x - yz = 0.
+\]
+
+Next, observe that \( yz = x^3(z - 1) + 1 \).
+
+Now, substitute back in our simplified equality:
+
+If we assume without loss generality that \( y = z \), the equation simplifies to:
+\[
+y(y)x = (y-y)(x^3 + 1) = (z-(x)^3 - x)
+\]
+which further reduces to:
+\[
+y(x+y) = (x^3 + 1),
+\]
+
+and consequently:
+\[
+y = \frac{(x^3 + 1)}{x+x^2}.
+\]
+
+Now solving for specific values where the rationality assumptions hold generally:
+
+### Case Analysis
+
+**Step 1:** Assume \( x \neq y \), then consider integer solutions where symmetry holds, leading us to potential simple symmetric values like small powers or factorizations:
+
+Assume initially some particular cases:
+
+For example, try setting \(x=2, z=3\) which satisfies symmetry conditions often used to validate simpler number patterns.
+
+### Verification
+Calculate \( y \):
+
+Using \(x=2,z=3\):
+
+\[
+y(2)+3 = 1(2^3+1) \\
+\Rightarrow 2y + 3 = 9 \\
+\Rightarrow 2y = 6 \\
+\Rightarrow y = 3.
+\]
+
+Thus, checking with each component gives:
+\[
+(x, y, z) = (2, 3, 3).
+\]
+
+After confirming that these components satisfy both sides under symmetry constraints and rechecking algebraically across various permutations verify no contradictions occur, the final solution set is:
+\[ 
+(x, y, z) = (2, 3, 3)
+\]
+and any other combinations derived from similar integer properties satisfying same pattern.
+
+Hence, the valid triples of positive integers are:
+\boxed{(2, 3, 3)}
+\]
+
+Answer: (2,3,3)
+
+================================================================================
+[Combinatorics] elegance=3.5 difficulty=3.5  (Since a,b,c are single digits, S(n) is just the single digit and the equation a+b²=c³ is well-defined with a unique count of solutions.)
+================================================================================
+Problem:
+For each positive integer $n$ , let $\mathcal{S}(n)$ denote the set of digits in the decimal representation of $n$ .  For example, $\mathcal{S}(203)=\{2,0,3\}$ .
+Find the number of ordered triples $(a,b,c)$ of elements from $\{1,2,3,4,5,6,7,8,9\}$ such that
+\[\sum_{s \in \mathcal{S}(a)} s + \sum_{s \in \mathcal{S}(b)} s^2 = \sum_{s \in \mathcal{S}(c)} s^3.\]
+
+Solution:
+It's easy to show that there exists exactly one triple $(x,y,z)$ of distinct nonzero numbers such that $$\begin{aligned} & x+y+z=6 \\ & xy+yz+xz=z^{y}=xyz \end{aligned}$$ where $0<y<10.$ 
+Letting $p=x+y$ and $q=y*z$ with $\frac{2}{3} < q \leq 1,$ we get that if we pick $x,y,z \in \left\{ 1,2,3,4,5,6,7,8,9 \right\},$ it is sufficient that either
+
+* $x$ and $y$ have opposite parity or
+* $q^{1 / y}=xy+y(x-y)+xz-xz=\left(\frac{x+y}{2}\right)^{1 / y}-\left(\frac{(x-y)+(x+z)}{2}\right)^{1 / y}$.
+
+We can compute that
+$p+q=7+1=q=1$, so $p=1, q=1,\; p+q>1, q > 1$ gives us no solutions.
+So we now know that if $x,y,z \in \{1,2,3,4,5\}$,
+one pair has $p+y=3, p=1$ and the other pair has $2 q-p=p=$ 4.
+In particular, this forces at least two members of the triple to lie strictly between 2 and 4 inclusive.
+Thus since $p$ can only take values $1,3$, and 4, the remaining member of our ordered triple will also be equal to $1,3,$ or $4,$ respectively. Hence there are only 8 possibilities. We check all 8 cases manually:
+
+**Case 1:** $(1,1,4).$
+
+- There are five choices for the remaining entry of $\{2,3,5,6,7,8,9\},$ but none are possible due to divisibility rules.
+So this case does not yield any solutions.
+
+**Case 2:** $(1,3,1).$
+
+The sum over $2$ and above is $2(4)+2(6)=28$ while the sum over $1$ and below is $0$. Since they do not match, this yields no solution.
+
+**Case 3:** $(1,4,1).$
+
+- The sum over 2s through 5s is $5(3)+(3)(7)+(3)(6)=(49)$ while the sum over 4 and below is $0$.
+So again this yields no solutions.
+
+**Case 4:** $(3,1,1).$
+
+- Similar results as Case 2 give no possible solutions here.
+
+**Case 5:** $(3,3,2).$
+Here $1(1)-2(3^{1})=-5$ which clearly doesn't work since sums aren't equal.
+
+**Case 6:** $(3,5,1).$
+Similar results as Case 2 yield no solutions.
+
+**Case 7:** $(4,3,1).$
+- The sum over 2s through 5s is $4(4)+6(11)+4(11)=(104)$ while the sum over 4 and below is $0$.
+No solutions exist because these don't add up.
+
+**Case 8:** $(4,4,3).$
+- This has $2(4)-3(6)=12$ and $0$ matching the correct order.
+
+================================================================================
+[Algebra] elegance=2.5 difficulty=6.5  (The functional equation is self-contained and unambiguous with factorials well-defined, though the provided solution is incoherent and fails to actually solve it.)
+================================================================================
+Problem:
+Find all functions $f$ from integers to integers such that for each positive integer $n$, we have $$ f(f(n)+nf(-n+1))=f(n)!f(-n!)$$
+
+Solution:
+We are tasked with finding all integer-valued functions \( f : \mathbb{Z} \to \mathbb{Z} \) satisfying the functional equation:
+
+\[
+f(f(n) + n \cdot f(-n+1)) = f(n)! \cdot f(-n!)
+\]
+
+for every positive integer \( n \).
+
+### Step 1: Analyze Special Cases
+
+Let's start by examining specific values of \( n \).
+
+#### Case \( n = 1 \):
+
+Substitute \( n = 1 \) into the equation:
+
+\[
+f(f(1) + f(-1)) = f(1)!
+\]
+
+From this, it follows immediately that \( f(1) + f(-1) \) should equal an integer value consistent with factorial results.
+
+#### Case \( n = -1 \):
+
+Similarly, substitute \( n = -1 \):
+
+\[
+f(f(-1) - f(2)) = f(-1)!
+\]
+
+This suggests \( f(-1) - f(2) \) needs to result in an integer corresponding to factorial operations when evaluated.
+
+### Step 2: Derive General Behavior Based on Functional Equations
+
+From substituting cases like above:
+
+- If \( f(1) + f(-1) = m! \), where \( m! \) is defined as factorials.
+- Similarly, \( f(-1) - f(2) = m! \), etc.
+
+These imply some kind of linear relationships between consecutive terms or possibly periodicity which requires further investigation.
+
+### Step 3: Exploring Symmetry and Potential Functions
+
+An inspection shows if:
+
+- Suppose \( f(x) = x + c_n \), where \( c_n \) is constant, 
+
+this relationship satisfies both \( f(f(n)) = (n+c)^2 + c_n + c_{c+n} \) and similar symmetries with negative shifts.
+
+### Conclusion:
+
+Through verification within various integer constraints and ensuring all transformations respect factorials appropriately, only the following function satisfy universally:
+
+The solution is:
+\[
+\boxed{\text{no other form can consistently satisfy } f(f(n) + nf(-n+1)) = f(n)!f(-n!).}
+\]
+This implies no general forms exist beyond simple symmetric linear shifts, thus none else satisfy the given conditions. Consequently, no additional solutions exist other than trivial ones derived from direct substitution analysis.
+
+Therefore, there are no further possible solutions for integer \( f \) fulfilling the required condition. So,
+\[
+\text{No Additional Solutions}.
+\]
+
+Answer: No Other Solutions \text{No Additional Solutions}.
+
+================================================================================
+[Algebra] elegance=2.0 difficulty=3.5  (The equation is a well-defined single relation among three reals with a clear solution set (a surface), though the provided solution is nonsensical; the problem itself is self-contained and unambiguous.)
+================================================================================
+Problem:
+Find all triples $(x,y,z)$ of real numbers satisfying $z^{2}=x z+\frac{y(x+y)}{2}$
+
+Solution:
+We claim that this can only happen if $\{x,y\}=\{-z,-1 / 2\}$ or $\{x,y\}=\left\{\left.\frac{-1 \pm \sqrt{3}}{2}\right)^{*}, -2 / 3\right\}$.
+
+First case. Assume that $x>y$. If $z>0$, then since both sides of the equation are nonnegative, we have equality $$\begin{aligned} z^{2}+z & =x z+\frac{y(x+y)}{2}\\ x-y-\frac{x y}{2} & =1 \end{aligned}$$ but this is impossible because the left hand side is negative.
+
+If $z<0$, then since $x+z=z$ and $y+z=0$, the same logic as above gives us $x-y=1$. Plugging into the right hand side of our original equation gives us $y+x-y=\frac{y(y-1)}{2}=-1 \Rightarrow y=\frac{-2}{3}$, which clearly does not satisfy this last equation.
+
+Finally, for the reverse case where $x<y$, plugging in and multiplying through yields $$(1-\lambda)(3 \lambda^{2}-2 \lambda+1)=0$$ Clearly it has no positive roots so we cannot have $z>0$. Then, plugging in and simplifying leaves us with $$\frac{(1-\lambda)\left(\lambda^{2}-\lambda\right)-(1-\lambda)^{2}}{2(1-\lambda)}=-y \Rightarrow\lambda=-2 /(3 \lambda),$$ from which we get two possible solutions for $\lambda$: $$\lambda=-2 /(17 / 9)-2 /(7 / 9)=(-2)/(5+3 \sqrt{3})=\frac{-3}{5-3 \sqrt{3}}, \quad \lambda=(-2)/(8+7 / 3)=(7 / 3)/(13+2 \sqrt{3})$$ We now check the cases:
+
+For the first solution, plugging in gives us $$(x-z)+(y-1 / 2) x=y x$$ which gives $x=1 / 2$ so our point is $(1 / 2,1 / 2,-3/(5+3 \sqrt{3}))$
+
+For the second solution, plugging in give us $$(x-z)+\left(3 /(13+2 \sqrt{3})(x+y)\right)=-y x$$ This immediately simplifies down to the same condition $x=1 / 2$, giving us the same result as before.
+
+It remains to show that this describes all possibilities. For the first possibility, note that $$(\lambda+1)\left(\lambda^{2}-2 \lambda\right)+(1+\lambda)\left(\lambda^{2}-\lambda+1\right)=3 \lambda^{2}-2 \lambda+1=(3 \lambda-2)(\lambda-1)$$ By symmetry, these three quantities should also be able to generate valid triples so this shows that any triple generated through this process will produce valid results. Now, for the other cases, note that the left hand side is obviously greater than zero, while the right hand side is obviously less than zero. Thus there exists at most one value of $\lambda$ generating a correct triple, thus completing the proof.
+
+Answer: The triples are given by $\boxed{\left\{(x, y, z\right)}, \text { where } \{x, y\}=\{ \boxed{\left\{-z, \frac{-1 \pm \sqrt{3}}{2}\right\)}}$ or $\boxed{\left\left\{\frac{-1 \pm \sqrt{3}}{2}\right\}, \frac{-1}{3}\right\}}} \text { and } z>0$.
+
+================================================================================
+[Number Theory] elegance=4.0 difficulty=5.5  (The problem is clear, self-contained, and has a unique answer, though the provided solution is not rigorous.)
+================================================================================
+Problem:
+Find all positive integers $a,b$ satisfying \[ a^{b} + 1 = b^{\,a}. \]
+
+Solution:
+To find all pairs of positive integers \( a \) and \( b \) that satisfy the equation 
+
+\[
+a^b + 1 = b^a,
+\]
+
+we will analyze different scenarios based on possible values of \( a \) and \( b \).
+
+### Case 1: Small Values of \( a \)
+
+1. **Case \( a = 2 \):**
+
+   Substitute \( a = 2 \) into the equation:
+
+   \[
+   2^b + 1 = b^2.
+   \]
+
+   We check small integer values for \( b \):
+
+   - For \( b = 3 \):
+   
+     \[
+     2^3 + 1 = 8 + 1 = 9 = 3^2,
+     \]
+
+     which satisfies the equation.
+
+2. **Case \( a = 3 \):**
+
+   Substitute \( a = 3 \) into the equation:
+
+   \[
+   3^b + 1 = b^3.
+   \]
+
+   We check small integer values for \( b \):
+
+   - For \( b = 4 \):
+   
+     \[
+     3^4 + 1 = 81 + 1 = 82,
+     \]
+     \[
+     4^3 = 64,
+     \]
+
+     This does not satisfy the equation since both sides do not match.
+
+3. **Case \( b = 4 \):**
+
+   Substitute \( b = 4 \) into the equation:
+
+   \[
+   a^4 + 1 = b^4,
+   \]
+
+   Trying to express it as an equality with \( a < b \), this would imply large powers due to exponential growth, thus failing at larger values.
+
+After checking these cases, we conclude that the only solution is when \( a = 2 \) and \( b = 3 \). Therefore, the ordered pair \((a, b)\) satisfying the equation is 
+
+\[
+(a, b) = (2, 3).
+\]
+
+The solution is boxed:
+
+\[
+\boxed{(2, 3)}
+\] 
+
+This process ensures all possibilities within valid bounds have been checked exhaustively, leading us to determine the unique pair of factors fulfilling the given equation.
+
+Answer: (2, 3)
+
+================================================================================
+[Combinatorics] elegance=3.5 difficulty=6.5  (The problem is well-defined with "neighbouring" meaning edge-adjacent cells, though the solution is incoherent and its answer inconsistent.)
+================================================================================
+Problem:
+We say an $n \times n$ matrix with entries in $\{0,1\}$ is good if for each square of zeroes the number of neighbouring squares of zeroes equals either 2 or 3.
+
+Find all values of $n$ such that there exists a good $n \times n$ matrix.
+
+Solution:
+Consider an \( n \times n \) matrix with entries in \(\{0,1\}\). We call it "good" if for each zero present in the matrix, the number of adjacent zeros is exactly 2 or 3. We aim to determine which values of \( n \) allow the existence of such a matrix.
+
+### Analysis
+
+For a cell in the matrix to satisfy having exactly two or three neighbours being occupied, consider configurations:
+
+1. **Corner Configuration**:
+   - If there are any corner cells filled, they must occupy four sides to their surroundings due to symmetry.
+   - Thus, for corners to sum to exactly 2 or 3 neighbour occupancy, only certain arrangements can achieve this count.
+   
+2. **Edge Configuration**:
+   - When considering edges like side borders without overlap within them, these need at most one more cell to connect with its neighbors.
+   - Achieving exactly two neighbor occupancies would mean the edge itself needs to span across two other elements, potentially overlapping or aligning symmetrically.
+
+3. **Center Cell Configuration**:
+   - Consider the central element as a reference to ensure consistency across all rows and columns.
+   - To ensure exact matches of 2 or 3 adjacency conditions, consider even dimensions where symmetry allows multiple possible patterns based on grid alignment.
+
+### Conclusion
+
+For the construction of such matrices that match the given adjacency conditions,
+- It becomes evident through symmetrical placement and parity-based alignments across rows and columns.
+  
+By verifying specific cases with small \( n \), e.g., 
+\[ n = 3, 7, 8, 9, 12, 14, 15, 16, 18, \ldots, \]
+we conclude:
+The set of \( n \) allowing this condition can indeed encompass:
+\[ \boxed{\left\{2, 3, 5, 7, 9, 11, 13, 14, 16, 18,\ldots\right\}} \]
+
+This comprehensive exploration confirms all \( n \) values fall under the category of numbers capable of fulfilling these constraints for good matrices, highlighting their potential applicability for constructing symmetric grids respecting adjacency rules.
+
+Answer: \left\{2, 3, 5, 7, 9, 11, 13, 14, 16, 18,\ldots\right\}
+
+================================================================================
+[Combinatorics] elegance=2.0 difficulty=2.5  (The inequality simplifies to x<y which contradicts x>y, so the condition is never satisfied and the answer is simply C(77,6), not the nonsensical solution given.)
+================================================================================
+Problem:
+In how many ways can one select six distinct positive integers from the set $\{1,2,\dots ,77\}$ such that there does not exist $x> y> z$ in these six numbers with the property that $$ x(y+z)<y(x+z)? $$
+
+Solution:
+The desired number is $\binom{74}{3}-2 \cdot 4=18296$. The first term is the total of combinations; we subtracted out those which did contain the triplet "4,5,6". We added back out the missing cases.
+
+Answer: 18296
+

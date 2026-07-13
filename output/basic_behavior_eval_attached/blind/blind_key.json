@@ -1,0 +1,98 @@
+{
+  "alg-finite-interp-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "alg-finite-interp-r2": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "alg-invariant-telescope-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "alg-invariant-telescope-r2": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "alg-roots-symmetry-r1": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "alg-roots-symmetry-r2": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "co-double-pigeonhole-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "co-double-pigeonhole-r2": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "co-invariant-expectation-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "co-invariant-expectation-r2": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "geo-inversion-power-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "geo-inversion-power-r2": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "geo-reflection-area-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "geo-reflection-area-r2": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "ineq-smoothing-tangent-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "ineq-smoothing-tangent-r2": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "nt-recurrence-gcd-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "nt-recurrence-gcd-r2": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "nt-roots-residues-r1": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "nt-roots-residues-r2": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "nt-valuation-factorial-r1": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "nt-valuation-factorial-r2": {
+    "a": "slm",
+    "b": "frontier"
+  },
+  "prob-first-linearity-r1": {
+    "a": "frontier",
+    "b": "slm"
+  },
+  "prob-first-linearity-r2": {
+    "a": "slm",
+    "b": "frontier"
+  }
+}

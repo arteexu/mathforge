@@ -16,7 +16,7 @@
   ],
   "example_crux": "Among any n+1 numbers from {1,...,2n} two are coprime because consecutive integers share a box.",
   "area": "Combinatorics",
-  "source_count": 39,
+  "source_count": 38,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -39,7 +39,7 @@
   ],
   "example_crux": "Assume the minimal counterexample and show a smaller one exists, forcing none to exist.",
   "area": "Combinatorics",
-  "source_count": 126,
+  "source_count": 123,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -62,7 +62,7 @@
   ],
   "example_crux": "Summing degrees counts edges twice, giving the handshake identity.",
   "area": "Combinatorics",
-  "source_count": 81,
+  "source_count": 78,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -85,7 +85,7 @@
   ],
   "example_crux": "Binary strings map to subsets, showing there are 2^n subsets of an n-set.",
   "area": "Combinatorics",
-  "source_count": 96,
+  "source_count": 97,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -131,7 +131,7 @@
   ],
   "example_crux": "Number of subsets with sum divisible by 3 comes from evaluating (1+x)^n at cube roots of unity.",
   "area": "Combinatorics",
-  "source_count": 26,
+  "source_count": 25,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -245,7 +245,7 @@
   ],
   "example_crux": "Expected number of fixed points of a random permutation is one by summing per-point probabilities.",
   "area": "Combinatorics",
-  "source_count": 3,
+  "source_count": 5,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -267,7 +267,7 @@
   ],
   "example_crux": "Variance control shows random graphs contain a subgraph with high probability near the threshold.",
   "area": "Combinatorics",
-  "source_count": 1,
+  "source_count": 0,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -336,7 +336,7 @@
   ],
   "example_crux": "A parity or coloring preserved by moves shows the target position cannot be attained.",
   "area": "Combinatorics",
-  "source_count": 88,
+  "source_count": 84,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -359,7 +359,7 @@
   ],
   "example_crux": "A strictly decreasing nonnegative potential forces the chip-firing process to halt.",
   "area": "Combinatorics",
-  "source_count": 13,
+  "source_count": 12,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -427,7 +427,7 @@
   ],
   "example_crux": "Tilings of a 2×n strip satisfy the Fibonacci recurrence by conditioning on the last piece.",
   "area": "Combinatorics",
-  "source_count": 35,
+  "source_count": 33,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -450,7 +450,7 @@
   ],
   "example_crux": "Solutions to x1+...+xk=n number C(n+k-1,k-1) by placing k-1 bars among n stars.",
   "area": "Combinatorics",
-  "source_count": 35,
+  "source_count": 36,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -722,7 +722,7 @@
   ],
   "example_crux": "Erdős–Szekeres follows from covering a sequence by monotone subsequences.",
   "area": "Combinatorics",
-  "source_count": 3,
+  "source_count": 2,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -811,7 +811,7 @@
   ],
   "example_crux": "A triangle-free graph on n vertices has at most n^2/4 edges (Mantel).",
   "area": "Combinatorics",
-  "source_count": 4,
+  "source_count": 2,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -1128,7 +1128,7 @@
   ],
   "example_crux": "Shifting an intersecting family to a compressed one preserves size for EKR.",
   "area": "Combinatorics",
-  "source_count": 3,
+  "source_count": 4,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -1288,7 +1288,7 @@
   ],
   "example_crux": "Expected number of fixed points of a random permutation is n·(1/n) = 1 by summing indicator expectations.",
   "area": "Probability",
-  "source_count": 26,
+  "source_count": 25,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -1426,7 +1426,7 @@
   ],
   "example_crux": "Derangement probability arises from alternating sums of fixing k specified points.",
   "area": "Probability",
-  "source_count": 6,
+  "source_count": 5,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -1790,7 +1790,7 @@
   ],
   "example_crux": "Probability two random meeting times overlap is an area ratio in the unit square.",
   "area": "Probability",
-  "source_count": 18,
+  "source_count": 17,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -1813,7 +1813,7 @@
   ],
   "example_crux": "Bad paths crossing a level biject with reflected paths, yielding a clean count.",
   "area": "Probability",
-  "source_count": 4,
+  "source_count": 2,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -2134,7 +2134,7 @@
   ],
   "example_crux": "Expected number of cycles is H_n since element k closes a cycle with probability 1/k.",
   "area": "Probability",
-  "source_count": 3,
+  "source_count": 4,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -2318,7 +2318,7 @@
   ],
   "example_crux": "Expected flips for a pattern satisfies E = setup + (prob restart)·E.",
   "area": "Probability",
-  "source_count": 5,
+  "source_count": 4,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -2731,7 +2731,7 @@
   ],
   "example_crux": "Map the incircle to an excircle by homothety to relate two tangent points.",
   "area": "Geometry",
-  "source_count": 13,
+  "source_count": 12,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -3305,7 +3305,7 @@
   ],
   "example_crux": "Reflect the orthocenter over a side to land it on the circumcircle.",
   "area": "Geometry",
-  "source_count": 17,
+  "source_count": 16,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -3902,7 +3902,7 @@
   ],
   "example_crux": "Compute a tower of exponents mod n by iterating totients.",
   "area": "Number Theory",
-  "source_count": 9,
+  "source_count": 8,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4064,7 +4064,7 @@
   ],
   "example_crux": "Compare v_p of both sides of an equation to force equality or contradiction.",
   "area": "Number Theory",
-  "source_count": 52,
+  "source_count": 49,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4156,7 +4156,7 @@
   ],
   "example_crux": "From any positive solution build a strictly smaller one, impossible in the naturals.",
   "area": "Number Theory",
-  "source_count": 5,
+  "source_count": 6,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4224,7 +4224,7 @@
   ],
   "example_crux": "Powers of the fundamental solution yield infinitely many, obeying a linear recurrence.",
   "area": "Number Theory",
-  "source_count": 1,
+  "source_count": 0,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4337,7 +4337,7 @@
   ],
   "example_crux": "A primitive prime divisor exists, forcing infinitely many distinct primes.",
   "area": "Number Theory",
-  "source_count": 4,
+  "source_count": 3,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4498,7 +4498,7 @@
   ],
   "example_crux": "Average f(ω^j) over roots of unity to isolate every mth coefficient.",
   "area": "Number Theory",
-  "source_count": 2,
+  "source_count": 1,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4521,7 +4521,7 @@
   ],
   "example_crux": "Factor n and multiply local values to get the arithmetic function globally.",
   "area": "Number Theory",
-  "source_count": 18,
+  "source_count": 17,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4658,7 +4658,7 @@
   ],
   "example_crux": "Odd cannot equal even, killing a candidate equation.",
   "area": "Number Theory",
-  "source_count": 37,
+  "source_count": 36,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4681,7 +4681,7 @@
   ],
   "example_crux": "Use base-p digits to compute carries or digit sums controlling divisibility.",
   "area": "Number Theory",
-  "source_count": 125,
+  "source_count": 126,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4703,7 +4703,7 @@
   ],
   "example_crux": "Match a number and its digit sum mod 9 to exclude impossible digits.",
   "area": "Number Theory",
-  "source_count": 17,
+  "source_count": 18,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4841,7 +4841,7 @@
   ],
   "example_crux": "A degree-d polynomial has at most d roots mod p, bounding solution counts.",
   "area": "Number Theory",
-  "source_count": 3,
+  "source_count": 4,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -4979,7 +4979,7 @@
   ],
   "example_crux": "If ab=c^k with gcd(a,b)=1, both a and b are kth powers.",
   "area": "Number Theory",
-  "source_count": 16,
+  "source_count": 15,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5071,7 +5071,7 @@
   ],
   "example_crux": "The quadratic Gauss sum has magnitude √p, controlling residue distributions.",
   "area": "Number Theory",
-  "source_count": 1,
+  "source_count": 0,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5140,7 +5140,7 @@
   ],
   "example_crux": "Show (a^2+b^2)/(ab+1) is a perfect square by minimizing a+b and flipping a root.",
   "area": "Algebra",
-  "source_count": 3,
+  "source_count": 2,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5186,7 +5186,7 @@
   ],
   "example_crux": "Minimize x+1/x for x>0 via x+1/x>=2.",
   "area": "Algebra",
-  "source_count": 25,
+  "source_count": 26,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5209,7 +5209,7 @@
   ],
   "example_crux": "Bound (a+b+c)^2 ≤ 3(a^2+b^2+c^2) as a Cauchy-Schwarz instance.",
   "area": "Algebra",
-  "source_count": 9,
+  "source_count": 10,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5277,7 +5277,7 @@
   ],
   "example_crux": "Show Σ a_i b_{σ(i)} ≤ Σ a_i b_i for similarly sorted sequences.",
   "area": "Algebra",
-  "source_count": 1,
+  "source_count": 0,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5482,7 +5482,7 @@
   ],
   "example_crux": "Express a difference as S_a(b-c)^2+S_b(c-a)^2+S_c(a-b)^2 and check positivity.",
   "area": "Algebra",
-  "source_count": 8,
+  "source_count": 7,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5664,7 +5664,7 @@
   ],
   "example_crux": "Evaluate Σ 1/(k(k+1)) as Σ(1/k − 1/(k+1))=1−1/(n+1).",
   "area": "Algebra",
-  "source_count": 45,
+  "source_count": 44,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5733,7 +5733,7 @@
   ],
   "example_crux": "Solve a Fibonacci-type recurrence via x/(1−x−x^2).",
   "area": "Algebra",
-  "source_count": 11,
+  "source_count": 10,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5756,7 +5756,7 @@
   ],
   "example_crux": "Given P(k)=1/k for k=1..n, find P(n+1) by interpolating.",
   "area": "Algebra",
-  "source_count": 6,
+  "source_count": 7,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5892,7 +5892,7 @@
   ],
   "example_crux": "Set x=y=0 to find f(0), then substitute to get injectivity.",
   "area": "Algebra",
-  "source_count": 126,
+  "source_count": 122,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -5915,7 +5915,7 @@
   ],
   "example_crux": "Solve a_n=3a_{n-1}-2a_{n-2} using roots 1 and 2.",
   "area": "Algebra",
-  "source_count": 23,
+  "source_count": 24,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -6006,7 +6006,7 @@
   ],
   "example_crux": "Prove two polynomials equal by matching them on all integers.",
   "area": "Algebra",
-  "source_count": 12,
+  "source_count": 13,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -6029,7 +6029,7 @@
   ],
   "example_crux": "Equate x^k coefficients on both sides of a product identity.",
   "area": "Algebra",
-  "source_count": 58,
+  "source_count": 59,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -6189,7 +6189,7 @@
   ],
   "example_crux": "Show n^2 < N < (n+1)^2 so N is not a perfect square.",
   "area": "Algebra",
-  "source_count": 43,
+  "source_count": 42,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -6235,7 +6235,7 @@
   ],
   "example_crux": "Show a sum mod 2 stays fixed, so a target configuration is unreachable.",
   "area": "Algebra",
-  "source_count": 12,
+  "source_count": 13,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -6624,7 +6624,7 @@
   ],
   "example_crux": "Solve cos3θ=4cos³θ−3cosθ set equal to a target value.",
   "area": "Precalculus and Trigonometry",
-  "source_count": 5,
+  "source_count": 6,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -7058,7 +7058,7 @@
   ],
   "example_crux": "Sum Σe^{ikθ}=(e^{i(n+1)θ}−1)/(e^{iθ}−1) then take the real part.",
   "area": "Precalculus and Trigonometry",
-  "source_count": 7,
+  "source_count": 8,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []
@@ -7309,7 +7309,7 @@
   ],
   "example_crux": "Expand sin(A+B)=sinAcosB+cosAsinB to relate combined and base angles.",
   "area": "Precalculus and Trigonometry",
-  "source_count": 8,
+  "source_count": 7,
   "combinability": {
    "pairs_well_with": [],
    "avoid_with": []

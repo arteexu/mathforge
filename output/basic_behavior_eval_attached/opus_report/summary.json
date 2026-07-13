@@ -1,0 +1,575 @@
+{
+  "schema_version": "behavior-opus-report-v1",
+  "pairs": 24,
+  "families": 12,
+  "judge_models": [
+    "claude-opus-4-8"
+  ],
+  "frontier_generator_model": "claude-opus-4-8",
+  "self_judge_caveat": true,
+  "pairwise": {
+    "slm_wins": 4,
+    "frontier_wins": 20,
+    "ties": 0
+  },
+  "arms": {
+    "slm": {
+      "validity": {
+        "valid": 0,
+        "repairable": 0,
+        "invalid": 24
+      },
+      "mean_interaction": 1.167,
+      "mean_novelty": 1.292,
+      "mean_elegance": 1.083,
+      "difficulty_passes": 0,
+      "content_gate_passes": 0,
+      "strict_format_passes": 0,
+      "strict_all_gate_passes": 0
+    },
+    "frontier": {
+      "validity": {
+        "valid": 1,
+        "repairable": 2,
+        "invalid": 21
+      },
+      "mean_interaction": 2.458,
+      "mean_novelty": 2.375,
+      "mean_elegance": 2.125,
+      "difficulty_passes": 3,
+      "content_gate_passes": 1,
+      "strict_format_passes": 0,
+      "strict_all_gate_passes": 0
+    }
+  },
+  "outcomes": [
+    {
+      "pair_id": "alg-finite-interp-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 3,
+        "elegance": 3,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "alg-finite-interp-r2",
+      "winner": "slm",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "alg-invariant-telescope-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 3,
+        "elegance": 3,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "alg-invariant-telescope-r2",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 3,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "alg-roots-symmetry-r1",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "alg-roots-symmetry-r2",
+      "winner": "slm",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "co-double-pigeonhole-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "co-double-pigeonhole-r2",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "co-invariant-expectation-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 3,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "co-invariant-expectation-r2",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "geo-inversion-power-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "geo-inversion-power-r2",
+      "winner": "slm",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "geo-reflection-area-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "geo-reflection-area-r2",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "ineq-smoothing-tangent-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 3,
+        "elegance": 3,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "ineq-smoothing-tangent-r2",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 3,
+        "elegance": 3,
+        "difficulty_pass": 1,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "nt-recurrence-gcd-r1",
+      "winner": "slm",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "nt-recurrence-gcd-r2",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 2,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "nt-roots-residues-r1",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "repairable",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 3,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "nt-roots-residues-r2",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "nt-valuation-factorial-r1",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 3,
+        "novelty": 3,
+        "elegance": 3,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "nt-valuation-factorial-r2",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "repairable",
+        "interaction": 4,
+        "novelty": 4,
+        "elegance": 4,
+        "difficulty_pass": 1,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "prob-first-linearity-r1",
+      "winner": "frontier",
+      "frontier": {
+        "validity": "invalid",
+        "interaction": 2,
+        "novelty": 2,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      }
+    },
+    {
+      "pair_id": "prob-first-linearity-r2",
+      "winner": "frontier",
+      "slm": {
+        "validity": "invalid",
+        "interaction": 1,
+        "novelty": 1,
+        "elegance": 1,
+        "difficulty_pass": 0,
+        "format_pass": false,
+        "content_gate_pass": false
+      },
+      "frontier": {
+        "validity": "valid",
+        "interaction": 4,
+        "novelty": 3,
+        "elegance": 4,
+        "difficulty_pass": 1,
+        "format_pass": false,
+        "content_gate_pass": true
+      }
+    }
+  ]
+}

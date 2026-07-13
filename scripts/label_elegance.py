@@ -76,7 +76,7 @@ def _select_targets(prefix: str, limit: int) -> list[str]:
         have_solution = {s.problem_id for s in ses.exec(select(Solution)).all()}
         ids = [
             p.id
-            for p in ses.exec(select(Problem)).all()
+            for p in ses.exec(db.training_problems_select()).all()
             if p.id.startswith(prefix)
             and p.id in have_solution
             and p.id not in have_elegance
@@ -137,7 +137,11 @@ def main() -> None:
     # preload statement + solution text for each id
     with db.session_scope() as ses:
         sols = {s.problem_id: s.text for s in ses.exec(select(Solution)).all()}
-        stmts = {p.id: p.statement for p in ses.exec(select(Problem)).all() if p.id in set(ids)}
+        stmts = {
+            p.id: p.statement
+            for p in ses.exec(db.training_problems_select()).all()
+            if p.id in set(ids)
+        }
 
     labeled = 0
     if workers <= 1:

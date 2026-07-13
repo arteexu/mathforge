@@ -1,0 +1,1736 @@
+{
+  "report_type": "frontier_verification_cumulative",
+  "generated_at": "2026-07-12T23:10:29.129222+00:00",
+  "source_of_truth": "Problem.provenance.agent_qa and persisted DB fields",
+  "prefixes": [
+    "distill-rich-",
+    "distill-combo-"
+  ],
+  "summary": {
+    "total": 43,
+    "qa_persisted": 43,
+    "qa_missing": 0,
+    "verified": 42,
+    "verification_unresolved": 1,
+    "awaiting_human_review": 30,
+    "category_counts": {
+      "verified": 42,
+      "wellposedness_rejection": 1
+    },
+    "review_status_counts": {
+      "accepted": 12,
+      "pending": 30,
+      "rejected": 1
+    },
+    "families": {
+      "combo": {
+        "total": 13,
+        "qa_persisted": 13,
+        "verified": 13,
+        "verification_unresolved": 0,
+        "category_counts": {
+          "verified": 13
+        },
+        "review_status_counts": {
+          "accepted": 12,
+          "rejected": 1
+        }
+      },
+      "rich": {
+        "total": 30,
+        "qa_persisted": 30,
+        "verified": 29,
+        "verification_unresolved": 1,
+        "category_counts": {
+          "verified": 29,
+          "wellposedness_rejection": 1
+        },
+        "review_status_counts": {
+          "pending": 30
+        }
+      }
+    }
+  },
+  "unresolved": [
+    {
+      "id": "distill-rich-f582f84d",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": false,
+      "category": "wellposedness_rejection",
+      "reason": "The answer verified, but the editorial well-posedness verdict was reject.",
+      "issues": [
+        "wellposedness_rejected"
+      ],
+      "stored_answer": "768",
+      "consensus": "768",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "reject",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": null,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "geo.rotation"
+      ],
+      "crux": "Rotating $P$ by $60^\\circ$ about $A$ (so $B\\mapsto C$) collapses the three vertex-distances into a single triangle with sides $3,5,7$; that triangle's $120^\\circ$ angle forces three points to be collinear, giving the side directly.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 2,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "judge_v2": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 5
+      },
+      "created_at": "2026-07-10T03:26:21.916602"
+    }
+  ],
+  "records": [
+    {
+      "id": "distill-combo-00ffb6d49c3c",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "31",
+      "consensus": "31",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-sonnet-4-6",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.amgm",
+        "tp.multiple-angle"
+      ],
+      "crux": "The half-angle identities sin(theta)=2 sin(theta/2)cos(theta/2) and 1+cos(theta)=2 cos^2(theta/2) rewrite sin(theta)(1+cos(theta)) as the pure monomial 4 sin(theta/2) cos^3(theta/2), a product whose maximum is nailed by a weighted (3:1) AM-GM.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T21:02:40.114265"
+    },
+    {
+      "id": "distill-combo-0343892089fc",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "12",
+      "consensus": "12",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 6.5,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.coeff_compare",
+        "alg.lagrange_interp"
+      ],
+      "crux": "Because the Lagrange basis sums to the constant polynomial 1, comparing the x^k coefficient for every k >= 1 forces symmetric conditions on the nodes; in particular the x^n coefficient gives sum_i 1/prod_{j!=i}(x_i - x_j) = 0.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T01:13:51.301592"
+    },
+    {
+      "id": "distill-combo-31ac7757f305",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "131",
+      "consensus": "131",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.linearity",
+        "prob.random-permutation-cycles"
+      ],
+      "crux": "Squaring a permutation keeps each odd-length cycle a single cycle but splits each even-length cycle into two equal cycles; so the number of cycles of pi^2 equals (cycles of pi) + (number of even-length cycles of pi), and linearity over cycle-length classes gives E[cycles of pi^2] = H_n + sum over even L<=n of 1/L.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T01:13:29.610390"
+    },
+    {
+      "id": "distill-combo-39234712e7b0",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "252",
+      "consensus": "252",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.bijection",
+        "nt.base_representation"
+      ],
+      "crux": "Pairs (x, y) with x + y = N that add with no carries in base b are in bijection with independent per-digit splits of each base-b digit d_i of N, so the number of carry-free pairs equals the product over digits of (d_i + 1).",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T03:09:38.011947"
+    },
+    {
+      "id": "distill-combo-7b4c08a0a7f2",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "63",
+      "consensus": "63",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.5,
+      "qa_elegance": 4,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.invariant",
+        "co.compression"
+      ],
+      "crux": "If shifts are restricted to adjacent swaps (i to i-1 inside a single set), each swap lowers the potential S(F) by exactly 1, so the number of adjacent shifts needed to reach the compressed family equals the integer gap S(F) - S(C(F)); this makes 'count of moves' and 'invariant drop' two names for one quantity, independent of the order of moves (confluence).",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T02:24:53.448594"
+    },
+    {
+      "id": "distill-combo-813e320cde03",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "rejected",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "163",
+      "consensus": "163",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.stars-bars",
+        "prob.indicator"
+      ],
+      "crux": "For the indicator Ii = [xi = 0], the probability P(xi=0) is not estimated but is exactly the stars-and-bars ratio C(n+k-2, k-2)/C(n+k-1, k-1) = (k-1)/(n+k-1), so E[number of empty bins] = k(k-1)/(n+k-1).",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T02:41:40.627260"
+    },
+    {
+      "id": "distill-combo-9d4260c9",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "280",
+      "consensus": "280",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 2.8,
+      "qa_elegance": 1,
+      "qa_persisted": true,
+      "generator_model": null,
+      "techniques": [
+        "prob.variance-computation",
+        "prob.chebyshev"
+      ],
+      "crux": "The variance of $X$, obtained through $\\operatorname{Var}(X)=\\mathbb{E}[X^2]-\\mathbb{E}[X]^2$, is the exact quantity fed into Chebyshev's bound on the sample mean, so the deviation threshold cannot be met without first evaluating both moments.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-combo": 1,
+        "total": 2
+      },
+      "created_at": "2026-07-11T08:16:08.477761"
+    },
+    {
+      "id": "distill-combo-a5de74f74ab8",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "676",
+      "consensus": "676",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-sonnet-4-6",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.linearity",
+        "tp.geometric-complex-sum"
+      ],
+      "crux": "Linearity over the negatively correlated fixed-size indicators gives $f(r) = r + \\tfrac{r(r-1)}{n(n-1)}(D-n)$ with $D = \\big|\\sum_{k=0}^{24} e^{ik\\theta}\\big|^2 = 1$ evaluated as an incomplete sum of $26$th roots of unity, yielding $f(r)=r(26-r)/25$, whose integer maximum at $r=13$ produces $100M=676$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T22:45:19.219125"
+    },
+    {
+      "id": "distill-combo-c1aff7a9",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "795",
+      "consensus": "795",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.5,
+      "qa_elegance": 4,
+      "qa_persisted": true,
+      "generator_model": null,
+      "techniques": [
+        "prob.indicator",
+        "geo.isoperimetric"
+      ],
+      "crux": "Indicator variables reduce the expected lattice-point count to the exact enclosed area (via a lattice-square tiling argument), and the isoperimetric inequality then maximizes that area under the fixed-perimeter constraint.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 2,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "judge_v2": 1,
+        "opus-4.8-combo": 1,
+        "opus-4.8-quality": 2,
+        "total": 5
+      },
+      "created_at": "2026-07-11T08:19:53.088862"
+    },
+    {
+      "id": "distill-combo-cc9de888f7b7",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "48",
+      "consensus": "48",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.5,
+      "qa_elegance": 1,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.char_eq",
+        "nt.fltn_finite_fields"
+      ],
+      "crux": "If the characteristic polynomial is irreducible mod p (no roots in F_p), then no F_p closed form of geometric type exists, and instead the sequence mod p has period equal to the order of a root in F_{p^2}*, a divisor of p^2 - 1 that does not divide p - 1.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T02:16:04.569348"
+    },
+    {
+      "id": "distill-combo-d0b8fa9275ac",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "14",
+      "consensus": "14",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.5,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.digit_sum_mod9",
+        "nt.order_element"
+      ],
+      "crux": "The place-value weights 10^j reduced mod m repeat with period ord_m(10), so casting-out-nines (period 1, since ord_9(10)=1) and the alternating-sum rule for 11 (period 2, since ord_11(10)=2) are two instances of a single order-controlled digit-weighting invariant.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T03:01:46.084227"
+    },
+    {
+      "id": "distill-combo-ee5caba7d031",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "302",
+      "consensus": "302",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.5,
+      "qa_elegance": 1,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.poly_infinite_roots",
+        "nt.infinite_descent"
+      ],
+      "crux": "Infinitely many valid n force the polynomial identity A^2 + B^2 = 3 C^2, whose leading-coefficient equation a^2 + b^2 = 3 c^2 is annihilated by a mod-3 infinite descent, forcing the top coefficients to vanish and hence bounding all three polynomials' degrees downward.",
+      "solution_counts": {
+        "human": 1,
+        "model": 1,
+        "solver_panel": 1,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T02:56:30.291935"
+    },
+    {
+      "id": "distill-combo-f8be55abc1f1",
+      "family": "combo",
+      "source": "synthetic",
+      "review_status": "accepted",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "49",
+      "consensus": "49",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.cauchy_schwarz",
+        "alg.telescoping"
+      ],
+      "crux": "In the Engel form sum (t_k - t_{k-1})^2 / w_k >= (sum (t_k - t_{k-1}))^2 / (sum w_k), the numerator's linear sum telescopes to (t_n - t_0)^2, so with fixed endpoints the minimum weighted energy is exactly (t_n - t_0)^2 / (sum w_k), attained when t_k - t_{k-1} is proportional to w_k.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "total": 1
+      },
+      "created_at": "2026-07-12T02:11:28.600032"
+    },
+    {
+      "id": "distill-rich-0a05b8f0",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "900",
+      "consensus": "900",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.invariant"
+      ],
+      "crux": "The Lyness recurrence $a_{n+1}=\\frac{a_n+1}{a_{n-1}}$ is periodic with period $5$ for all positive reals, and the only positive‑integer cycle is a shift of $(1,1,2,3,2)$, whose block sum is $9$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 2,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "judge_v2": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 5
+      },
+      "created_at": "2026-07-10T03:28:12.246714"
+    },
+    {
+      "id": "distill-rich-0e51d527",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "256",
+      "consensus": "256",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.euclidean_algorithm"
+      ],
+      "crux": "The greatest common divisor of two \"all-nines\" numbers satisfies $\\gcd(10^m-1,10^n-1)=10^{\\gcd(m,n)}-1$, so the count of common divisors is just the number of divisors of $10^{\\gcd(m,n)}-1$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T15:55:09.603815"
+    },
+    {
+      "id": "distill-rich-13860b8f",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "500",
+      "consensus": "500",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 4,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.base_representation"
+      ],
+      "crux": "Since $1000 \\equiv -1 \\pmod{1001}$, each three-digit block contributes with an alternating sign, collapsing $N \\bmod 1001$ to the alternating sum $1-2+3-\\cdots+999$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T19:59:54.728823"
+    },
+    {
+      "id": "distill-rich-1da002ec",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "273",
+      "consensus": "273",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.cycle-lemma"
+      ],
+      "crux": "Reading each arrangement cyclically, exactly one of its $16$ rotations keeps all partial sums positive (the Cycle Lemma for step-values $\\le 1$ with total sum $1$), so the answer is $\\binom{16}{5}/16$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T15:59:29.483017"
+    },
+    {
+      "id": "distill-rich-1fad14eb",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "255",
+      "consensus": "255",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.fundamental_theorem_arithmetic"
+      ],
+      "crux": "A product of integers is a perfect square iff the sum of their squarefree-part vectors over $\\mathbb{F}_2$ (indexed by primes) is zero, so the count of square subsets is $2^{\\,n-r}$ where $r$ is the $\\mathbb{F}_2$-rank of those vectors.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T20:29:38.350684"
+    },
+    {
+      "id": "distill-rich-2150b708",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "30",
+      "consensus": "30",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.crt"
+      ],
+      "crux": "The powers $5^{2^k}$ stabilize $10$-adically to the automorphic idempotent $\\equiv 0 \\pmod{5^n}$, $\\equiv 1 \\pmod{2^n}$, because the order of $5$ modulo a power of $2$ is itself a power of $2$; via CRT this pins the last six digits to $890625$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T16:47:15.740585"
+    },
+    {
+      "id": "distill-rich-4055a46d",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "429",
+      "consensus": "429",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 6.0,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.chung-feller"
+      ],
+      "crux": "Chung–Feller phenomenon: among all $\\pm1$ paths from $(0,0)$ to $(2n,0)$, the number having exactly $2k$ steps below the axis equals the Catalan number $C_n$ for *every* admissible $k$, independent of $k$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T20:03:08.847604"
+    },
+    {
+      "id": "distill-rich-4128f702",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "196",
+      "consensus": "196",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": null,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "geo.ptolemy",
+        "tp.law-of-cosines"
+      ],
+      "crux": "Ptolemy on the cyclic quadrilateral $ABPC$ gives $PA=PB+PC$, and the inscribed angle forces $\\angle BPC=120^\\circ$, so the Law of Cosines in $\\triangle PBC$ yields $s^2 = PA^2 - PB\\cdot PC$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T23:38:55.340510"
+    },
+    {
+      "id": "distill-rich-552f530c",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "250",
+      "consensus": null,
+      "agreement": 0.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.5,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.base_representation"
+      ],
+      "crux": "Since $7\\equiv 1\\pmod 6$ and $7\\equiv -1\\pmod 8$, the base-7 digit sum and alternating digit sum satisfy $S(n)\\equiv n\\pmod 6$ and $A(n)\\equiv n\\pmod 8$, so the two conditions are just $6\\mid n$ and $8\\mid n$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 2,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "judge_v2": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 5
+      },
+      "created_at": "2026-07-09T17:29:29.423669"
+    },
+    {
+      "id": "distill-rich-6e2fc855",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "324",
+      "consensus": "324",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.5,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.transfer-matrix"
+      ],
+      "crux": "A permutation moving every element by at most one step around a circle is either a product of disjoint adjacent transpositions (matchings of the cycle $C_n$, counted by the Lucas number $L_n$) or one of the two full rotations, giving $L_n+2$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-10T03:27:29.545129"
+    },
+    {
+      "id": "distill-rich-6e9552a1",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "200",
+      "consensus": "200",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.0,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.vieta"
+      ],
+      "crux": "The reciprocal squared chord-lengths from one vertex reduce to $\\tfrac14\\sum_{j=1}^{n-1}\\csc^2\\frac{j\\pi}{n}=\\tfrac{n^2-1}{12}$, where the cosecant-square sum is evaluated by Vieta's formulas on the polynomial whose roots are $\\cot^2\\frac{j\\pi}{n}$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-10T03:27:47.972683"
+    },
+    {
+      "id": "distill-rich-6ea60925",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "109",
+      "consensus": "109",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.5,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "geo.ptolemy",
+        "tp.law-of-cosines"
+      ],
+      "crux": "For a point on the arc of an equilateral triangle's circumcircle, Ptolemy gives $PA=PB+PC$, after which the inscribed angle $\\angle BPC=120^\\circ$ turns the Law of Cosines in $\\triangle BPC$ directly into the side length.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T16:01:14.710929"
+    },
+    {
+      "id": "distill-rich-6fa733db",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "448",
+      "consensus": "448",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.legendre_factorial",
+        "nt.base_representation"
+      ],
+      "crux": "By Legendre's formula the 2-adic valuation of a central binomial coefficient collapses to a binary digit sum: $v_2\\binom{2n}{n}=s_2(n)$, so the whole product's valuation is $\\sum_{n=1}^{127}s_2(n)$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T21:00:52.795720"
+    },
+    {
+      "id": "distill-rich-70f2e25c",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "945",
+      "consensus": "945",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.base_representation"
+      ],
+      "crux": "The digit-sum condition $S(a)+S(b)+S(c)=S(a+b+c)$ holds exactly when the column addition $a+b+c$ produces no carries, which makes the digit positions independent and reduces the count to a product of $\\binom{d+2}{2}$ over the digits $d$ of $145$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T17:31:47.966883"
+    },
+    {
+      "id": "distill-rich-86b8f0a3",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "319",
+      "consensus": "319",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.legendre_factorial"
+      ],
+      "crux": "By Legendre's digit-sum formula, $v_2\\!\\binom{2n}{n}=s_2(n)$, the number of $1$'s in the binary representation of $n$, so the sum is just the total number of binary $1$-bits among $1,\\dots,100$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T16:31:12.961913"
+    },
+    {
+      "id": "distill-rich-8968a366",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "55",
+      "consensus": "55",
+      "agreement": 0.6666666666666666,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.coprime_split"
+      ],
+      "crux": "Writing $a=gx,\\,b=gy$ with $\\gcd(x,y)=1$ turns the condition into $g(1+xy)=2024$, so for each divisor $g$ the number of valid coprime factorizations $xy=2024/g-1$ is $2^{\\omega(\\cdot)}$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-10T03:27:35.072292"
+    },
+    {
+      "id": "distill-rich-8cc6decd",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "125",
+      "consensus": "125",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "prob.symmetry"
+      ],
+      "crux": "Rotational symmetry of the circular parking process makes each of the 5 spots equally likely to be the empty one, so the count is simply $5^4/5$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T16:25:47.308859"
+    },
+    {
+      "id": "distill-rich-97bd998a",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "48",
+      "consensus": "48",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.lte",
+        "nt.legendre_factorial"
+      ],
+      "crux": "The 3-adic valuation of a repunit satisfies $v_3(R_k)=v_3(k)$ (via Lifting the Exponent), so the product's valuation collapses to $v_3(100!)$ by Legendre's formula.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-10T03:29:45.402962"
+    },
+    {
+      "id": "distill-rich-be5d7b68",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "19",
+      "consensus": "19",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "alg.fe_substitution"
+      ],
+      "crux": "The substitution map $g(x)=\\dfrac{x-1}{x}=1-\\tfrac1x$ has order $3$ (i.e. $g(g(g(x)))=x$), so three iterations of the equation form a solvable $3\\times3$ linear system for $f$ on each orbit.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-thinking": 1,
+        "total": 2
+      },
+      "created_at": "2026-07-09T23:41:55.640362"
+    },
+    {
+      "id": "distill-rich-c4c5263c",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "207",
+      "consensus": "207",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.order_element"
+      ],
+      "crux": "Midy's theorem: for a prime $p$ whose period length $L$ is even, the two halves of the repeating block are digit-wise $9$-complements, so the digit sum is $9L/2$ — reducing the problem to finding $\\operatorname{ord}_{47}(10)$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T17:02:10.066852"
+    },
+    {
+      "id": "distill-rich-c7615fc9",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "522",
+      "consensus": "522",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.2,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.double-count"
+      ],
+      "crux": "Write $\\max-\\min$ as the number of integers $k$ with $\\min\\le k<\\max$; equivalently split the sum into $\\sum\\max-\\sum\\min$ and count how many subsets have a given element as their maximum ($2^{m-1}$) or minimum ($2^{7-m}$).",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T16:34:28.036998"
+    },
+    {
+      "id": "distill-rich-d0f2da7b",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "991",
+      "consensus": "991",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.padic_valuation"
+      ],
+      "crux": "The 2-adic valuation of $C_n$ equals $s_2\\!\\left(\\tfrac{n+1}{2^{v_2(n+1)}}-1\\right)$, so $C_n$ is odd exactly when $n+1$ is a power of $2$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 2,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "judge_v2": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 5
+      },
+      "created_at": "2026-07-09T18:25:55.870467"
+    },
+    {
+      "id": "distill-rich-d606efe1",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "495",
+      "consensus": "495",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "prob.random-permutation-cycles"
+      ],
+      "crux": "In a uniformly random permutation the cycle containing a fixed element has length uniform on $\\{1,\\dots,n\\}$, so any two distinct elements lie in a common cycle with probability exactly $\\tfrac12$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-10T03:27:18.169400"
+    },
+    {
+      "id": "distill-rich-dc34f976",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "165",
+      "consensus": "165",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.0,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.kummer"
+      ],
+      "crux": "The exponent of $2$ in $\\binom{2n}{n}$ equals $s_2(n)$, the number of $1$'s in the binary representation of $n$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T18:00:44.226100"
+    },
+    {
+      "id": "distill-rich-dcad297e",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "105",
+      "consensus": "105",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 5.0,
+      "qa_elegance": 4,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.kummer"
+      ],
+      "crux": "By Kummer's theorem, $3 \\nmid \\binom{2n}{n}$ exactly when adding $n+n$ in base $3$ produces no carries, which happens iff every base-3 digit of $n$ is $0$ or $1$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T16:22:10.208882"
+    },
+    {
+      "id": "distill-rich-de904065",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "140",
+      "consensus": "140",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.0,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.jensen_multiplicative"
+      ],
+      "crux": "Grouping the terms by the value of $\\gcd(k,n)$ turns $\\sum_{k=1}^n\\gcd(k,n)$ into the multiplicative function $\\sum_{d\\mid n} d\\,\\varphi(n/d)$, computable prime-power by prime-power.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-10T03:26:15.584971"
+    },
+    {
+      "id": "distill-rich-ec2a1d2d",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "49",
+      "consensus": "49",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": 3,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "nt.crt",
+        "nt.coprime_split"
+      ],
+      "crux": "The condition $n^2\\equiv n \\pmod{10^{10}}$ means $2^{10}5^{10}\\mid n(n-1)$ with $\\gcd(n,n-1)=1$, so each prime power lands entirely in $n$ or in $n-1$; the even nontrivial solution is fixed by $2^{10}\\mid n,\\ 5^{10}\\mid n-1$ via CRT.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 2,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "judge_v2": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 5
+      },
+      "created_at": "2026-07-09T22:13:51.953766"
+    },
+    {
+      "id": "distill-rich-f582f84d",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": false,
+      "category": "wellposedness_rejection",
+      "reason": "The answer verified, but the editorial well-posedness verdict was reject.",
+      "issues": [
+        "wellposedness_rejected"
+      ],
+      "stored_answer": "768",
+      "consensus": "768",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "reject",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 4.5,
+      "qa_elegance": null,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "geo.rotation"
+      ],
+      "crux": "Rotating $P$ by $60^\\circ$ about $A$ (so $B\\mapsto C$) collapses the three vertex-distances into a single triangle with sides $3,5,7$; that triangle's $120^\\circ$ angle forces three points to be collinear, giving the side directly.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 2,
+        "total": 3
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "judge_v2": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 5
+      },
+      "created_at": "2026-07-10T03:26:21.916602"
+    },
+    {
+      "id": "distill-rich-fed4398e",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "486",
+      "consensus": "486",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 3.0,
+      "qa_elegance": 2,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.transfer-matrix"
+      ],
+      "crux": "A ±1 walk confined to the five sites $\\{-2,\\dots,2\\}$ returning to $0$ in $2n\\ge 4$ steps: its transfer matrix (path graph $P_5$) has eigenvalues $\\pm\\sqrt3,\\pm1,0$, collapsing the count to $2\\cdot 3^{\\,n-1}$.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-10T03:28:17.129532"
+    },
+    {
+      "id": "distill-rich-ff6187ed",
+      "family": "rich",
+      "source": "synthetic",
+      "review_status": "pending",
+      "verified": true,
+      "category": "verified",
+      "reason": "Stored answer independently verified and well-posedness accepted.",
+      "issues": [],
+      "stored_answer": "950",
+      "consensus": "950",
+      "agreement": 1.0,
+      "answer_verified": true,
+      "wellposedness_verdict": "accept",
+      "solver_model": "claude-opus-4-8",
+      "judge_model": "claude-opus-4-8",
+      "k": 3,
+      "qa_difficulty": 6.0,
+      "qa_elegance": 5,
+      "qa_persisted": true,
+      "generator_model": "claude-opus-4-8",
+      "techniques": [
+        "co.involution"
+      ],
+      "crux": "The signed count $E(n)-O(n)$ is the coefficient of $x^n$ in $\\prod_{k\\ge1}(1-x^k)$, which by Euler's Pentagonal Number Theorem (Franklin's sign-reversing involution) is $0$ except at generalized pentagonal numbers.",
+      "solution_counts": {
+        "model": 1,
+        "solver_panel": 1,
+        "total": 2
+      },
+      "evaluation_counts": {
+        "judge_v1": 1,
+        "opus-4.8-quality": 2,
+        "opus-4.8-thinking": 1,
+        "total": 4
+      },
+      "created_at": "2026-07-09T16:49:01.135958"
+    }
+  ]
+}

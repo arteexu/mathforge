@@ -9,6 +9,7 @@ from sqlmodel import select
 
 from mathforge import db
 from mathforge.distill import (
+    _extract_json,
     generate_problem,
     is_banned_template,
     repair_problem,
@@ -80,6 +81,33 @@ def _client(be, db_url, model="fake"):
 # --------------------------------------------------------------------------- #
 # Units
 # --------------------------------------------------------------------------- #
+def test_extract_json_after_prose_and_math_braces():
+    text = r"""The set is \{x \in \mathbb{R}: x^{2}=1\}, so the exponent is fixed.
+Final assessment:
+{"difficulty": 6.5, "band": "late_aime"}"""
+
+    assert _extract_json(text) == {"difficulty": 6.5, "band": "late_aime"}
+
+
+def test_extract_json_from_fenced_block():
+    text = '```json\n{"overall": 4, "crux_economy": 2}\n```'
+
+    assert _extract_json(text) == {"overall": 4, "crux_economy": 2}
+
+
+def test_extract_json_from_plain_object():
+    assert _extract_json('{"outer": {"inner": 1}, "ok": true}') == {
+        "outer": {"inner": 1},
+        "ok": True,
+    }
+
+
+def test_extract_json_uses_final_complete_object():
+    text = 'For example {"verdict": "repair"}. Final: {"verdict": "accept"}'
+
+    assert _extract_json(text) == {"verdict": "accept"}
+
+
 def test_generate_problem_parses(db_url):
     c = _client(make_fake_backend(gen_answer="42"), db_url)
     g = generate_problem(c)

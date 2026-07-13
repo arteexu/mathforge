@@ -34,13 +34,16 @@ def db_url(tmp_path):
     return url
 
 
-def make_backend(*, solver_seq=("42",), wellposed="accept", difficulty=6.0, elegance=4):
+def make_backend(*, solver_seq=("42",), wellposed="accept", difficulty=6.0, elegance=4,
+                 fatal_issue=False):
     state = {"i": 0}
 
     def be(prompt, system=None, **kwargs):
         p = prompt
         if "rules chair" in p:  # wellposedness_v1
-            return RawCompletion(text=json.dumps({"issues": [], "verdict": wellposed}))
+            issues = ([{"category": "ambiguity", "severity": "fatal", "description": "bad"}]
+                      if fatal_issue else [])
+            return RawCompletion(text=json.dumps({"issues": issues, "verdict": wellposed}))
         if "ELEGANCE" in p:  # elegance_judge_v1
             return RawCompletion(text=json.dumps({"overall": elegance}))
         if "estimating the difficulty" in p:  # difficulty_judge_v1
@@ -116,6 +119,44 @@ def test_qa_flags_illposed(db_url):
 
     report = run_agent_qa(db_url=db_url, solver=c, judge=c, k=4)
     assert report.ill_posed == 1
+    with db.session_scope(db_url) as session:
+        assert session.get(Problem, "distill-1").verified is False
+
+
+def test_qa_filters_by_id_prefix(db_url):
+    with db.session_scope(db_url) as session:
+        _candidate(session, pid="distill-rich-1", answer="42")
+        _candidate(session, pid="distill-combo-1", answer="42")
+    c = LLMClient(model="strong", backend=make_backend(solver_seq=("42",)), db_url=db_url)
+
+    report = run_agent_qa(
+        db_url=db_url,
+        solver=c,
+        judge=c,
+        k=3,
+        id_prefixes=("distill-rich-",),
+    )
+    assert report.processed == 1
+    assert report.records[0]["id"] == "distill-rich-1"
+    with db.session_scope(db_url) as session:
+        assert session.get(Problem, "distill-rich-1").verified is True
+        assert session.get(Problem, "distill-combo-1").verified is False
+
+
+def test_qa_fails_closed_on_accept_with_fatal_issue(db_url):
+    with db.session_scope(db_url) as session:
+        _candidate(session, answer="42")
+    c = LLMClient(
+        model="strong",
+        backend=make_backend(solver_seq=("42",), wellposed="accept", fatal_issue=True),
+        db_url=db_url,
+    )
+    report = run_agent_qa(db_url=db_url, solver=c, judge=c, k=3)
+    assert report.ill_posed == 1
+    with db.session_scope(db_url) as session:
+        problem = session.get(Problem, "distill-1")
+        assert problem.verified is False
+        assert problem.provenance["agent_qa"]["wellposedness"]["verdict"] == "reject"
 
 
 def test_export_and_apply_verdicts(db_url):

@@ -1,0 +1,372 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}\usepackage{amsmath,amssymb}\usepackage{parskip}
+
+\setlength{\parindent}{0pt}\begin{document}
+
+\section*{MathForge: fine-tuned SLM vs.\ baseline (Qwen2.5-1.5B-Instruct)}
+
+\section*{Problem 1 --- Number Theory (difficulty 6.5, target elegance 4.5)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Find all triples $(a,b,c)$ of positive integers such that $a+b+c=20$ and $\operatorname{lcm}(a,b,c)=3^m \cdot n$ for some positive integer $m$ and positive integer $n$.
+
+Solution:
+By the fundamental theorem of arithemetic, we have $3$ divides at least one of $a,b,c$. If $a=3t$, then $\operatorname{lcm}(a,b,c) \geq 3^{2} \cdot t^{2}$, so $m \geq 2$. On the other hand, if $b=c=3t+1$, then $\operatorname{lcm}(a,b,c)=3^{3} \cdot(t+1)^{2}$; thus, $m=3$, and $n=(t+1)^{2}$. We also have $\operatorname{lcm}(a,b,c) \leq 20^{3}$. Therefore, $t \leq 4$, which means $n$ is at most $25$. However, $25$ does not divide any number of the form $(t+1)^{2}$, so there are no solutions in this case either. Thus, there are only two cases to consider:
+
+Case 1: $a=3t$. Then, $b=c=6-t$, and we need $$(6-t)^{2} \leq 20^{3} \Longrightarrow 6-t \leq 40 \Longrightarrow t \geq 27$$ This gives us $t=28,29,30$, and hence the solutions are $(84,4,12),(90,2,18),(92,0,22)$.
+
+Case 2: $b=3t+1$. Then, $a=c=6-t$, and we need $$(6-t)^{2} \leq 20^{3} \Longrightarrow 6-t \leq 40 \Longrightarrow t \geq -34$$ The only possible value for $t$ is $35$, so $b=103$, $a=c=5$, and we get the unique solution $(103,5,5)$.
+
+It's clear that these are the only solutions. Indeed, it suffices to show that $\operatorname{lcm}(a,b,c)=3^{m} \cdot n$ implies that each of $a,b,c$ is divisible by $3$. Assume otherwise, and let $a=a^{\prime} / d, b=b^{\prime} / e, c=c^{\prime} / f$, where $d, e, f$ are pairwise relatively prime, $d e f=1$, and $3 \mid a^{\prime}, 3 \mid b^{\prime}, 3 \mid c^{\prime}$. This implies that $$\begin{aligned} 3^{\text {gcd }(\operatorname{ord}_{3}(d),\operatorname{ord}_{3}(e),\operatorname{ord}_{3}(f))} & =\operatorname{lcm}(a^{\prime}, b^{\prime}, c^{\prime}) \\ & =\frac{(a^{\prime})(b^{\prime})(c^{\prime})}{d e f} \\ & =\frac{a b c}{d e f} \\ & =3^{m} \end{aligned}$$ Therefore, $\operatorname{gcd}(\operatorname{ord}_{3}(d), \operatorname{ord}_{3}(e), \operatorname{ord}_{3}(f)) \leq m$. Since $\operatorname{gcd}(\operatorname{ord}_{3}(d), \operatorname{ord}_{3}(e), \operatorname{ord}_{3}(f))$ divides both $\operatorname{ord}_{3}(d)$ and $\operatorname{ord}_{3}(e)$, it must divide both $\operatorname{ord}_{3}(d e)$ and $\operatorname{ord}_{3}(f)$. But the order of $d e f$ can be arbitrarily large, since $\operatorname{ord}_{3}(d e f)=2 \operatorname{ord}_{3}(d)+\operatorname{ord}_{3}(e)-1$, which is clearly greater than $\operatorname{ord}_{3}(f)$. This contradiction proves the desired result.
+
+Answer: $(84,4,12)$, $(90,2,18)$, $(92,0,22)$, $(103,5,5)$
+
+\subsection*{Baseline}
+
+\textbf{Problem Statement:}
+Let \( n \) be a positive integer such that \( n^2 + 2n + 3 \) is divisible by 7. Find the sum of all possible values of \( n \).
+\medskip
+\textbf{Solution:}
+
+Let \( n \) be a positive integer such that \( n^2 + 2n + 3 \equiv 0 \pmod{7} \). We need to find the values of \( n \) modulo 7 that satisfy this congruence.
+
+First, we check each value from 0 to 6:
+
+\[
+\begin{aligned}
+0^2 + 2 \cdot 0 + 3 & = 3 \not\equiv 0 \pmod{7}, \\
+1^2 + 2 \cdot 1 + 3 & = 6 \not\equiv 0 \pmod{7}, \\
+2^2 + 2 \cdot 2 + 3 & = 8 + 4 + 3 = 15 \equiv 1 \not\equiv 0 \pmod{7}, \\
+3^2 + 2 \cdot 3 + 3 & = 9 + 6 + 3 = 18 \equiv 4 \not\equiv 0 \pmod{7}, \\
+4^2 + 2 \cdot 4 + 3 & = 16 + 8 + 3 = 27 \equiv 6 \not\equiv 0 \pmod{7}, \\
+5^2 + 2 \cdot 5 + 3 & = 25 + 10 + 3 = 38 \equiv 2 \not\equiv 0 \pmod{7}, \\
+6^2 + 2 \cdot 6 + 3 & = 36 + 12 + 3 = 51 \equiv 1 \not\equiv 0 \pmod{7}.
+\end{aligned}
+\]
+
+From the above calculations, we see that none of these values satisfy the congruence \( n^2 + 2n + 3 \equiv 0 \pmod{7} \). Therefore, there are no solutions for \( n \) in the range from 0 to 6.
+
+Since there are no solutions, the sum of all possible values of \( n \) is \( 0 \).
+
+\[
+\boxed{0}
+\]
+
+\section*{Problem 2 --- Combinatorics (difficulty 5.5, target elegance 4.4)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Compute $\sum_{k=1}^{100} \sum_{\substack{m+n=2k \\ k<m<n}} \frac{(2k-1)!!}{k!}$.
+
+Solution:
+We need to compute the sum:
+\[
+\sum_{k=1}^{100} \sum_{\substack{m+n=2k \\ k<m<n}} \frac{(2k-1)!!}{k!}.
+\]
+First, we rewrite the inner sum as:
+\[
+\sum_{\substack{m+n=2k \\ k<m<n}} \frac{(2k-1)!!}{k!} = \frac{(2k-1)!!}{k!} \sum_{m+k=n}^n 1.
+\]
+The inner sum is simply the number of solutions to $m+k=n$, which is 1. Thus, we have:
+\[
+\sum_{k=1}^{100} \frac{(2k-1)!!}{k!} = \sum_{k=1}^{100} \frac{(2k-1)!!}{k!} = \sum_{k=1}^{100} \frac{\prod_{j=1}^{2k-1} j}{k!} = \sum_{k=1}^{100} \frac{A(2k)}{k!},
+\]
+where $A(n)$ denotes the $n$th harmonic number. Therefore, our final answer is the $100$th harmonic number minus 1:
+\[
+H(100) - 1 = 100.
+\]
+
+Thus, the answer is $\boxed{100}$.
+
+Answer: 100
+
+\subsection*{Baseline}
+
+\textbf{Problem Statement:}
+
+How many ways are there to choose two non-consecutive pairs of vertices from a regular pentagon such that each pair is connected by an edge in the pentagon?
+\medskip
+\textbf{Solution:}
+
+Consider a regular pentagon inscribed in a circle. Let's label the vertices of the pentagon as \(A_1, A_2, A_3, A_4, A_5\) in clockwise order.
+
+We need to count the number of ways to choose two non-consecutive pairs of vertices such that each pair is connected by an edge in the pentagon. Note that the only edges in the pentagon are the sides \(A_iA_{i+1}\) for \(i = 1, 2, 3, 4\).
+
+First, let's consider the possible choices for the first pair \((A_i, A_j)\). Since we want the pairs to be non-consecutive, \(i\) and \(j\) must be adjacent or separated by at least one vertex. 
+
+- If \(i = 1\), then \(j\) can be 2 or 4 (since \(j \neq i\)).
+- If \(i = 2\), then \(j\) can be 3 or 5.
+- If \(i = 3\), then \(j\) can be 4 or 1.
+- If \(i = 4\), then \(j\) can be 5 or 2.
+- If \(i = 5\), then \(j\) can be 1 or 3.
+
+From these possibilities, we get the following valid pairs:
+- From \(i = 1\), we have the pairs \((A_1, A_2)\) and \((A_1, A_4)\).
+- From \(i = 2\), we have the pairs \((A_2, A_3)\) and \((A_2, A_5)\).
+- From \(i = 3\), we have the pairs \((A_3, A_4)\) and \((A_3, A_1)\).
+- From \(i = 4\), we have the pairs \((A_4, A_5)\) and \((A_4, A_2)\).
+- From \(i = 5\), we have the pairs \((A_5, A_1)\) and \((A_5, A_3)\).
+
+This gives us a total of \(6\) valid pairs from the first choice.
+For each of these pairs, there are \(2\) ways to choose the second pair such that they are non-consecutive. Therefore, the total number of ways is \(6 \times 2 = 12\).
+
+Thus, the number of ways to choose two non-consecutive pairs of vertices from a regular pentagon such that each pair is connected by an edge in the pentagon is \(\boxed{12}\).
+
+\section*{Problem 3 --- Algebra (difficulty 6.0, target elegance 4.3)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $a_{n}=n^{2}+2 n+2$. Determine the number of positive integers $k\leq 100$ such that $\frac{1}{a_{1}}+\frac{1}{a_{2}}+\cdots+\frac{1}{a_{k}} \geq \frac{k}{49}$.
+
+Solution:
+For any positive integer $k$, $$\frac{1}{a_{k}}=\frac{1}{(2 k+1)^{2}+2(2 k+1)+2}=\frac{(4 k+5)(k+1)}{(2 k+1)^{2}(k+1)}=\frac{1}{2}\left(\frac{1}{(2 k+1)^{2}}-\frac{1}{(2 k+3)^{2}}+\frac{1}{(2 k+3)^{2}}-\frac{1}{(2 k+5)^{2}}+\frac{1}{(2 k+5)^{2}}-\frac{1}{(2 k+7)^{2}}+\ldots+\frac{1}{(2 k+5)^{2}}-\frac{1}{(2 k+7)^{2}}+\frac{1}{(2 k+7)^{2}}-\frac{1}{(2 k+9)^{2}}\right)$$ Since all terms except for the first and last are negative or zero, we get that $\frac{1}{a_{k}} \leq \frac{1}{(2 k+1)^{2}}-\frac{1}{(2 k+7)^{2}}$ and $\frac{1}{a_{k}} \geq \frac{1}{(2 k+3)^{2}}-\frac{1}{(2 k+5)^{2}}$. So $\frac{1}{a_{1}}+\frac{1}{a_{2}}+\cdots+\frac{1}{a_{k}} \geq \frac{1}{(2 k+1)^{2}}-\frac{1}{(2 k+7)^{2}}+\frac{1}{(2 k+3)^{2}}-\frac{1}{(2 k+5)^{2}}+\cdots+\frac{1}{(2 k+9)^{2}}-\frac{1}{(2 k+11)^{2}}= \frac{1}{(2 k+1)^{2}}-\frac{1}{(2 k+11)^{2}}$ By induction on $k$, we see that $\frac{1}{(2 k+1)^{2}}-\frac{1}{(2 k+11)^{2}}=\frac{8 k}{(2 k+1)(2 k+11)} \geq \frac{k}{49}$, as desired.
+
+Answer: 23
+
+\subsection*{Baseline}
+
+\textbf{Problem Statement:}  
+Let \( x \) be a positive integer such that when you insert the digit 1 between each pair of digits of \( x \), the resulting number is exactly 27 times \( x \). Find \( x \).
+
+\textbf{Solution:}  
+Let \( x = d_0d_1d_2\ldots d_n \) where \( d_i \in \{0, 1, 2, 3, 4, 5, 6, 7, 8, 9\} \). Inserting the digit 1 between each pair of digits gives the number \( 1 \underbrace{x_1x_2\ldots x_{n-1}}_M \). We are given that \( M = 27x \).
+
+Since \( x \) is a 10-digit number, inserting the digit 1 between each pair gives us an \( M \) that is composed of 10 digits plus two leading and two trailing 1's (from the inserted ones), making it a 22-digit number. Therefore, \( M = 27x \).
+
+We need to find \( x \) such that \( x \times 27 \leq M < (x + 1) \times 27 \).
+
+Let's denote \( x = 100000000 + n \) where \( n \) is a 9-digit number. Then,
+\[ 100000000 + n \times 27 \leq 27 \times (100000000 + n) < (100000000 + n + 1) \times 27. \]
+
+Simplifying the inequality:
+\[ 27 \times 100000000 + 27n \leq 27 \times (100000000 + n) < 27 \times (100000000 + n + 1). \]
+This reduces to:
+\[ 27n \leq 27n \leq 27n + 27. \]
+
+By subtracting \( 27n \) from all sides, we get:
+\[ 0 \leq 27 \leq 27. \]
+
+The only way this can hold true is if \( x = 1999999999 \). Let's check:
+\[ 1999999999 \times 27 = 5399999993 \]
+and
+\[ 27 \times 1999999999 = 5399999993. \]
+
+Therefore, \( x = 1999999999 \).
+
+So, the final answer is \( x = 1999999999 \).
+
+\section*{Problem 4 --- Geometry (difficulty 5.5, target elegance 4.5)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $P_{1}, P_{2}, \ldots, P_{10}$ be ten points on a circle. Compute the largest possible number of triangles with vertices at these points that have at least one interior point inside the circle.
+
+Solution:
+First note that the maximum number of intersections is $5$ if and only if all the points are on a diameter, which happens for $10 / 2=5$ choices of diameter. To achieve this we can take two opposite points to be endpoints of each diameter. For example, let the points on the circle be $1,2,3,4,5$. Then the diameters are $1-5$ and $2-4$. Now we need to prove that this is optimal. Let $A, B, C$ be three intersections of a diameter and a side of the triangle. If $B$ lies on the diameter, then the other intersection must lie on the diameter as well (since $A$ and $C$ are on opposite sides of the diameter). Therefore $A, B, C$ form an equilateral triangle, and therefore the angle between the diameters must be $60^{\circ}$. Thus, for every diameter with intersections $A$ and $C$, we get an equilateral triangle. This proves the claim.
+
+Answer: 5
+
+\subsection*{Baseline}
+
+\textbf{Problem Statement:}
+
+In a right triangle $ABC$, where $\angle C = 90^\circ$, let $AB = c$, $BC = a$, and $AC = b$. The length of the altitude from $C$ to $AB$ is denoted as $h_c$. If $a^2 + b^2 - 2ab = 0$, find the value of $c^2$.
+
+\textbf{Solution:}
+
+Given the equation $a^2 + b^2 - 2ab = 0$, we can rewrite it as $(a - b)^2 = 0$. This implies that $a = b$. In a right triangle, the Pythagorean theorem states that $c^2 = a^2 + b^2$. Substituting $a = b$ into this equation, we get $c^2 = a^2 + a^2 = 2a^2$. Since $a = b$, we have $a^2 = \left(\frac{c}{2}\right)^2$, which simplifies to $c^2 = 4\left(\frac{c}{2}\right)^2$. Solving for $c$, we find that $c = 4$. Thus, the value of $c^2$ is $\boxed{16}$.
+
+\section*{Problem 5 --- Number Theory (difficulty 5.0, target elegance 4.6)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $m$ be a positive integer. Find all pairs of integers $(a, b)$ with $|a| \le m$ and $|b| \le m$ such that there exist distinct prime numbers $p_1$ and $q_1$ which satisfy the following conditions:
+
+(i) For any positive integer $x$, there exist at most $m$ values of $t$ such that
+$\textstyle\left(x+p_1^{t} q_1^{k}\right)^{m}$ is divisible by $x^{m}+2 x^{m-1}+...+x+x^{m}$. Here $k$ is an integer satisfying $1\le k\le m$.
+
+(ii) For any positive integer $y$ there exist at least $m$ values of $t$ such that 
+$\textstyle\left(y+q_1^{t} p_1^{k}\right)^{m}$ is divisible by $y^{m}+2 y^{m-1}+...+y+y^{m}$. Here $k$ is an integer satisfying $1\le k\le m$.
+
+Solution:
+To solve the problem, we need to find all pairs of integers \((a, b)\) such that there exist distinct prime numbers \(p_1\) and \(q_1\) satisfying the given conditions. We will analyze both conditions carefully.
+Condition (i)
+
+For any positive integer \(x\), we need to determine if there exist at most \(m\) values of \(t\) such that:
+
+\[
+\left(x + p_1^{t} q_1^{k}\right)^{m} \text{ is divisible by } x^{m} + 2 x^{m-1} + \cdots + x + x^{m}
+\]
+
+This expression simplifies to:
+
+\[
+\sum_{j=0}^{m} x^{j} = \frac{x^{m+1} - 1}{x-1}
+\]
+
+Thus, the condition becomes:
+
+\[
+p_1^{t} q_1^{k} \equiv 0 \pmod{\frac{x^{m+1} - 1}{x-1}}
+\]
+Condition (ii)
+
+For any positive integer \(y\), we need to ensure that there are at least \(m\) values of \(t\) such that:
+
+\[
+\left(y + q_1^{t} p_1^{k}\right)^{m} \text{ is divisible by } y^{m} + 2 y^{m-1} + \cdots + y + y^{m}
+\]
+
+This expression simplifies to:
+
+\[
+\sum_{j=0}^{m} y^{j} = \frac{y^{m+1} - 1}{y-1}
+\]
+
+Thus, the condition becomes:
+
+\[
+q_1^{t} p_1^{k} \equiv 0 \pmod{\frac{y^{m+1} - 1}{y-1}}
+\]
+Solution
+
+To satisfy both conditions simultaneously, consider the following approach:
+
+1. \textbf{Choosing \(a\) and \(b\):}
+
+   The key insight here is to use properties of cyclotomic polynomials and symmetry in residues modulo a large prime number. Specifically, consider using the properties of binomial coefficients and the structure of the set \(\{0, 1, \ldots, m\}\).
+
+2. \textbf{Using symmetry and properties of cyclotomic fields:}
+
+   One possible approach is to use the properties of roots of unity and the fact that for certain small sets of residues, the number of factors is bounded. By analyzing the structure of the set of integers within the range \([-m, m]\), one can determine that the correct pair \((a, b)\) must be chosen from specific symmetrical sets.
+
+3. \textbf{Finding suitable primes \(p_1\) and \(q_1\):}
+
+   The primes \(p_1\) and \(q_1\) must also satisfy certain divisibility conditions related to the binomial coefficient expressions and the constraints on the size of \(a\) and \(b\). Through trial and error, or through analytical methods based on known results in number theory, it can be determined that the correct choice is:
+
+   \[
+   (a, b) = (-1, 1)
+   \]
+
+This pair satisfies the conditions as derived above through careful analysis and verification using the properties of cyclotomic polynomials and binomial coefficients.
+
+Therefore, the correct pair \((a, b)\) is:
+
+\[
+\boxed{(-1, 1)}
+\]
+
+Answer: (-1, 1)
+
+\subsection*{Baseline}
+
+\textbf{Problem Statement:}
+Let \( n \) be an integer such that \( n^2 + 1 \) is divisible by 5. What is the sum of all distinct values of \( n \) between 0 and 999 inclusive?
+\medskip
+\textbf{Solution:}
+
+Given that \( n^2 + 1 \equiv 0 \pmod{5} \), we need to find the values of \( n \) modulo 5 that satisfy this congruence. We consider the possible residues of \( n \) when divided by 5, which are 0, 1, 2, 3, and 4.
+
+1. \textbf{Case 1: \( n \equiv 0 \pmod{5} \)}
+   \[
+   n = 5k \quad \text{for some integer } k.
+   \]
+   Then,
+   \[
+   n^2 = (5k)^2 = 25k^2 \equiv 0 \pmod{5}.
+   \]
+   Therefore, \( n^2 + 1 \equiv 1 \pmod{5} \).
+
+2. \textbf{Case 2: \( n \equiv 1 \pmod{5} \)}
+   \[
+   n = 5k + 1 \quad \text{for some integer } k.
+   \]
+   Then,
+   \[
+   n^2 = (5k + 1)^2 = 25k^2 + 10k + 1 = 5(5k^2 + 2k) + 1.
+   \]
+   Since \( 5(5k^2 + 2k) \) is divisible by 5, it follows that \( n^2 + 1 \equiv 1 \pmod{5} \).
+
+3. \textbf{Case 3: \( n \equiv 2 \pmod{5} \)}
+   \[
+   n = 5k + 2 \quad \text{for some integer } k.
+   \]
+   Then,
+   \[
+   n^2 = (5k + 2)^2 = 25k^2 + 20k + 4 = 5(5k^2 + 4k) + 4.
+   \]
+   Since \( 5(5k^2 + 4k) \) is divisible by 5, it follows that \( n^2 + 1 \equiv 1 \pmod{5} \).
+
+4. \textbf{Case 4: \( n \equiv 3 \pmod{5} \)}
+   \[
+   n = 5k + 3 \quad \text{for some integer } k.
+   \]
+   Then,
+   \[
+   n^2 = (5k + 3)^2 = 25k^2 + 30k + 9 = 5(5k^2 + 6k) + 9.
+   \]
+   Since \( 5(5k^2 + 6k) \) is divisible by 5, it follows that \( n^2 + 1 \equiv 1 \pmod{5} \).
+
+5. \textbf{Case 5: \( n \equiv 4 \pmod{5} \)}
+   \[
+   n = 5k + 4 \quad \text{for some integer } k.
+   \]
+   Then,
+   \[
+   n^2 = (5k + 4)^2 = 25k^2 + 40k + 16 = 5(5k^2 + 8k) + 16.
+   \]
+   Since \( 5(5k^2 + 8k) \) is divisible by 5, it follows that \( n^2 + 1 \equiv 1 \pmod{5} \).
+
+From the above cases, we see that for any integer \( n \), \( n^2 + 1 \equiv 1 \pmod{5} \). This implies that \( n^2 \equiv -1 \pmod{5} \), or equivalently, \( n^2 \equiv 4 \pmod{5} \).
+
+We now find the integers \( n \) between 0 and 999 such that \( n^2 \equiv 4 \pmod{5} \). The integers satisfying this condition are those where the last digit is either 1 or 9, since:
+\[ 1^2 \equiv 1 \pmod{5}, \quad 9^2 = 81 \equiv 1 \pmod{5}, \quad \text{and so on}. \]
+
+The corresponding values of \( n \) between 0 and 999 are:
+\[ n = 1, 9, 6, 4. \]
+
+To verify, we check the squares of these numbers modulo 5:
+\[
+1^2 \equiv 1 \pmod{5}, \quad 9^2 \equiv 1 \pmod{5}, \quad 6^2 \equiv 1 \pmod{5}, \quad 4^2 \equiv 1 \pmod{5},
+\]
+so indeed \( n^2 \equiv 4 \pmod{5} \) only when \( n \equiv 1, 9, 6, 4 \pmod{5} \).
+
+Thus, the distinct values of \( n \) are 1, 4, 6, 9, and their sum is:
+\[ 1 + 4 + 6 + 9 = \ldots \]
+
+\section*{Strength: SLM vs baseline}
+
+\begin{tabular}{lrr}
+
+metric & SLM & baseline \\ \hline
+
+parseable \% & 100 & 100 \\
+
+valid integer answer \% & 60 & 60 \\
+
+degenerate \% & 0 & 20 \\
+
+avg length (chars) & 1751.6 & 1557.2 \\
+
+well-posed mean & 0.2 & 0.6 \\
+
+answer-correct mean & 0.0 & 0.2 \\
+
+problem elegance mean & 0.6 & 1.8 \\
+
+solution elegance mean & 0.0 & 0.4 \\
+
+\end{tabular}
+
+\medskip
+
+pairwise win-rate: SLM 40\%, baseline 60\%, tie 0\%
+
+\end{document}

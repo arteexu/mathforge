@@ -1,0 +1,342 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{parskip}
+
+\setlength{\parindent}{0pt}
+
+\title{MathForge --- Generated Problems (insight bank)}
+
+\author{Arthur Xu}\date{July 2026}
+
+\begin{document}\maketitle
+
+\noindent 30 elegant AIME/olympiad-level problems with their key insight (crux). Each header shows the intended answer, problem-elegance (PE), solution-elegance (SE), and difficulty (d).
+
+\bigskip
+
+\section*{Problem 1 --- Algebra \quad (answer $=900$; PE 4.3, SE 4.2, difficulty 5.5)}
+
+A sequence of positive integers $a_1, a_2, a_3, \dots$ satisfies
+$$a_{n+1}\,a_{n-1} = a_n + 1 \qquad \text{for every integer } n \ge 2.$$
+Find $\displaystyle\sum_{n=1}^{500} a_n$.
+
+\medskip
+
+\textit{Crux.} The Lyness recurrence $a_{n+1}=\frac{a_n+1}{a_{n-1}}$ is periodic with period $5$ for all positive reals, and the only positive-integer cycle is a shift of $(1,1,2,3,2)$, whose block sum is $9$.
+
+\section*{Problem 2 --- Algebra \quad (answer $=19$; PE 3.6, SE 4.2, difficulty 5.5)}
+
+Let $f$ be a real-valued function defined for all real $x$ with $x \notin \{0,1\}$, satisfying
+$$f(x) + f\!\left(\frac{x-1}{x}\right) = 8x^2$$
+for every $x$ in its domain. Given that this condition determines $f$ uniquely, find $f(2)$.
+
+\medskip
+
+\textit{Crux.} The substitution map $g(x)=\dfrac{x-1}{x}=1-\tfrac1x$ has order $3$ (i.e. $g(g(g(x)))=x$), so three iterations of the equation form a solvable $3\times3$ linear system for $f$ on each orbit.
+
+\section*{Problem 3 --- Combinatorics \quad (answer $=125$; PE 4.6, SE 4.7, difficulty 5.5)}
+
+There is a one-way circular road with $5$ parking spots, labeled $0,1,2,3,4$ in clockwise order. Four cars, numbered $1,2,3,4$, arrive one at a time in that order. Car $i$ has a favorite spot $f_i \in \{0,1,2,3,4\}$. When car $i$ arrives it drives directly to spot $f_i$; if that spot is empty it parks there, and otherwise it continues clockwise (visiting spots in the cyclic order $\ldots \to j \to j+1 \to \cdots \to 4 \to 0 \to \cdots$) and parks in the first empty spot it encounters.
+
+Because there are $5$ spots and only $4$ cars, every car always parks, and exactly one spot is left empty after all four cars have parked.
+
+Determine the number of preference sequences $(f_1,f_2,f_3,f_4)$ for which the spot left empty is spot $0$.
+
+\medskip
+
+\textit{Crux.} Rotational symmetry of the circular parking process makes each of the 5 spots equally likely to be the empty one, so the count is simply $5^4/5$.
+
+\section*{Problem 4 --- Combinatorics \quad (answer $=950$; PE 4.3, SE 4.5, difficulty 5.5)}
+
+For a positive integer $n$, a \textbf{partition into distinct parts} is a way of writing $n$ as a sum of distinct positive integers, where order does not matter (for example, $6 = 6 = 1+5 = 2+4 = 1+2+3$).
+
+Let $E(n)$ be the number of partitions of $n$ into distinct parts using an \textbf{even} number of parts, and let $O(n)$ be the number using an \textbf{odd} number of parts. (For $n=6$: the partitions $1+5,\,2+4$ have $2$ parts and $6,\,1+2+3$ have $1$ and $3$ parts, so $E(6)=2$ and $O(6)=2$.)
+
+Determine the number of integers $n$ with $1 \le n \le 1000$ for which
+$$E(n) = O(n).$$
+
+\medskip
+
+\textit{Crux.} The signed count $E(n)-O(n)$ is the coefficient of $x^n$ in $\prod_{k\ge1}(1-x^k)$, which by Euler's Pentagonal Number Theorem (Franklin's sign-reversing involution) is $0$ except at generalized pentagonal numbers.
+
+\section*{Problem 5 --- Combinatorics \quad (answer $=429$; PE 4.3, SE 4.2, difficulty 6.0)}
+
+Consider lattice paths in the plane that begin at $(0,0)$, end at $(14,0)$, and consist of $14$ steps, each either an \textbf{up} step $(1,1)$ or a \textbf{down} step $(1,-1)$. (Every such path therefore uses exactly $7$ up steps and $7$ down steps.)
+
+Call a step of a path \textbf{below the $x$-axis} if the open segment representing that step lies strictly below the $x$-axis (touching the axis, if at all, only at an endpoint).
+
+Among all such paths, how many have \textbf{exactly $6$ steps below the $x$-axis}?
+
+\medskip
+
+\textit{Crux.} Chung-Feller phenomenon: among all $\pm1$ paths from $(0,0)$ to $(2n,0)$, the number having exactly $2k$ steps below the axis equals the Catalan number $C_n$ for every admissible $k$, independent of $k$.
+
+\section*{Problem 6 --- Combinatorics \quad (answer $=324$; PE 4.2, SE 4.3, difficulty 5.5)}
+
+The integers $1,2,\dots,12$ are placed around a circle in their natural order, so that each integer is adjacent to the two integers immediately before and after it, and $12$ is adjacent to $1$.
+
+Call a permutation $\pi$ of $\{1,2,\dots,12\}$ \textbf{gentle} if for every $i$, the value $\pi(i)$ is either $i$ itself or one of the two integers adjacent to $i$ on the circle. (In other words, $\pi(i)-i \equiv -1,\,0,\text{ or }1 \pmod{12}$.)
+
+Find the number of gentle permutations.
+
+\medskip
+
+\textit{Crux.} A permutation moving every element by at most one step around a circle is either a product of disjoint adjacent transpositions (matchings of the cycle $C_n$, counted by the Lucas number $L_n$) or one of the two full rotations, giving $L_n+2$.
+
+\section*{Problem 7 --- Combinatorics \quad (answer $=486$; PE 4.2, SE 4.3, difficulty 6.0)}
+
+A grasshopper starts at position $0$ on the integer number line. Each minute it makes one jump, moving either one unit to the left or one unit to the right. At all times its position must remain in the set $\{-2,-1,0,1,2\}$ (if the grasshopper is at $2$ it must jump left, and if it is at $-2$ it must jump right). After exactly $12$ jumps the grasshopper is once again at position $0$.
+
+How many different sequences of $12$ jumps are possible?
+
+\medskip
+
+\textit{Crux.} A $\pm1$ walk confined to the five sites $\{-2,\dots,2\}$ returning to $0$ in $2n\ge 4$ steps: its transfer matrix (path graph $P_5$) has eigenvalues $\pm\sqrt3,\pm1,0$, collapsing the count to $2\cdot 3^{\,n-1}$.
+
+\section*{Problem 8 --- Combinatorics \quad (answer $=273$; PE 4.1, SE 4.4, difficulty 6.0)}
+
+A counter begins at $0$. It then undergoes $16$ operations performed one after another; each operation is either a $+1$ (add $1$ to the counter) or a $-2$ (subtract $2$ from the counter). Among the $16$ operations, exactly $11$ are $+1$'s and exactly $5$ are $-2$'s.
+
+Considering all $\binom{16}{5}$ possible orders in which these operations can be arranged, determine how many of these orders keep the counter's value \textbf{strictly positive} immediately after each of the $16$ operations.
+
+\medskip
+
+\textit{Crux.} Reading each arrangement cyclically, exactly one of its $16$ rotations keeps all partial sums positive (the Cycle Lemma for step-values $\le 1$ with total sum $1$), so the answer is $\binom{16}{5}/16$.
+
+\section*{Problem 9 --- Combinatorics \quad (answer $=945$; PE 4.1, SE 4.3, difficulty 5.5)}
+
+Let $S(n)$ denote the sum of the decimal (base $10$) digits of a nonnegative integer $n$; for example $S(145)=1+4+5=10$.
+
+Find the number of ordered triples $(a,b,c)$ of nonnegative integers satisfying
+$$a+b+c = 145 \qquad\text{and}\qquad S(a)+S(b)+S(c) = S(145).$$
+
+\medskip
+
+\textit{Crux.} The digit-sum condition $S(a)+S(b)+S(c)=S(a+b+c)$ holds exactly when the column addition $a+b+c$ produces no carries, which makes the digit positions independent and reduces the count to a product of $\binom{d+2}{2}$ over the digits $d$ of $145$.
+
+\section*{Problem 10 --- Combinatorics \quad (answer $=255$; PE 4.0, SE 4.3, difficulty 5.5)}
+
+Consider the set of twelve positive integers
+$$A=\{6,\;8,\;10,\;12,\;15,\;18,\;20,\;21,\;28,\;45,\;50,\;98\}.$$
+Call a subset $T\subseteq A$ *square* if the product of all the elements of $T$ is a perfect square. (The empty product $1$ counts as a perfect square.)
+
+How many \textbf{nonempty} square subsets does $A$ have?
+
+\medskip
+
+\textit{Crux.} A product of integers is a perfect square iff the sum of their squarefree-part vectors over $\mathbb{F}_2$ (indexed by primes) is zero, so the count of square subsets is $2^{\,n-r}$ where $r$ is the $\mathbb{F}_2$-rank of those vectors.
+
+\section*{Problem 11 --- Combinatorics \quad (answer $=522$; PE 3.7, SE 4.2, difficulty 4.5)}
+
+For a nonempty set $S$ of positive integers, define its \textbf{spread} by
+$$\operatorname{sp}(S)=\max(S)-\min(S),$$
+so that $\operatorname{sp}(S)=0$ whenever $S$ is a singleton.
+
+Compute
+$$\sum_{S}\operatorname{sp}(S),$$
+where the sum ranges over \textbf{all} nonempty subsets $S$ of $\{1,2,3,4,5,6,7\}$.
+
+\medskip
+
+\textit{Crux.} Write $\max-\min$ as the number of integers $k$ with $\min\le k<\max$; equivalently split the sum into $\sum\max-\sum\min$ and count how many subsets have a given element as their maximum ($2^{m-1}$) or minimum ($2^{7-m}$).
+
+\section*{Problem 12 --- Geometry \quad (answer $=768$; PE 4.3, SE 4.6, difficulty 5.5)}
+
+Let $P$ be a point in the interior of equilateral triangle $ABC$ with
+$$PA = 3, \qquad PB = 5, \qquad PC = 7.$$
+Find the square of the area of triangle $ABC$.
+
+\medskip
+
+\textit{Crux.} Rotating $P$ by $60^\circ$ about $A$ (so $B\mapsto C$) collapses the three vertex-distances into a single triangle with sides $3,5,7$; that triangle's $120^\circ$ angle forces three points to be collinear, giving the side directly.
+
+\section*{Problem 13 --- Geometry \quad (answer $=109$; PE 4.0, SE 4.3, difficulty 5.0)}
+
+Equilateral triangle $ABC$ is inscribed in a circle. Point $P$ lies on the arc $BC$ that does not contain $A$. Given that $PA = 24$ and $PB = 10$, the area of triangle $ABC$ can be written as $m\sqrt{3}$ for a positive integer $m$. Find $m$.
+
+\medskip
+
+\textit{Crux.} For a point on the arc of an equilateral triangle's circumcircle, Ptolemy gives $PA=PB+PC$, after which the inscribed angle $\angle BPC=120^\circ$ turns the Law of Cosines in $\triangle BPC$ directly into the side length.
+
+\section*{Problem 14 --- Geometry \quad (answer $=196$; PE 4.0, SE 4.3, difficulty 5.5)}
+
+Let $ABC$ be an equilateral triangle inscribed in a circle $\omega$, and let $P$ be a point on the arc $BC$ of $\omega$ not containing $A$. Suppose that
+$$PA = 16 \qquad\text{and}\qquad [\triangle PBC] = 15\sqrt{3},$$
+where $[\cdot]$ denotes area. Find the square of the side length of triangle $ABC$.
+
+\medskip
+
+\textit{Crux.} Ptolemy on the cyclic quadrilateral $ABPC$ gives $PA=PB+PC$, and the inscribed angle forces $\angle BPC=120^\circ$, so the Law of Cosines in $\triangle PBC$ yields $s^2 = PA^2 - PB\cdot PC$.
+
+\section*{Problem 15 --- Number Theory \quad (answer $=165$; PE 4.3, SE 4.6, difficulty 5.5)}
+
+How many integers $n$ with $1 \le n \le 2047$ have the property that the central binomial coefficient $\dbinom{2n}{n}$ is divisible by $8$ but not by $16$?
+
+\medskip
+
+\textit{Crux.} The exponent of $2$ in $\binom{2n}{n}$ equals $s_2(n)$, the number of $1$'s in the binary representation of $n$.
+
+\section*{Problem 16 --- Number Theory \quad (answer $=991$; PE 4.3, SE 4.5, difficulty 5.5)}
+
+For a nonnegative integer $n$, the $n$-th Catalan number is
+\[
+C_n=\frac{1}{n+1}\binom{2n}{n}=\frac{(2n)!}{n!\,(n+1)!}.
+\]
+Thus $C_0=1,\ C_1=1,\ C_2=2,\ C_3=5,\ C_4=14,\ C_5=42,\ C_6=132,\ C_7=429,\dots$
+
+Determine how many of the Catalan numbers $C_1, C_2, C_3, \ldots, C_{1000}$ are \textbf{even}.
+
+\medskip
+
+\textit{Crux.} The 2-adic valuation of $C_n$ equals $s_2\!\left(\tfrac{n+1}{2^{v_2(n+1)}}-1\right)$, so $C_n$ is odd exactly when $n+1$ is a power of $2$.
+
+\section*{Problem 17 --- Number Theory \quad (answer $=500$; PE 4.3, SE 4.6, difficulty 5.5)}
+
+For each integer $k$ from $1$ to $999$, write $k$ as a three-digit block using leading zeros when necessary (so $1$ becomes $001$, $42$ becomes $042$, and $999$ stays $999$). Concatenate these $999$ blocks in increasing order of $k$ to form one large integer
+$$N = \underbrace{001}_{k=1}\,\underbrace{002}_{k=2}\,\underbrace{003}_{k=3}\cdots\underbrace{999}_{k=999}.$$
+Find the remainder when $N$ is divided by $1001$.
+
+\medskip
+
+\textit{Crux.} Since $1000 \equiv -1 \pmod{1001}$, each three-digit block contributes with an alternating sign, collapsing $N \bmod 1001$ to the alternating sum $1-2+3-\cdots+999$.
+
+\section*{Problem 18 --- Number Theory \quad (answer $=48$; PE 4.3, SE 4.5, difficulty 6.5)}
+
+For a positive integer $k$, let $R_k$ denote the \textbf{repunit} with $k$ ones, i.e.
+$$R_k=\underbrace{11\cdots1}_{k\text{ ones}}=\frac{10^{k}-1}{9}.$$
+Find the largest integer $m$ such that $3^{m}$ divides the product
+$$R_1\,R_2\,R_3\cdots R_{100}.$$
+
+\medskip
+
+\textit{Crux.} The 3-adic valuation of a repunit satisfies $v_3(R_k)=v_3(k)$ (via Lifting the Exponent), so the product's valuation collapses to $v_3(100!)$ by Legendre's formula.
+
+\section*{Problem 19 --- Number Theory \quad (answer $=319$; PE 4.2, SE 4.3, difficulty 5.5)}
+
+For a positive integer $n$, let $e(n)$ denote the exponent of the highest power of $2$ dividing the central binomial coefficient $\dbinom{2n}{n}$ — that is, the largest integer $k$ such that $2^{k}\mid \dbinom{2n}{n}$.
+
+Compute
+\[
+\sum_{n=1}^{100} e(n).
+\]
+
+\medskip
+
+\textit{Crux.} By Legendre's digit-sum formula, $v_2\!\binom{2n}{n}=s_2(n)$, the number of $1$'s in the binary representation of $n$, so the sum is just the total number of binary $1$-bits among $1,\dots,100$.
+
+\section*{Problem 20 --- Number Theory \quad (answer $=49$; PE 4.2, SE 4.3, difficulty 5.5)}
+
+Call a positive integer $n$ \textbf{special} if it has exactly ten digits (its leftmost digit is nonzero, i.e. $10^{9}\le n<10^{10}$) and the last ten digits of $n^{2}$ are exactly the ten digits of $n$; equivalently, $n^{2}$ and $n$ end in the same ten digits.
+
+There are exactly two special numbers, and exactly one of them is even. Find the sum of the decimal digits of the even one.
+
+\medskip
+
+\textit{Crux.} The condition $n^2\equiv n \pmod{10^{10}}$ means $2^{10}5^{10}\mid n(n-1)$ with $\gcd(n,n-1)=1$, so each prime power lands entirely in $n$ or in $n-1$; the even nontrivial solution is fixed by $2^{10}\mid n,\ 5^{10}\mid n-1$ via CRT.
+
+\section*{Problem 21 --- Number Theory \quad (answer $=256$; PE 4.0, SE 4.2, difficulty 5.5)}
+
+Let $A$ be the positive integer whose decimal representation consists of exactly $36$ consecutive digits equal to $9$ (that is, $A=\underbrace{99\cdots9}_{36}$), and let $B$ be the positive integer whose decimal representation consists of exactly $24$ consecutive nines (that is, $B=\underbrace{99\cdots9}_{24}$).
+
+Find the number of positive integers that divide \textbf{both} $A$ and $B$.
+
+\medskip
+
+\textit{Crux.} The greatest common divisor of two "all-nines" numbers satisfies $\gcd(10^m-1,10^n-1)=10^{\gcd(m,n)}-1$, so the count of common divisors is just the number of divisors of $10^{\gcd(m,n)}-1$.
+
+\section*{Problem 22 --- Number Theory \quad (answer $=105$; PE 4.0, SE 4.2, difficulty 5.5)}
+
+For a positive integer $n$, let $\binom{2n}{n}$ denote the central binomial coefficient. Find the number of integers $n$ with $1 \le n \le 1000$ for which $\binom{2n}{n}$ is \textbf{not} divisible by $3$.
+
+\medskip
+
+\textit{Crux.} By Kummer's theorem, $3 \nmid \binom{2n}{n}$ exactly when adding $n+n$ in base $3$ produces no carries, which happens iff every base-3 digit of $n$ is $0$ or $1$.
+
+\section*{Problem 23 --- Number Theory \quad (answer $=207$; PE 4.0, SE 4.0, difficulty 5.5)}
+
+The decimal expansion of $\dfrac{1}{47}$ is purely periodic. Writing one full period as a string of digits (including any leading zeros, so that the string has length equal to the minimal period), find the sum of all the digits in that period.
+
+\medskip
+
+\textit{Crux.} Midy's theorem: for a prime $p$ whose period length $L$ is even, the two halves of the repeating block are digit-wise $9$-complements, so the digit sum is $9L/2$ — reducing the problem to finding $\operatorname{ord}_{47}(10)$.
+
+\section*{Problem 24 --- Number Theory \quad (answer $=250$; PE 4.0, SE 4.3, difficulty 5.5)}
+
+For a positive integer $n$, write $n$ in base $7$ as
+$$n = d_k\,7^k + d_{k-1}\,7^{k-1} + \cdots + d_1\,7 + d_0,\qquad 0\le d_i\le 6.$$
+Define
+$$S(n) = d_0 + d_1 + \cdots + d_k \qquad\text{(the digit sum)},$$
+$$A(n) = d_0 - d_1 + d_2 - \cdots + (-1)^k d_k \qquad\text{(the alternating digit sum)}.$$
+Find the number of integers $n$ with $1 \le n \le 6000$ such that $S(n)$ is divisible by $6$ \textbf{and} $A(n)$ is divisible by $8$.
+
+\medskip
+
+\textit{Crux.} Since $7\equiv 1\pmod 6$ and $7\equiv -1\pmod 8$, the base-7 digit sum and alternating digit sum satisfy $S(n)\equiv n\pmod 6$ and $A(n)\equiv n\pmod 8$, so the two conditions are just $6\mid n$ and $8\mid n$.
+
+\section*{Problem 25 --- Number Theory \quad (answer $=448$; PE 4.0, SE 4.5, difficulty 5.5)}
+
+Let
+$$N=\prod_{n=1}^{127}\binom{2n}{n}=\binom{2}{1}\binom{4}{2}\binom{6}{3}\cdots\binom{254}{127}.$$
+Find the largest integer $k$ such that $2^{k}\mid N$.
+
+\medskip
+
+\textit{Crux.} By Legendre's formula the 2-adic valuation of a central binomial coefficient collapses to a binary digit sum: $v_2\binom{2n}{n}=s_2(n)$, so the whole product's valuation is $\sum_{n=1}^{127}s_2(n)$.
+
+\section*{Problem 26 --- Number Theory \quad (answer $=55$; PE 4.0, SE 4.3, difficulty 5.5)}
+
+Find the number of ordered pairs $(a,b)$ of positive integers such that
+$$\gcd(a,b) + \operatorname{lcm}(a,b) = 2024.$$
+
+\medskip
+
+\textit{Crux.} Writing $a=gx,\,b=gy$ with $\gcd(x,y)=1$ turns the condition into $g(1+xy)=2024$, so for each divisor $g$ the number of valid coprime factorizations $xy=2024/g-1$ is $2^{\omega(\cdot)}$.
+
+\section*{Problem 27 --- Number Theory \quad (answer $=30$; PE 3.8, SE 4.0, difficulty 5.5)}
+
+Find the sum of the digits of the six-digit string formed by the last six digits of
+$$5^{\,2^{100}}.$$
+(Here the "last six digits" are the residue of $5^{2^{100}}$ modulo $10^6$, written as a six-digit number.)
+
+\medskip
+
+\textit{Crux.} The powers $5^{2^k}$ stabilize $10$-adically to the automorphic idempotent $\equiv 0 \pmod{5^n}$, $\equiv 1 \pmod{2^n}$, because the order of $5$ modulo a power of $2$ is itself a power of $2$; via CRT this pins the last six digits to $890625$.
+
+\section*{Problem 28 --- Number Theory \quad (answer $=140$; PE 3.7, SE 4.2, difficulty 6.0)}
+
+For each integer $k$ with $1 \le k \le 2520$, let
+$$g_k = \gcd(k,\,2520).$$
+Find the remainder when $\displaystyle\sum_{k=1}^{2520} g_k$ is divided by $1000$.
+
+\medskip
+
+\textit{Crux.} Grouping the terms by the value of $\gcd(k,n)$ turns $\sum_{k=1}^n\gcd(k,n)$ into the multiplicative function $\sum_{d\mid n} d\,\varphi(n/d)$, computable prime-power by prime-power.
+
+\section*{Problem 29 --- Precalculus \quad (answer $=200$; PE 4.3, SE 4.0, difficulty 5.5)}
+
+A regular $49$-gon $P_1P_2P_3\cdots P_{49}$ is inscribed in a circle of radius $1$. Compute
+$$\sum_{k=2}^{49}\frac{1}{(P_1P_k)^2}.$$
+
+\medskip
+
+\textit{Crux.} The reciprocal squared chord-lengths from one vertex reduce to $\tfrac14\sum_{j=1}^{n-1}\csc^2\frac{j\pi}{n}=\tfrac{n^2-1}{12}$, where the cosecant-square sum is evaluated by Vieta's formulas on the polynomial whose roots are $\cot^2\frac{j\pi}{n}$.
+
+\section*{Problem 30 --- Probability \quad (answer $=495$; PE 4.2, SE 4.5, difficulty 5.5)}
+
+Forty-five students form a class. A "note-passing scheme" is created by choosing a uniformly random permutation $\sigma$ of the students (all $45!$ permutations equally likely); student $i$ is required to pass any note in hand to student $\sigma(i)$. If a note is started by student $i$, it travels
+$$i \to \sigma(i) \to \sigma(\sigma(i)) \to \cdots$$
+and eventually returns to $i$.
+
+Call two \textbf{distinct} students *linked* if a note started by one of them passes through the other before it first returns to its originator.
+
+Find the expected number of linked (unordered) pairs of students.
+
+\medskip
+
+\textit{Crux.} In a uniformly random permutation the cycle containing a fixed element has length uniform on $\{1,\dots,n\}$, so any two distinct elements lie in a common cycle with probability exactly $\tfrac12$.
+
+\end{document}

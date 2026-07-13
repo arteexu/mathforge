@@ -1,18 +1,59 @@
 # MathForge
 
-A pipeline for generating **elegant, AIME/olympiad-level competition math
-problems** — problems where a single simple concept is used creatively, rather
-than problems that are merely long.
+A complete experimental pipeline for training a small language model to generate
+**creative, AIME/olympiad-style competition math problems** from a specified
+crux and pair of interacting techniques.
 
-The core idea: mine *interesting patterns / insights* from strong problems, then
-grow fully-formed problems around each insight. Solutions are collected and
-scored for **difficulty** and **elegance** (few genuine "crux" leaps, little
-routine bookkeeping), and the best problems are curated into a dataset used to
-train a small model (SLM) that can generate quality problems itself.
+The BrainLift thesis is that problem generation is the inverse of problem
+solving: start from the surprising observation, then engineer the statement
+outward. Topic is metadata; the crux is the unit of generation.
 
-This repository is the **data-and-tooling skeleton**: schema, SQLite
-persistence, a CLI with the pipeline stages stubbed out, and an audited LLM
-wrapper. The stages are ready to be filled in.
+## Submission snapshot
+
+- **Model:** `Qwen/Qwen2.5-Math-7B-Instruct` with a 4-bit NF4, rank-32 QLoRA
+  adapter. The preserved full-training manifest records the 2,956-example
+  training snapshot and exact hyperparameters.
+- **Data:** leakage-controlled exports, reviewed duplicate quarantine, a
+  205-example creative view, and a frozen 240-problem reference holdout (90
+  AIME + 150 Omni-MATH).
+- **Generator:** a bridge-first technique-combination pipeline with blind
+  statement solving, bounded repair, human acceptance, and a corpus-aware
+  novelty gate.
+- **Evaluation:** a frozen 12-brief x 2-repetition behavior pilot comparing the
+  trained SLM with Claude Opus 4.8 under matched prompts.
+- **Current result:** this pilot did **not** show the SLM beating Opus. The Opus
+  blind judge preferred the frontier arm 20-4; it marked 0/24 SLM outputs and
+  1/24 frontier outputs fully valid. Because Opus was both frontier generator
+  and judge, the result is explicitly labeled exploratory and self-judged.
+
+### Grader quick links
+
+| Artifact | Link |
+|---|---|
+| BrainLift | [SLM Brainlift.pdf](SLM%20Brainlift.pdf) |
+| Architecture and training | [Model training architecture report](docs/model_training_architecture_report.md) |
+| Full-training manifest | [full2956-20260712-manifest.json](output/training/full2956-20260712-manifest.json) |
+| Training notebook | [mathforge_qlora_full2956_colab.ipynb](notebooks/mathforge_qlora_full2956_colab.ipynb) |
+| Runnable behavior evaluation | [Open in Colab](https://colab.research.google.com/github/arteexu/mathforge/blob/main/notebooks/mathforge_basic_behavior_eval_colab.ipynb) |
+| Evaluation report | [Opus-blind-judged pilot](output/basic_behavior_eval_attached/opus_report/report.md) |
+| Machine-readable evaluation | [summary.json](output/basic_behavior_eval_attached/opus_report/summary.json) |
+| SLM generations | [Compiled PDF](output/pdf/slm_generated_problems.pdf) |
+| Opus generations | [Compiled full-math PDF](output/pdf/opus_generated_problems_math.pdf) |
+| Demo narration | [3-5 minute script](docs/slm_demo_script_3_to_5_minutes.md) |
+| Data-integrity audit | [data_integrity_report.json](data/data_integrity_report.json) |
+
+The trained PEFT adapter weights are intentionally not stored directly in Git
+because they live in the completed Colab/Drive training artifact. For a fully
+portable deployment, publish that adapter directory to Hugging Face and add its
+model-repository link here; the code, manifests, data exports, generation
+outputs, and evaluation evidence are all versioned in this repository.
+
+## Project idea
+
+MathForge mines interesting patterns and insights from strong problems, then
+grows fully formed problems around each insight. Solutions are collected and
+scored for **difficulty** and **elegance** (few genuine crux leaps and little
+routine bookkeeping), and the best problems are curated into the training data.
 
 ## Requirements
 
@@ -131,6 +172,93 @@ eval set is reproducible and tamper-evident even if the DB is rebuilt.
 
 > Note: `freeze-eval` is guarded — it raises if `eval/frozen_eval_v1.json`
 > already exists (pass `--force` to intentionally re-freeze).
+
+### Training-data integrity
+
+All exporters use the TRAIN/non-frozen selector, remove exact and reviewed
+cross-source duplicates, and quarantine known train copies of frozen evaluation
+problems. Quality weighting is stored as metadata rather than repeated physical
+rows, so an example cannot leak across an internal train/validation split.
+
+```bash
+PYTHONPATH=src python scripts/apply_dedup_quarantine.py
+PYTHONPATH=src python scripts/export_dataset.py
+PYTHONPATH=src python scripts/export_weighted.py
+PYTHONPATH=src python scripts/export_creative.py
+PYTHONPATH=src python scripts/rebuild_technique_coverage.py
+PYTHONPATH=src python scripts/audit_data_integrity.py
+```
+
+The final command must report `PASS` for every export before training. The
+reviewed duplicate quarantine is versioned at `eval/dedup_quarantine_v1.json`.
+The current frozen manifest is deliberately **90 AIME + 150 Omni-MATH**; changing
+that definition requires a new versioned manifest rather than editing v1.
+
+Current external-source coverage includes Omni-MATH (including HMMT and Putnam
+provenance), Hendrycks MATH/AoPS-labelled data, and OlympiadBench. PUMAC and a
+direct AoPS-site import are not currently present.
+
+## Bridge-first technique combinations
+
+The combination generator uses exactly two canonicalized techniques. V2 (the
+default for new runs) ranks three fused bridge-cruxes, diversifies the winner
+into four structurally different problem shells, and selects a shell only after
+validity-first novelty and necessity gates. After composition, a statement-only
+solver searches for routine bypasses and independently rates difficulty. A valid
+but ordinary draft gets at most one critique-guided structural rewrite; the
+revised statement is audited from scratch. Before storage, a frozen local corpus
+snapshot retrieves the eight closest structural neighbors plus every pair-evidence
+source; a separate judge rejects reused mathematical kernels and persists the
+neighbor IDs, scores, hashes, and reasons. Pair planning remains reproducible
+with a 65% observed / 25% structured-novel / 10% bounded-exploration mix.
+V2 reserves 48k output tokens for generation because Claude's adaptive thinking
+and the required proof can otherwise exhaust a 32k budget before emitting the
+final tagged artifact; this budget is frozen in each new run's configuration.
+
+```bash
+# Inspect the exact pair plan without API calls or job creation.
+PYTHONPATH=src python scripts/generate_from_techniques.py start \
+  --jobs 10 --seed 15 --difficulty-low 5 --difficulty-high 8 --dry-run
+
+# Start, inspect, and resume a durable run.
+PYTHONPATH=src python scripts/generate_from_techniques.py start \
+  --jobs 10 --seed 15 --difficulty-low 5 --difficulty-high 8 \
+  --run-id combo-creativity-canary-v3
+PYTHONPATH=src python scripts/generate_from_techniques.py status --run-id combo-creativity-canary-v3
+PYTHONPATH=src python scripts/generate_from_techniques.py resume --run-id combo-creativity-canary-v3
+PYTHONPATH=src python scripts/generate_from_techniques.py retry --run-id combo-creativity-canary-v3
+```
+
+Audit a completed run without making model calls. The three-job profile is for
+the historical confirmation canary; the five-job profile requires the current
+V2/48k/novelty configuration, complete call lineage, bounded retries and token
+waste, and valid per-round corpus-novelty coverage.
+
+```bash
+PYTHONPATH=src uv run python scripts/report_combination_efficiency.py \
+  --run-id combo-creativity-canary-20260712-v4 --profile confirmation-3
+
+PYTHONPATH=src uv run python scripts/report_combination_efficiency.py \
+  --run-id YOUR-FIVE-JOB-RUN --profile pilot-5 --strict
+```
+
+Reports are written to `output/combination_efficiency/<run-id>.json`. A strict
+audit exits nonzero when any objective gate fails.
+
+Use `--pipeline-version v1` only to create a legacy four-stage run. Existing v1
+runs always resume from their frozen configuration and prompt hashes. V2 stores
+shells, original/revised drafts, blind audits, and repair lineage durably in the
+job; its blind prompt receives only the statement, target band, and numeric
+quality-policy thresholds—never the intended techniques, bridge, shell, answer,
+or setter solution.
+New V2 runs also freeze the corpus-novelty prompt hash and bind each novelty
+audit to both the final statement hash and the persisted neighbor-retrieval hash.
+Historical V2 runs without this gate retain their original workflow on resume.
+
+Every attempted pair—including parse failures and rejections—is checkpointed in
+`CombinationJob`. Passing drafts become `distill-combo-*` candidates with
+`verified=None` and `review_status=PENDING`; independent frontier verification
+and human acceptance are still required before export.
 
 ## Eval harness (`src/mathforge/evalharness.py`)
 

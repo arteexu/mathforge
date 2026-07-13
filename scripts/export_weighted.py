@@ -2,26 +2,32 @@
 
 Design goal: train the generator to produce elegant, hard problems built on a deep
 crux -- NOT to solve them. So we (1) curate to elegant+difficult problems, (2)
-OVERSAMPLE the best ones (priority = elegance & difficulty) so the SFT loss weights
-them more, and (3) retarget each completion to foreground the statement + key idea
+store a quality ``sample_weight`` without physically duplicating rows, and (3)
+retarget each completion to foreground the statement + key idea
 (crux when we have it, else a short solution sketch) rather than a long derivation.
 
 Run: PYTHONPATH=src python scripts/export_weighted.py
-Tunables via env: PE_FLOOR, DIFF_FLOOR, W_ELEG, W_DIFF, MAX_COPIES, SKETCH_CHARS.
+Tunables via env: PE_FLOOR, DIFF_FLOOR, W_ELEG, W_DIFF, MAX_WEIGHT, SKETCH_CHARS.
 """
 
 from __future__ import annotations
 
 import json
 import os
-import random
-import re
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 from sqlmodel import select
 
 from mathforge import db
+from mathforge.integrity import (
+    answer_type,
+    deduplicated_training_problems,
+    is_export_eligible,
+    normalize_aime_answer,
+    normalize_solution_text,
+    preferred_solution,
+)
 from mathforge.schema import Evaluation, Problem, Solution
 
 OUT = Path("data/train_elegant.jsonl")
@@ -29,18 +35,8 @@ PE_FLOOR = float(os.environ.get("PE_FLOOR", 3.7))
 DIFF_FLOOR = float(os.environ.get("DIFF_FLOOR", 4.5))
 W_ELEG = float(os.environ.get("W_ELEG", 0.6))
 W_DIFF = float(os.environ.get("W_DIFF", 0.4))
-MAX_COPIES = int(os.environ.get("MAX_COPIES", 4))
+MAX_WEIGHT = float(os.environ.get("MAX_WEIGHT", os.environ.get("MAX_COPIES", 4)))
 SKETCH_CHARS = int(os.environ.get("SKETCH_CHARS", 500))
-random.seed(13)
-
-
-def _answer_type(answer) -> str:
-    if answer is None:
-        return "none"
-    a = str(answer).strip()
-    if re.fullmatch(r"-?\d+", a):
-        return "integer" if 0 <= int(a) <= 999 else "integer_other"
-    return "symbolic"
 
 
 def _source(pid: str) -> str:
@@ -89,9 +85,9 @@ def main() -> None:
     db.init_db()
     OUT.parent.mkdir(exist_ok=True)
     with db.session_scope() as ses:
-        sols = {}
+        sols: dict[str, list[Solution]] = defaultdict(list)
         for s in ses.exec(select(Solution)).all():
-            sols.setdefault(s.problem_id, s)
+            sols[s.problem_id].append(s)
         evals = {}
         for e in ses.exec(select(Evaluation)).all():
             d = evals.setdefault(e.problem_id, {})
@@ -101,8 +97,10 @@ def main() -> None:
                 d.setdefault("diff", e.difficulty_score)
 
         base_rows = []
-        for p in ses.exec(select(Problem)).all():
-            sol = sols.get(p.id)
+        for p in deduplicated_training_problems(ses):
+            if not is_export_eligible(p):
+                continue
+            sol = preferred_solution(p, sols.get(p.id, []))
             if sol is None:
                 continue
             prov = p.provenance or {}
@@ -114,33 +112,40 @@ def main() -> None:
                 continue
             if pe < PE_FLOOR or diff < DIFF_FLOOR:
                 continue
+            normalized_answer = normalize_aime_answer(p.answer)
+            if normalized_answer is None:
+                continue
             crux = prov.get("crux") or ""
             priority = W_ELEG * (pe / 5.0) + W_DIFF * (min(diff, 10) / 10.0)
-            copies = max(1, round(priority * MAX_COPIES))
+            sample_weight = 1.0 + max(0.0, priority) * max(0.0, MAX_WEIGHT - 1.0)
             prompt = build_prompt(p.topic, diff, pe)
-            completion = build_completion(p.statement, crux, sol.text, p.answer)
+            completion = build_completion(
+                p.statement, crux, normalize_solution_text(sol.text), normalized_answer
+            )
             meta = {"id": p.id, "source": _source(p.id), "topic": p.topic, "difficulty": diff,
-                    "problem_elegance": pe, "answer": p.answer, "answer_type": _answer_type(p.answer),
-                    "has_crux": bool(crux), "priority": round(priority, 3), "copies": copies}
-            base_rows.append(({"messages": [{"role": "user", "content": prompt},
-                                            {"role": "assistant", "content": completion}],
-                               "meta": meta}, copies))
+                    "problem_elegance": pe, "answer": normalized_answer,
+                    "answer_type": answer_type(normalized_answer),
+                    "has_crux": bool(crux), "priority": round(priority, 3),
+                    "sample_weight": round(sample_weight, 3)}
+            base_rows.append({"messages": [{"role": "user", "content": prompt},
+                                           {"role": "assistant", "content": completion}],
+                              "meta": meta})
 
-    # oversample by copies, then shuffle so duplicates are spread across the epoch
-    weighted = []
-    for row, copies in base_rows:
-        weighted.extend([row] * copies)
-    random.shuffle(weighted)
-    OUT.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in weighted), encoding="utf-8")
+    # Keep exactly one row per problem.  Consumers may use sample_weight without
+    # leaking identical copies across train/validation splits.
+    base_rows.sort(key=lambda row: row["meta"]["id"])
+    payload = "\n".join(json.dumps(r, ensure_ascii=False) for r in base_rows)
+    OUT.write_text(payload + ("\n" if payload else ""), encoding="utf-8")
 
     print(f"curated {len(base_rows)} problems (PE>={PE_FLOOR}, diff>={DIFF_FLOOR}) "
-          f"-> {len(weighted)} weighted rows -> {OUT}")
-    print("  by source:", dict(Counter(r[0]['meta']['source'] for r in base_rows)))
-    print("  with crux (key-idea target):", sum(1 for r in base_rows if r[0]['meta']['has_crux']))
-    print("  answer_type:", dict(Counter(r[0]['meta']['answer_type'] for r in base_rows)))
+          f"-> {len(base_rows)} unique rows -> {OUT}")
+    print("  by source:", dict(Counter(r['meta']['source'] for r in base_rows)))
+    print("  with crux (key-idea target):", sum(1 for r in base_rows if r['meta']['has_crux']))
+    print("  answer_type:", dict(Counter(r['meta']['answer_type'] for r in base_rows)))
     import statistics
-    print(f"  mean elegance {statistics.mean(r[0]['meta']['problem_elegance'] for r in base_rows):.2f}, "
-          f"mean difficulty {statistics.mean(r[0]['meta']['difficulty'] for r in base_rows):.2f}")
+    if base_rows:
+        print(f"  mean elegance {statistics.mean(r['meta']['problem_elegance'] for r in base_rows):.2f}, "
+              f"mean difficulty {statistics.mean(r['meta']['difficulty'] for r in base_rows):.2f}")
 
 
 if __name__ == "__main__":

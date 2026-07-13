@@ -25,5 +25,15 @@ wheels/
 candidates.json
 verdicts.json
 
+# Generated local render scratch
+tmp/
+*.aux
+*.log
+*.out
+*.toc
+
+# Redundant local preview; final PDFs live under output/pdf/
+/mathforge_normal.pdf
+
 # macOS
 .DS_Store

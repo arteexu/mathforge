@@ -1,0 +1,561 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}\usepackage{amsmath,amssymb}\usepackage{parskip}
+
+\setlength{\parindent}{0pt}
+
+\title{MathForge 7B --- blind 30-pair benchmark: full problems \& solutions\\ (fine-tuned SLM vs.\ baseline, judged blind by Opus 4.8)}\date{}
+
+\begin{document}\maketitle
+
+\section*{Aggregate (blind, statements judged, $n=30$)}
+
+\begin{tabular}{lrr} metric & SLM & baseline \\ \hline
+
+well-posed rate & 0.07 & 0.10 \\ problem elegance (0--5) & 0.82 & 0.65 \\ difficulty (1--10) & 2.75 & 1.83 \\ \end{tabular}
+
+\medskip Pairwise: \textbf{SLM 12 / baseline 13 / tie 5}. Solutions below are lightly condensed from the raw model output for readability.
+
+\bigskip
+
+\section*{Problem 1 --- Number Theory \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Determine all positive integers $n$ with the following property: there exist distinct positive integers $\{ x_{i} \}_{1 \leq i \leq n}$ such that $x_{i}-x_{j}=\operatorname{lcm}(x_{1},x_{2}, \ldots, x_{m})+\cdots+\operatorname{lcm}(x_{1}, \ldots, x_{r})$ for some strictly increasing sequences of positive integers $m>r>n$.
+
+Solution:
+We prove that if $k$ is even then no such integer $n$ exists, while if $k$ is odd then all integers satisfy. Consider $f(x)=x-kx^{k/2}$; suppose $f(x_{i+1})=f(x_i)+b>0$. One derives $f(y)-f(x) \ge \lfloor \sqrt{y} \rfloor - \lfloor \sqrt{x} \rfloor$, which contradicts the assumption since $y>x$. By an induction on $t<k$, choosing $x_{i+1}=a^{k-1}(-1)^{(k-1)t}+(-1)^{(kt-t)}a^{kt}$ and $x_i=-a^{t-1}+(-1)^{-t(t-1)}a^{t+1}$ with $t \equiv k-1 \pmod 2$ maintains strict monotonicity. Hence by contradiction no such conditions exist for even $n$, and every odd number satisfies the equation. The answer is that all odd numbers $n$ satisfy the given condition.
+
+\subsection*{Baseline}
+
+Problem:
+Find all positive integers $n \geq 2$ such that $n^2 + 1$ is divisible by both $n+2$ and $n+3$.
+
+Solution:
+We need $n^2 + 1 \equiv 0 \pmod{n+2}$ and $n^2+1 \equiv 0 \pmod{n+3}$, i.e. $n^2 \equiv -1$ modulo each. From these congruences $-1$ should have certain properties: $n+2 \mid (-1)^r$ and $n+3 \mid (-1)^s$. Solving simultaneous polynomial equations in modular arithmetic, it turns out that only specific $n$ work; finding valid $n$ involves exploring modulo relations and solving diophantine equations, leading ultimately to recognizing that particular values like primes may work under the constraints provided.
+
+\section*{Problem 2 --- Combinatorics \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Two players play the following game on an infinite grid in which two horizontal rows, labeled $R_{2}$ and $R_{3}$, are blocked off; no stones may be placed in these two cells. A valid move consists of placing a white or black stone in any cell adjacent to both of the previously-placed stones. In how many ways can the first player place stones until the second player cannot make another move?
+
+Solution:
+The first player wins if he places the stones so as to force the second player into a configuration where he cannot play again. Let $\phi_n^\ell$ denote the set of configurations at move $n$ with $\ell$ colored squares remaining; the answer is $1+\sum_{n=2}^{99}\sum_{\ell=0}^{n-1}|\phi_n^\ell|$. For $n=2$ the set has a factor of $2$; in general $|\phi_n^\ell|=1$ for $\ell\ne 0$ and $2$ for $\ell=0$, shown by induction using the Pigeonhole Principle. Applying inclusion-exclusion gives the final result: Answer: $1+\sum_{n=$}
+
+\subsection*{Baseline}
+
+Problem:
+In how many ways can we arrange the numbers $2, 3, 4, 5, 6$ in a row such that no two consecutive numbers are used more than once?
+
+Solution:
+The total number of unrestricted arrangements is $5! = 120$. Since no two consecutive numbers can be used more than once, we account for the constraints. Focusing on permutations avoiding repetition of consecutive numbers forces a different count structure due to needing avoidance patterns across positions. After calculating carefully, the total count follows a recursive method leveraging factorial considerations. The final count accurately counts the number of ways following all necessary criteria.
+
+\section*{Problem 3 --- Algebra \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $A$ be an integral domain in which no nonzero element is invertible. Let $S=\{s_1,\ldots,s_k\}\subset \mathbb N^{+}$ with $(s_{i+1}, s_i)=1$ for all $1\leq i\leq k-1$. Find the number of subsets $T$ of $S$ such that $|AT|=|TA|$.
+
+Solution:
+This means there must be pairs of subsets from $T$ and their dual counterparts from $AT$ with $T \oplus T' = AT \oplus TA$. If $k$ is odd, taking $A \cong \mathbb{Z}/p^n\mathbb{Z}$, each pairing corresponds to valid subgroups within modular arithmetic frameworks, giving $\boxed{k + 1 - \frac{n}{n-1}}$. If $k$ is even, symmetry gives $2n+1$. Answer: 2n+1.
+
+\subsection*{Baseline}
+
+Problem:
+Let $f(x)$ be defined for all real numbers $x$ such that $f(1+x) + f(1-x) = 4x^2$. Find $f(x)$.
+
+Solution:
+Substitute $x = t - 1$: $f(t) + f(1-t) = 4(t-1)^2 = 4t^2 - 8t + 4$. Adding two copies, $2(f(x)+f(1-x)) = 4x^2 + 4(1-x)^2 = 4(x^2 - 2x + 2)$, so $f(x)+f(1-x) = 2(x-1)^2$. Then $f(x)+f(x) = f(2)$, giving $f(2) = 2$, hence $2f(x) = 2$ and $f(x) = 1$ for all real $x$.
+
+\section*{Problem 4 --- Geometry \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Two circles with centers $A$ and $B$ meet at point $P$. Let $\ell_1$ be the line tangent to both circles and parallel to segment $AB$, let $\ell_2$ be another line through $P$ perpendicular to $\ell_1$. If all points of intersection between $\ell_2$ and circle $A$ lie inside angle $APB$, find all possible values of $\angle APB$.
+
+Solution:
+Let $C$ be any other common point. Since $PA = PB$, triangle $PCD$ is isosceles, so the circumcircle of $PCD$ has center $M$ with $PM \perp CD$. Since $ABPM$ is cyclic with diameter $AB$, it must be an acute or right configuration. We show two possibilities: (i) $ABCD$ a kite; (ii) vertices $A,B,D,C$. Angle chasing with $\angle PAC = \angle PAD > 60^\circ$ forces $\angle BAC = 60^\circ$.
+
+\subsection*{Baseline}
+
+Problem:
+Let $ABC$ be a triangle with circumradius $\rho$. Define points $P$, $Q$, $R$ inside $ABC$ such that $AP$, $BQ$, $CR$ do not intersect the interior. Let $M$, $N$ be midpoints of $AB$, $BC$. Prove that if $\angle P = \angle Q = \angle R$, then $\rho^2 + 8\sqrt{r/s} = (a+b+c)^2/(bc)$.
+
+Solution:
+Utilize Viviani's theorem and properties of the centroid to transform the geometric relationships into trigonometric identities. Apply Viviani's theorem to express angle measures in terms of $\rho$; analyze angle subtensions; use midpoint properties and the circumradius relation; combine with trigonometric identities and simplify to reach the stated expression. Re-examine all derived expressions to verify the result.
+
+\section*{Problem 5 --- Precalculus \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $x$ be an angle such that $7 \tan x + 5 \cot^6 x = 4$. Find $\cos 2x$.
+
+Solution:
+Since $\cot x = \frac{1}{\tan x}$, the equation implies $(7\tan x)(\cot^6 x)=4$. Taking cube roots and manipulating, $\sqrt{\cot x}=-\sqrt 7$ or $-\sqrt{-7}$. Since $(-7)^2+(\sqrt7)^2 = 99 = 9^2-4^2$, applying de Moivre's Theorem gives $\cos 2x = \pm 7/9$. Answer: $\cos 2x = \pm 7/9$.
+
+\subsection*{Baseline}
+
+Problem:
+In triangle $ABC$, $AB=c$, $AC=b$, $BC=a$. Given $c = \frac{a+b}{\sqrt{ab}}$ and $b^2 + c^2 - ac = bc$, prove that $\sin(A) = \cos(A)$, where $\cos(A) = \frac{\sqrt{2}-\sqrt{6}}{4}$.
+
+Solution:
+Substitute $c$ into $b^2 + c^2 - ac = bc$ and simplify. Combining over a common denominator and factoring leads to an expression isolating a value related to $\sin(A)$: after algebraic manipulation $(\frac{\sqrt{2}-\sqrt{6}}{2})a$. Comparing against known values, $\cos(A) = \frac{\sqrt{2}-\sqrt{6}}{4}$, proving $\sin(A) = \cos(A)$.
+
+\section*{Problem 6 --- Number Theory \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Call a positive integer good if no matter how its digits are permuted the resulting number is not divisible by any of $\pm1,\pm2,\ldots,\pm9$. How many of the numbers $1^{2}, 2^{2}, \cdots, 9^{2}$ are good?
+
+Solution:
+Note that $k\cdot n$ divides $k(n+1)$; for every permutation either $|i_1-i_2|=1$ or $|i_3-i_4|\ge 2$, etc. We show $n$ only works for $n=9$: since $0=\frac{9}{21}$, $9=1$, $19=2$, $29=3$, we cannot get from $21$ to zero without passing through $9$. Constructing sequences from $k=1$, exactly half of the good numbers from $1$ to $9$ arise, namely $\binom92=36/2=18$. Answer: 18.
+
+\subsection*{Baseline}
+
+Problem:
+Let $n \geq 3$, and let $S(n)$ be the integers from 1 to $n$. Determine whether there exists an infinite subset $T \subseteq S(n)$ such that every pair of elements has gcd either 2 or 3.
+
+Solution:
+Consider $f:[n]\to[n]$ with $f(i)=3i+1 \pmod n$ if $p_i \bmod 3 \ne 0$ and $f(i)=2i+1 \pmod n$ otherwise. Checking for fixed points shows none exist except trivial. Mapping onto cycles and ensuring disjoint parity cycles, pairs $x,y$ differing only mod 3 but not sharing 2 or 3 belong to disjoint cycles. Hence an infinite subset $T$ exists such that every pair has gcd 2 or 3. $\boxed{\text{Yes}}$
+
+\section*{Problem 7 --- Combinatorics \quad(blind winner: tie)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+A $7\times7$ grid of squares has been colored like an I-sandwich, with all colors being used exactly once and two colors appearing in each row and column. How many such colorings exist?
+
+Solution:
+Suppose some color appears in only four corners; WLOG red, and blue in the remaining four corners. No two adjacent squares can be red. If the four corner red squares form a square, there would need to be more than six red squares, but there are only eight places. Hence the red and blue squares form a $7\times7$ checkerboard, and the number of configurations is $\binom72=21$. Answer: $\binom72=21$.
+
+\subsection*{Baseline}
+
+Problem:
+In a deck of cards consisting of $n$ distinct cards, each labeled with a unique letter from $\{A,B,C\}$ for the first card up to $\{P,Q,R\}$ for the last card, find an expression in terms of $n$.
+
+Solution:
+Each card occupies exactly one of five positions where no two cards from the same pair share a position. Using the combination formula $\binom nk$, each arrangement corresponds to choosing which card goes into which position based on its category, giving $C_n^4 = \frac{n!}{(n-4)!}$. Thus $N(n)=\frac{n!}{(n-4)!}$.
+
+\section*{Problem 8 --- Algebra \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Given $m$ real numbers $\{y_{k}\}_{k \in Z}$ satisfying $y_{n+2}=1+\sum_{i=0}^{k-1} y_{n+i}-2 x$, $n \geq k$. Find all such sequences if there exists an integer $x$ so that for every $k$, the values $y_{k}, y_{k+1}, y_{k+2}$ can be represented as squares in base $8$.
+
+Solution:
+Rewrite as $(y_{k+2}-y_{k-1})(1+x)=(1+y_k)^2-1-x=(y_{k+1}-y_k)^2-1$. The difference must be divisible by $(1+x)$, i.e. $(x+2)(1-(y_k/\sqrt{x+2})^2)$; this difference must be zero. With $\sqrt{x+2}=r>1$, $|x|<\min(r-r^{-1},(1+rr^{-1})^{-1}-1)$; the smaller root dominates, giving $x \in (-1,2]$. Answer: $(-1, 2]$.
+
+\subsection*{Baseline}
+
+Problem:
+Let $f$ be a quadratic polynomial such that $(x - a)(x + b)(x - c) f(x) = (x^2 + ax + b)(x^2 - cx + d)$ for all real $x$, with $b \neq c$. Given $f(a) = 0$ and $f(b) = 0$, find $c$.
+
+Solution:
+The crux lies in understanding the polynomial's structure when multiplied out. Expand both sides and use Vieta's formulas relating coefficients to sums and products of roots. Analyzing how roots combine, carefully chosen values of $a,b,c$ influence the relationship, and after detailed analysis $c = 4$ solves the problem. Therefore $c = 4$.
+
+\section*{Problem 9 --- Geometry \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $ABC$ be right-angled at $A$. Let $D,E,F$ trisect $\overline{AB}$, $\overline{BC}$, $\overline{CA}$. The incircles of $BDE, CDF, DAF$ touch $BC, CA, AB$ at $K,L,M$. If $BK=144$ and $BL=\frac{x}{\sqrt{a}}$ with $x,\sqrt{a}\in\mathbb N$, find $x+\sqrt{a}$.
+
+Solution:
+Let $BD=b, DF=d, DC=c$. Since $CDBE$ is cyclic, $\frac{b}{c+d}=\frac{BD}{AC-DG}$; similar relations give the radii of $BDE, CDF, AFA$ in geometric progression. Substituting yields a Pell equation $6k(2mk-m^2-mn+mn+m)=n^2(k(m-1)-1)$; it suffices to show integer solutions exist. Checking special values of $m,n$ (Fibonacci-like $1,2,3,5,8,13,21,\ldots$) shows $m$ evenly divides $n(n$
+
+\subsection*{Baseline}
+
+Problem:
+In a circle with center $O$, $A=(0,0)$, $B=(6,0)$, and $C$ inside with $BC = \sqrt{3}$ and $AC + AB = 8$. Let $P$ be any point on the circumference distinct from $A$, $B$. Determine whether there exists an angle $\theta$ between $AP$ and the horizontal axis such that for all $P$, $|OP - AP| \leq \frac{\pi}{3}$.
+
+Solution:
+This relies on understanding angles in a circle and the relationships between distances and slopes. Consider the radius of the circle, the lengths involved, and angle relationships in a triangle formed by different points $P$. The condition would need to involve a direct measurement rather than an arbitrary constant involving $P$, so careful examination of angles and distance measurements is required before concluding.
+
+\section*{Problem 10 --- Precalculus \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $x$ be a real number. Evaluate $\lfloor\log_{\sin x}(\cos^2 x+3x)\rfloor$.
+
+Solution:
+Note $\sin\sqrt8 x=\frac{\sqrt{1-\cos^2 x}}{\cos x}=|\tan(\pi/4-x)|=|\tan x|$ and similarly $\sin(\sqrt1-x)=|\cot x|$. Then for $0<x<\pi$, $\frac1{\sin x}+\frac{\sqrt{1-\cos x}}{\cos x} > |\cot x|+|\tan x| \ge 0$. When $x=\pi/4$, $1/\sin x>0$, $1/\cos x<0$, so the sum is negative, giving the result. The answer is $0$. Answer: 0.
+
+\subsection*{Baseline}
+
+Problem:
+Let $S$ be a set of 20 integers that includes every integer from 1 to 60 exactly once. Define $f(A)=\prod_{x\in A}x$ for each even-sized subset $A$. Find the sum of all possible values of $f(A)$ over all subsets $A$ containing 18 numbers from $S$.
+
+Solution:
+The key insight leverages the fact that swapping any two elements within the same subset does not change the product, simplifying the analysis to permutations. Explore properties of sets and combinations within modular arithmetic and combinatorics while leveraging symmetric functions through swaps and reflections.
+
+\section*{Problem 11 --- Number Theory \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+A positive integer is good if its base $10$ representation $b_k\cdots b_0$ has all distinct digits and there exists $j\neq k$ with $b_{k-j+1}=\max(b_{k-j},b_{k-j+1})$ and $b_j=\min(b_k,b_{k-j})$. Compute the number of good integers with $12\le n\le 25$.
+
+Solution:
+A good number has unique digits, and for at least one pair one digit is $\ge$ the max of its neighbors while $<$ the min across pairs. In segment 12--19 the digits use 1--9; no single-digit comparison satisfies the condition, giving 8 numbers. In segment 20--25, digits 0--8, manual inspection confirms several configurations, giving 10. Total $8+10=18$. $\boxed{18}$
+
+\subsection*{Baseline}
+
+Problem:
+Let $p$ be a prime such that $3 \cdot 2^p - p = n$. Find all possible values of $n$.
+
+Solution:
+The problem hinges on primes of the form $p+k$. For a prime $p>2$, $3\cdot2^p - p = n$ implies $n \equiv 1$ or $3 \pmod 4$, narrowing potential values based on the prime property. Exploring patterns in $3\cdot 2^p$ and using Fermat's Little Theorem and quadratic residues identifies possible congruences for $n$.
+
+\section*{Problem 12 --- Combinatorics \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $N$ denote the number of ways to select four distinct numbers from $\{2023,\dots,2080\}$ such that the sum of these four numbers is at least as large as their product. Find $N \bmod 1000$.
+
+Solution:
+$N=\binom{58}{4}-\frac{54\cdot 55\cdot 56}{3}=21569$. The remainder upon dividing $21569$ by $1000$ is $569$. Answer: 569.
+
+\subsection*{Baseline}
+
+Problem:
+In how many ways can three distinct coins $A$, $B$, $C$ be placed in four slots numbered 1--4 with at most one coin per slot, given that $A$ and $B$ must be placed together?
+
+Solution:
+The crux is recognizing that $A$ and $B$ cannot be separated and are adjacent in any placement. This reduces the problem to permutations of an ordered set with repeated elements, highlighting the importance of relative adjacency in the arrangements.
+
+\section*{Problem 13 --- Algebra \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+For which $n \in\mathbb{N}$ do there exist two $n\times n$ matrices with entries from $\{-2,-1,0,1,2\}$ with only positive determinant?
+
+Solution:
+Consider a matrix $A=[a_{ij}]$ with entries in $\{-2,-1,0,1,2\}$; we want $\det A>0$ for $n>2$. Using a block form $B=\begin{bmatrix} c & d \\ -d & e\end{bmatrix}$, $\det(B)=e-cd$. Choosing $B=\begin{bmatrix}3&1\\-1&5\end{bmatrix}$ gives $\det=16>0$. Therefore the smallest $n$ is $\boxed{5}$. Answer: 5.
+
+\subsection*{Baseline}
+
+Problem:
+Given reals $x,y,z$ with $\frac{xy}{z} = z + y - x$ and $xyz = xy + zx + zy$, find all $n$ for which $x^{2} + y^2 + z^n$ is positive.
+
+Solution:
+The problem hinges on identifying when $xyz$ equals $(x+y+z)(\text{something})$. The second equation reveals a relationship between $x,y,z$. Consider cases where a variable is zero (then $n$ negative), and where variables are equal (special symmetries). After extensive consideration, viable $n$ are those where the polynomial simplifies neatly, predominantly zeros under normal contexts confirming positivity.
+
+\section*{Problem 14 --- Geometry \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+For some positive integers $n$, let $\overline{r} s t u v \overline{w}$ be an $n$-digit number with all digits nonzero such that $\frac{\lfloor r^{2} s t^{2} u v w\rfloor}{r+s+t+u+v+w}<6$. Determine all possible values of $v/w$ in terms of $(\frac{\sqrt[3]{8}-1}{2})$.
+
+Solution:
+Assume an arrangement with $\sum = \lfloor \sqrt{r^2 s t u v u w}\rfloor$; then $v/u = \frac{(st)^3}{rs^3t^3}$. If $v/u<1$ requires at least two variables $>1$, then at most four can exceed 2, so the maximum $2\cdot4\cdot1\cdot1\cdot1$ is not enough. Hence no solution. Answer: No solutions exist.
+
+\subsection*{Baseline}
+
+Problem:
+In an equilateral triangle $ABC$ with side length 6, points $D$, $E$, $F$ on sides with $AD = BE = CF = x$. The area of $DEF$ is $\frac{m}{n}$; find $x$ minimizing it.
+
+Solution:
+When $D,E,F$ divide the triangle into smaller triangles of equal mass distribution, the centroid lies at the center of $ABC$. Each smaller triangle has half the height, scaling area by $(1/3)^2$. Computing the area ratio after segmentation and solving gives $\boxed{x = \frac{4}{6}}$.
+
+\section*{Problem 15 --- Precalculus \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $ABC$ be equilateral side 8 with circumcircle $\Omega$. An equilateral triangle $A'B'C'$ is constructed so that $\ell_1 = AB' = CC'$. Prove or disprove: there exists a unique point on the circumcircle such that lines to $B,C,A$ make triangles $ABB'$ and $CC'A'$ have equal area.
+
+Solution:
+The circumcircle $\Omega$ has radius 4; the center is the centroid and orthocenter. Choose $P$ on $\Omega$ so that $PB, PC$ create congruent angles with $BA, BC$. By similarity $\triangle C'B'D \sim \triangle BAA'$, they subtend equal arcs, so $\angle CAP = \angle B'$. Using power of a point and $60^\circ$ angles, $\sin(ACP')=\cos(CAP)=\frac{\sqrt3}2$, ensuring equal areas. $\boxed{\text{Yes, exists uniquely.}}$
+
+\subsection*{Baseline}
+
+Problem:
+Let $f(x)$ be continuously differentiable with $f(xy) = f(x) + xf(y)$ for all real $x,y$, and $f(1) = 2$. Find $f(e^2)$.
+
+Solution:
+Use the functional equation with $f(1)=2$. Analyze how $f$ behaves under multiplication and exponentiation, expressing $xy$ as exponential forms involving logarithms to leverage the base relationship. Apply algebraic identities and use symmetry, continuity of derivatives, and the initial condition to conclude the value.
+
+\section*{Problem 16 --- Number Theory \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Call two positive integers complementary if they differ by $2022$. How many pairs of complementary numbers with at least one even number between them sum to $2023$?
+
+Solution:
+All odd sums occur when both numbers are odd. Writing $y=x+2022$ and $xy=2023$ leads to $x=2022-(x+2022)$. For even pairs, $k_1+(k_2-2022)=2022$ has no solution unless $k_2=2023, k_1=1$. Thus there are three positive integer pairs summing to 2023: $(405,408),(407,406),(2022,1)$, of which two are valid, giving $\boxed{3\cdot2/2=3}$.
+
+\subsection*{Baseline}
+
+Problem:
+Let $N$ be a positive integer with $N \equiv 3 \pmod 7$, and $4N \equiv 5 \pmod{12}$. Find the smallest $N$.
+
+Solution:
+From $4N=12k+5$, $N \equiv 5\cdot 3^{-1} \pmod 3$. But $3^{-1}$ does not exist mod 3, so consider other values via CRT. Combining $N\equiv 3 \pmod 7$ and testing small values until the first condition holds, solve step by step and validate within the initial conditions.
+
+\section*{Problem 17 --- Combinatorics \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+A set of positive integers is balanced if for every element $x$, $|x-\frac{\sum_{y\in S}y}{|S|}|=m$ for some integer $m$. A subset $S$ of $\{1,\ldots,799\}$, pairwise coprime, with $|S|$ dividing $799^m-1$, is special. How many special sets are there?
+
+Solution:
+By Fermat's Little Theorem $p^m-1 \mid p^j-1$ where $m$ is coprime to $799=23\cdot 343$. Any set with $|S|=p$ contains one or two members. If all elements are odd, the subset is a subset of $\{1,2,4,\ldots\}$; choose $p=3,5,23$. With an even member, choose from another set. Two choices per parity gives 4 subsets. Answer: 4.
+
+\subsection*{Baseline}
+
+Problem:
+In equilateral triangle $ABC$ side $s$, points $D,E,F$ on sides with $\triangle BDE$, $\triangle EFA$, $\triangle FDB$ having areas in arithmetic progression. Find the minimum of $AD^2 + BE^2 + CF^2$.
+
+Solution:
+Since the areas are in arithmetic progression, $2s_2 = s_1 + s_3$. Using $[ABC]=\frac{\sqrt3}{2}s^2$ and expressing the small areas as fractions of the total, place $D,E,F$ symmetrically about vertex $A$. With $\theta=\phi=\psi=120^\circ$, minimizing $AD^2+BE^2+CF^2$ yields $3s^2$. The minimum
+
+\section*{Problem 18 --- Algebra \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Determine all integers $n$ such that $\tfrac{1}{\sqrt{n^{2}-4}+\sqrt{(n+1)^{2}-4}}$ is an integer.
+
+Solution:
+Simplify each square root: $\sqrt{n^2-4}=\sqrt{(n-2)(n+2)}$ and $\sqrt{(n+1)^2-4}=\sqrt{(n-1)(n+3)}$, so the expression is $\frac{1}{\sqrt{(n-2)(n+2)}+\sqrt{(n-1)(n+3)}}$. Testing $n=3$ gives $\frac1{\sqrt7+\sqrt8}$; via conjugation this reduces to an integer under rationality checks. Trial checking to a reasonable range yields $\boxed{3}$. Answer: n=3.
+
+\subsection*{Baseline}
+
+Problem:
+Let $f(x)$ be an odd function with $f(1)=1$. Define $g_1=f$, $g_{n+1}(x)=g_n(f(x))$. If $g_6(1)=2$, find $g_8(1)$.
+
+Solution:
+The problem hinges on the behavior of $f$ applied to its own output. Since $f$ is odd, $f(-x)=-f(x)$. Exploit this property to find a pattern or recurrence relation that determines $g_8(1)$ from $g_6(1)=2$.
+
+\section*{Problem 19 --- Geometry \quad(blind winner: tie)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+The points $A, B, C$ lie in that order on a circle of radius 6; the line through $B$ parallel to $AC$ meets the circle at $X$, where $\angle AXC = 90^\circ$. Compute $\frac{AX}{BX}$.
+
+Solution:
+Let $O$ be the center. Since $\odot ABC$ is tangent to the $BC$ tangent at $X$, $BX^2 = AC\cdot XC$, so $\frac{BX}{XC}=\sqrt{AC}$. By homothety between the circles with radii $AC$ and $XB$, $\frac{OX}{XC}=\frac{\sqrt{AC}}{AC}$, so $\frac{BX}{XA}=\frac{\sqrt{AB}}{\sqrt{BC}}$. Combining yields the result. Answer: $\sqrt{AC}$.
+
+\subsection*{Baseline}
+
+Problem:
+In triangle $ABC$, $D,E,F$ are midpoints of $BC,CA,AB$. The incircle is tangent to the sides at $P,Q,R$. If $M$ is the midpoint of $DE$, prove $M$ lies on the altitude from $C$ to $AB$.
+
+Solution:
+By the Midpoint Theorem, $AD \parallel EF$, $BE \parallel DF$, $CF \parallel AE$. Since $D,E,F$ are midpoints, $DE, EF, FD$ are medians. Considering perpendicular bisectors of the medial triangle's sides, the altitudes are concurrent at the orthocenter. By properties of parallel lines and their perpendiculars, $M$, the midpoint of $DE$, lies on the altitude from $C$ to $AB$.
+
+\section*{Problem 20 --- Precalculus \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Find all real numbers $x$ satisfying the system $x^{3}-2 x+2 y < y-x$ and $x-y-y-x^{3}+2 x < y$.
+
+Solution:
+The inequalities give $(y-x)-(x^3+x)<y-x$, so dividing by $y-x$ gives $x>0$ or $x<-\frac12$. Defining $f(x)=x$, $\varphi(y)=x+\frac{y-1}2$, $\psi(x)=x-x^3+y-2$, $\chi(y)=-y+y+x^3+x$ and evaluating, the only point with a solution is $x_1=\frac38$; for $x\ge\frac38$, $2x<x^3+x$. Concluding, $\mathbb R\setminus[-\frac12;\infty)$ is the answer. Answer: $\{x : -\frac12 < x < \infty\}$.
+
+\subsection*{Baseline}
+
+Problem:
+Let $f(x)$ satisfy $f(x + y) = f(x)f(y)$ for all $x,y$, with $f(0) = 0$. Suppose $f(x) > 0$ for some $x \in [0, 1]$. Show that $f(f^{-1}(x)) = e^{\log_3{x}}$.
+
+Solution:
+Recognize how the exponential function maps values from different logarithmic scales. From $f(x+y)=f(x)f(y)$, setting $x=1/y$ gives $f(1/y)=f(0)$, suggesting the function maps points inversely. Examining $f(1/e)=\lim_{n\to0} n f(1-n)$, the function follows a logarithmic-scale shift, giving $f(f^{-1}(x)) = e^{\log_3 x}$.
+
+\section*{Problem 21 --- Number Theory \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+A sequence of $n$ positive integers is given such that for each positive integer $k$ there exist distinct indices $i,j$ with $\frac{a_i}{a_j}=k$. Find all possible values of $\prod_{j=1}^{100}\frac{a_i}{a_j}$.
+
+Solution:
+We claim $\prod_{j=1}^{100}\frac{a_i}{a_j}=1$ if $n=2$ and $2^{f(n)}$ if $n>2$, where $f(n)$ is the number of 1's in the binary representation of $n$. The lcm contains a power of two greater than 2, so ignore powers of two by dividing by the gcd. After the second iteration only numbers containing $2^3$ appear, leaving at most 80 terms; dividing out $c=2^s$ repeatedly gives $2^{|d|-s+1}$, where $d\ge1$, yielding the claim.
+
+\subsection*{Baseline}
+
+Problem:
+Determine all $n$ such that for every prime $p$ there exists an even $e>0$ with $p^e \mid \phi(n)$, where $\phi$ is Euler's totient.
+
+Solution:
+Understanding how $\phi(n)$ behaves with respect to primes, consider when $n$ has distinct prime factors or $n=k^m$. Analyze how prime powers impact $\phi(n)$ under each prime through congruence relationships modulo the prime factorization structure. Determine under what conditions the divisibility always holds, requiring familiarity with the totient function and divisor sum identities.
+
+\section*{Problem 22 --- Combinatorics \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+For $n\ge2$, let $\mathcal S$ be sequences of positive integers with first term 1 and, for all $m>1$, either the digit-sum up to term $m-1$ is $\ge m-1$, or the last term is 1. How many such sequences have length exactly $2n+1$?
+
+Solution:
+We claim there are precisely two sequences up to length $2n+1$: one consisting entirely of 1's, and one with a single term equal to $n$. By induction on $n$: the base case $n=2$ gives $(1)$ and $(1,1)$. If the sequence reaches $n$ at term $m>n$, then every subsequent term is $\ge n$, forcing $\frac{n(2n)}2+m\ge m$; since $m<2n+1$, the sequence can't be longer. Answer: There are 15 possible sequences of length $2n+1$.
+
+\subsection*{Baseline}
+
+Problem:
+In a town, $n$ people each independently decide whether to participate. The number of ways is $\binom{n}{k} + \binom{n}{k+1}$ for all $k$. Find $n$ such that the total number of ways equals $1024$.
+
+Solution:
+The insight involves parity properties in combinatorial outcomes. Since choosing any person corresponds to binomial coefficients via inclusion-exclusion, and combinations like $\binom n1, \binom n0$ behave distinctly mod 2, checking which $n \equiv 1 \pmod 8$ satisfies $n(n+1)/2 = 1024$ gives $n = 27$.
+
+\section*{Problem 23 --- Algebra \quad(blind winner: tie)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Compute $(1+\frac{1}{1})(1+\frac{1}{2})(1-\frac{1}{3})\cdots(1-\frac{1}{80})$ in closed form.
+
+Solution:
+Observe that $\prod_{j=1}^{80}\frac{1-j^{-1}}{1-j^{-1}}=\frac{(1)(1-1)}{(1)(1-1)}\cdot\frac{1+1}{1+2}\cdots=1\cdot(1-\frac12)(1-\frac23)\cdots(1-\frac{79}{80})=1$. Answer: 1.
+
+\subsection*{Baseline}
+
+Problem:
+Let $f(x)$ be a polynomial of degree 4 with $f(3) = 7$, $f(-1) = -7$, $f(1) = -1$. Suppose $g(x) = x^2 + bx + c$. Determine all possible values of $f(5)$.
+
+Solution:
+Treating the conditions with $f(x_i)=ax_i^2+bx_i+c$: $9a+3b+c=7$, $a-b+c=-7$, $a+b+c=-1$. Subtracting gives $8a+4b=14$, so $4a+2b=7$ and $b=\frac{7-4a}2$. With $(a,b,c)=(4,-5,-5)$, $f(5)=25a+5b+c=9a$
+
+\section*{Problem 24 --- Geometry \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+An isosceles trapezoid with bases $BC$ and $AD$ has area 6. If $X \neq B$ on $\overline{BC}$ and $Y \neq D$ on $\overline{AD}$ such that triangle $CXY$ and trapezoid $BXYD$ have equal areas, what is the length of diagonal $AC$?
+
+Solution:
+The area of trapezoid $DAXY = \frac{(AD+BX)AX}2$ and the area of triangle $CXD = \frac{CX\cdot DC}2$. Since these are equal, $DA=BX$, which implies $D=AB$, and similarly $A=DA$ since all four lengths are nonzero. Answer: 6.
+
+\subsection*{Baseline}
+
+Problem:
+In acute triangle $ABC$, $D$ is the midpoint of $BC$. A circle center $O$ touches $AB$ at $P$ and is tangent to $AC$ at $Q$, with $OP = OQ$. Prove that if the radius is $\frac{AB}{4}$, then $DE = \sqrt{AD^2 - AD + 1}$.
+
+Solution:
+The configuration implies special angle properties: when a circle passes through two points from different sides, the angle at the tangency points relates to the internal bisector theorem. Since the distances from $O$ to each side are equal and $OP=OQ$, $P$ and $Q$ subtend equal angles at $A$ and $B$. This invariant allows deducing $DE = \sqrt{AD^2 - AD + 1}$.
+
+\section*{Problem 25 --- Precalculus \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $x,y$ be real with $0<x<\frac{\pi}{6}$, $\sin x+y=\cos x$, and $\tan y-\tan x=2$. Find $\sin x+\cos x$.
+
+Solution:
+Solving for $\cos x=\cos(y-x)=\sqrt{1-\sin^2 x}$ and $\tan y-\tan x=(\cot y)(1+\tan x)$ gives $(\cot y-\cot x)(1+\tan x)=2(\sec x+1)$. Rearranging with $\tan(x-y)=2/(-1-\tan x)$ yields $\cot x=\pm 1/(-4-\cot y)$; squaring gives $(\cot x)^2-2\cot x-2=0$, so $\cot x=\frac3{\sqrt2}$ (the valid root), giving $x=7\pi/8$. Then $\sin 7\pi/8=4/5$. $\boxed{\frac45}$
+
+\subsection*{Baseline}
+
+Problem:
+Let $f(x) = \sqrt{x}$ if $x \geq 0$ else $-x+6$; $g(x) = \frac{f(x)}{\cos(\pi x)}$. Determine $g(0.1)$ given $\cos(\pi x) = -\cos(\pi y)$ for some $x \neq y$.
+
+Solution:
+The crux involves how the domain and range of $g$ interact based on where $\cos(\pi x) = -\cos(\pi y)$. This requires the piecewise definition of $f$, trigonometric properties, and algebraic manipulation, involving trigonometric identities and piecewise functions.
+
+\section*{Problem 26 --- Number Theory \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Determine whether there exist positive integers $x_0, x_1, \ldots$ satisfying: (a) for every integer $k$ there exists an index $i$ with $|3^{x_i}-7^{y_i}|\le k$ where $(x_i,y_i)=(3^m,2^n)$ or $(2^p,3^q)$; (b) no two such index sequences correspond to distinct triples; (c) $\sum_{i=0}^{\infty}(3^{x_i}+7^{y_i})$ is finite.
+
+Solution:
+For every integer $k$ there must be an index where the sequences transition between valid forms, indicating uniform distribution modulo specific sets. Ensuring exclusivity and finite sums via inclusion-exclusion, transitioning via modulo operations creates distinct sequences. Given adequate flexibility in parameters, it is feasible to construct such integers. $\boxed{\text{Yes}}$
+
+\subsection*{Baseline}
+
+Problem:
+Let $p$ be an odd prime. Consider $x = \sqrt{p} + \frac{\sqrt{p}}{2}$. Determine whether there exists an integer $n$ such that $x^n \cdot (\sqrt{p} - \frac{\sqrt{p}}{2}) = k(6k^3 + 6k)$ for some integer $k \geq 1$.
+
+Solution:
+The core lies in the algebraic simplification when substituting $p$, focusing on how logarithmic behavior aligns with roots of primes. Recognizing patterns in exponents within prime numbers and analyzing via modular arithmetic, find the smallest integer $n$ making the equation consistent with prime characteristics.
+
+\section*{Problem 27 --- Combinatorics \quad(blind winner: tie)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+How many $n$-tuples $(x_1,\ldots,x_n)$ with nonnegative integer entries add up to exactly $\overline{m}$ when summed in base 2?
+
+Solution:
+The number of such tuples is the coefficient of $x^{\overline m}$ in $\sum_{k=0}^\infty \binom{n+k}k x^{2k+n}$. For every prime divisor $p$ there is an index $j$ with $p\mid n+2^j$ but not $p\mid n+2^{j+1}$, and $\binom{n+j}j-\binom{n+j+1}{j+1}=p$. Expanding and using Fermat's Little Theorem associates primes with indices, giving the coefficient $\text{coeff}(S(x),x^M)$.
+
+\subsection*{Baseline}
+
+Problem:
+Let $S$ be all positive integers with no zeros in base 3. Among these numbers, there is exactly one number that ends with 1. Find this number.
+
+Solution:
+To find the unique position of the digit 1, explore how many ways a given position occurs across all numbers in $S$. The uniqueness restricts which 1's occupy which places; since no two consecutive digits are allowed, the number uniquely mirrors the count of 1's mod 4. Iterating without violating conditions determines the answer.
+
+\section*{Problem 28 --- Algebra \quad(blind winner: Model)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Find all functions $f : \mathbb{Z}_{>0} arrow \mathbb{Z}_{>0}$ such that $f(mn) = f(n)\big(f(m+1)-1\big)$ for every two coprime positive integers $m,n$.
+
+Solution:
+Set $m=1$, $n=x$: $f(x)=f(x)(f(1)+1)$, implying $f(1)=0$ if $f(x)\ne0$. Testing $f(p)=p^k$ and analyzing divisibility, consistency under modular arithmetic, and constraints from $\mathbb Z_{>0}$ verifies solutions like $f(n)=n+1$. $\boxed{\text{No functions unless } f(n)=0 \text{ or } f(n)=n+1.}$
+
+\subsection*{Baseline}
+
+Problem:
+Given $a_1=\sqrt2$, $a_{n+1}=\sqrt{2+\big(3-\frac1{a_n}\big)}$. Determine the limit or show divergence.
+
+Solution:
+The sequence converges when $\lim a_n$ is constant, derived from a cubic involving an infinite sum $S=\sum(1-a_k)^{-1}$ with constant $\sqrt[3]{S}$. Establishing that for $x>1$ there is a unique $c_x$ with $f(x)=x f(c_x)$, and bounding $|f^-|$, the sequence converges to an irrational limit.
+
+\section*{Problem 29 --- Geometry \quad(blind winner: Baseline)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Let $ABC$ have $BA=19$, $CA=20$, $CB=21$. Let $\omega_c$ be the circle centered at $C$ tangent to $AB$. Let $I$ be the incenter, $\Gamma_d$ the circle through $D,I,E$ with $D$ the foot from $I$ to $AB$ and $E$ making $AIDE$ cyclic and tangent to $\omega_c$. Let $O$ be the circumcenter. Compute $\frac{r}{R}\big((\frac{AB}{OC}-1)^2+(\frac{BC}{OA}-1)^2\big)$.
+
+Solution:
+Note $EB=3R$ from a 3:4:5 right triangle obtained by extending $CA$ to arc $BA$. Then $\cos^2 B+\cos^2 C=\sin B\sin C=\frac{1-r}{R^2}$, and expanding the identities gives $\sin^2 A+\sin^2 C+2\sin^2 B\cos^2(A+2\cos^2 B)=7/10+2/4=7/5$. Answer: 7/5.
+
+\subsection*{Baseline}
+
+Problem:
+In triangle $ABC$, angle bisectors meet at $D$. The incircle touches $AB,BC,CA$ at $P,Q,R$. If $AP=3x$, $BQ=2y$, $CR=\frac z3$, prove $x^2+y^2+z^2$ is minimized when $AP=BQ=CR$.
+
+Solution:
+This hinges on a fact about the lengths from a vertex to the tangency points. Show that minimizing $x^2+y^2+z^2$ under the constraints leads to maximizing $AB\cdot BC$; finding such equalities within the geometric setup provides the minimum, using triangle inequalities through symmetry.
+
+\section*{Problem 30 --- Precalculus \quad(blind winner: tie)}
+
+\subsection*{Fine-tuned SLM}
+
+Problem:
+Find all complex numbers of the form $x + yi$, with $x,y$ real and positive, such that $(2\sqrt{2}+i)(x+y)^6 = 8 + 18i$ and $8(x-y)^7 = -10 - 8i$.
+
+Solution:
+Let $z_1=x+y$, so $z_1^6=4+9i$ with $|z_1|=\sqrt{x+y}$. The second equation gives $(z_1-y)^7=-1-i$. Using de Moivre's theorem and assuming $x=y$ by symmetry, verify $(2\sqrt2+i)(1)^6=8+18i$ and $8(1-1)^7=-10-8i$. Both simplify correctly, so $x=y=1$ and their conjugate counterparts $\boxed{(1-i)}$. Answer: $x=y=1$.
+
+\subsection*{Baseline}
+
+Problem:
+Let $f(n) = n^2 + n - 2$. With $a_1 = 1$, $a_{n+1} = f(a_n)$, find $a_{10}$.
+
+Solution:
+The sequence uses a quadratic recurrence. Expressing $a_{n+1}=(-\alpha)^n(a_1)^\alpha+(\beta^n)(-\beta)^\beta$ where $a_1, a_n$ are roots of $x(x+1)=2$, the sequence alternates between roots depending on $n \bmod 2$. Since $a_1=1$ corresponds to $\beta=\sqrt2$, contributions follow $a_{n+1}=(-1)^{n-1}(-1)$, giving $a_{10}=1^5=1$.
+
+\end{document}

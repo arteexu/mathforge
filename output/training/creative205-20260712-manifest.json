@@ -1,0 +1,25 @@
+{
+  "run_id": "creative205-20260712-v1",
+  "dataset": "data/train_creative.jsonl",
+  "dataset_sha256": "d59c0c83d6a9ccb8e4a84e18f063dd86e4f61a386ffb6fb6a0bf0dad9f25e6ae",
+  "rows": 205,
+  "unique_problem_ids": 205,
+  "answer_type": "integer",
+  "integrity_audit": "pass",
+  "base_model": "Qwen/Qwen2.5-Math-7B-Instruct",
+  "epochs": 3,
+  "max_sequence_length": 1536,
+  "lora_rank": 32,
+  "learning_rate": 0.0002,
+  "seed": 42,
+  "save_and_eval_steps": 25,
+  "package_versions": {
+    "transformers": "5.13.0",
+    "trl": "1.8.0",
+    "peft": "0.19.1",
+    "datasets": "5.0.0",
+    "accelerate": "1.14.0",
+    "bitsandbytes": "0.49.2"
+  },
+  "output_directory": "/content/drive/MyDrive/mathforge-qlora-7b-creative205-20260712-v1"
+}

@@ -41,8 +41,11 @@ def main():
 
     db.init_db()
     with db.session_scope() as ses:
-        cruxes = [(p.id, p.topic, (p.provenance or {}).get("crux"))
-                  for p in ses.exec(select(Problem)).all() if (p.provenance or {}).get("crux")]
+        cruxes = [
+            (p.id, p.topic, (p.provenance or {}).get("crux"))
+            for p in ses.exec(db.training_problems_select()).all()
+            if (p.provenance or {}).get("crux")
+        ]
     if limit:
         cruxes = cruxes[:limit]
     print(f"auditing {len(cruxes)} cruxes against {len(techs)} techniques", flush=True)
@@ -98,7 +101,12 @@ def main():
             if not tag_ids:
                 continue
             p = ses.get(Problem, pid)
-            prov = dict(p.provenance or {}); prov["techniques"] = tag_ids; p.provenance = prov; ses.add(p)
+            prov = dict(p.provenance or {})
+            # Keep generator conditioning immutable.  A later classifier pass
+            # records what it inferred without overwriting required techniques.
+            prov["inferred_techniques"] = tag_ids
+            p.provenance = prov
+            ses.add(p)
 
     name = {t["id"]: t["name"] for t in techs}
     area = {t["id"]: t["area"] for t in techs}
@@ -107,7 +115,9 @@ def main():
     gaps = [t["id"] for t in techs if counts.get(t["id"], 0) == 0]
     by_area = Counter(area[t] for t in counts.elements())
     by_mech = Counter(mech[t] for t in counts.elements())
-    OUT.write_text(json.dumps({"counts": dict(counts), "covered": covered, "gaps": gaps,
+    OUT.write_text(json.dumps({"scope": "train_only_nonfrozen",
+                               "total_cruxes": len(cruxes), "tagged_cruxes": tagged,
+                               "counts": dict(counts), "covered": covered, "gaps": gaps,
                                "by_area": dict(by_area), "by_mechanism": dict(by_mech)},
                               indent=1), encoding="utf-8")
 

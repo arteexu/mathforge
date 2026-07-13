@@ -149,6 +149,7 @@ def parse_solver_verdict(text: str) -> dict:
         "final_answer": final_answer,
         "confidence": (fields.get("confidence") or "").strip().strip('"') or None,
         "ambiguity_flag": _as_bool(fields.get("ambiguity_flag", "false")),
+        "ambiguity_note": (fields.get("ambiguity_note") or "").strip().strip('"'),
         "recognized_as_existing": _as_bool(fields.get("recognized_as_existing", "false")),
     }
 

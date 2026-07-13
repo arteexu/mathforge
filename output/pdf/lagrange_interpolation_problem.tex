@@ -1,0 +1,191 @@
+\documentclass[11pt]{article}
+
+\usepackage[letterpaper,margin=0.82in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+
+\definecolor{navy}{HTML}{17365D}
+\definecolor{blue}{HTML}{2D6CA2}
+\definecolor{pale}{HTML}{F3F7FB}
+\definecolor{ink}{HTML}{18212B}
+\definecolor{muted}{HTML}{637083}
+\definecolor{green}{HTML}{247A4A}
+
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\allowdisplaybreaks
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\footnotesize\color{muted}MathForge technique-combination pilot}
+\rhead{\footnotesize\color{muted}Algebra}
+\cfoot{\footnotesize\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\newtcolorbox{problembox}{
+  enhanced,
+  breakable,
+  colback=pale,
+  colframe=blue,
+  boxrule=0.9pt,
+  arc=2.5mm,
+  left=5mm,right=5mm,top=4mm,bottom=4mm,
+  title={\bfseries Problem},
+  coltitle=white,
+  colbacktitle=blue,
+  attach boxed title to top left={xshift=4mm,yshift=-2mm},
+  boxed title style={arc=1.5mm,boxrule=0pt}
+}
+
+\newtcolorbox{resultbox}{
+  colback=green!6,
+  colframe=green,
+  boxrule=0.8pt,
+  arc=2mm,
+  left=4mm,right=4mm,top=3mm,bottom=3mm
+}
+
+\newcommand{\solutionhead}[1]{%
+  \par\medskip{\large\bfseries\color{ink}#1}\par\smallskip
+}
+
+\begin{document}
+
+\begin{center}
+  {\small\bfseries\color{blue}COMBINED-TECHNIQUE COMPETITION PROBLEM}\par
+  \vspace{0.45em}
+  {\LARGE\bfseries\color{navy}Lagrange Interpolation and Coefficient Comparison}\par
+  \vspace{0.45em}
+  {\color{muted}Target level: late AIME / introductory olympiad}\par
+\end{center}
+
+\vspace{1em}
+
+\begin{problembox}
+Let $t$ be a positive integer different from each of $1,2,3,4,6$, so that the
+six numbers $1,2,3,4,6,t$ are distinct. For each of these six numbers $v$, let
+$D(v)$ denote the product of the five differences $(v-u)$ taken over the other
+five numbers $u$. Suppose that
+\[
+  \frac{1^{7}}{D(1)}+
+  \frac{2^{7}}{D(2)}+
+  \frac{3^{7}}{D(3)}+
+  \frac{4^{7}}{D(4)}+
+  \frac{6^{7}}{D(6)}+
+  \frac{t^{7}}{D(t)}=497.
+\]
+Find $t$.
+\end{problembox}
+
+\vspace{1.2em}
+
+\begin{center}
+\begin{minipage}{0.82\textwidth}
+\small\color{muted}
+\textbf{Review note.} The problem appears alone on this page so it can be read
+without spoilers. A complete solution begins on the next page.
+\end{minipage}
+\end{center}
+
+\vfill
+
+\begin{center}
+  \small\color{muted}
+  Claude panel: $3/3$ answer agreement, well-posedness accepted, difficulty $6.5/10$,
+  elegance $5/5$.
+\end{center}
+
+\newpage
+
+\begin{center}
+  {\Large\bfseries\color{navy}Solution}\par
+\end{center}
+
+\begingroup
+\small
+\setlength{\parskip}{0.28em}
+
+Write the six nodes as
+\[
+  \{x_0,x_1,\ldots,x_5\}=\{1,2,3,4,6,t\},
+  \qquad
+  w_i=\frac{1}{\prod_{j\ne i}(x_i-x_j)}=\frac{1}{D(x_i)}.
+\]
+The Lagrange basis polynomial
+\[
+  L_i(x)=w_i\prod_{j\ne i}(x-x_j)
+\]
+has degree $5$ and leading coefficient $w_i$.
+
+\solutionhead{A generating identity}
+
+Consider
+\[
+  G(z)=\sum_i w_i\prod_{k\ne i}(1-x_kz),
+\]
+a polynomial of degree at most $5$. Since every node is nonzero, evaluate at
+$z=1/x_\ell$. Every term with $i\ne\ell$ vanishes, so
+\begin{align*}
+  G(1/x_\ell)
+    &=w_\ell\prod_{k\ne\ell}\left(1-\frac{x_k}{x_\ell}\right)\\
+    &=w_\ell\frac{\prod_{k\ne\ell}(x_\ell-x_k)}{x_\ell^5}
+      =\frac{1}{x_\ell^5}.
+\end{align*}
+Thus $G(z)-z^5$ has degree at most $5$ and vanishes at the six distinct points
+$1/x_i$. Therefore $G(z)=z^5$. Dividing by $\prod_i(1-x_iz)$ gives
+\[
+  \sum_i\frac{w_i}{1-x_iz}
+  =\frac{z^5}{\prod_i(1-x_iz)}
+  =z^5\sum_{k\ge0}h_kz^k,
+\]
+where $h_k$ is the complete homogeneous symmetric polynomial of degree $k$ in
+the six nodes.
+
+\solutionhead{Comparing coefficients}
+
+The coefficient of $z^m$ on the left is $\sum_i w_ix_i^m$, while the
+coefficient on the right is $h_{m-5}$. In particular, when $m=7$,
+\[
+  \sum_i\frac{x_i^7}{D(x_i)}=\sum_iw_ix_i^7=h_2.
+\]
+The left side is exactly the sum in the problem.
+
+For six variables,
+\[
+  h_2=\frac{e_1^2+p_2}{2}.
+\]
+Here
+\[
+  e_1=1+2+3+4+6+t=16+t,
+  \qquad
+  p_2=1+4+9+16+36+t^2=66+t^2.
+\]
+Consequently,
+\begin{align*}
+  h_2
+    &=\frac{(16+t)^2+66+t^2}{2}\\
+    &=t^2+16t+161.
+\end{align*}
+
+\solutionhead{Solving for the node}
+
+Setting $h_2=497$ gives
+\[
+  t^2+16t-336=(t-12)(t+28)=0.
+\]
+The only positive solution is $t=12$, which is distinct from
+$1,2,3,4,6$.
+
+\begin{resultbox}
+\centering
+\large Therefore, the answer is \(\boxed{12}\).
+\end{resultbox}
+
+\endgroup
+
+\end{document}

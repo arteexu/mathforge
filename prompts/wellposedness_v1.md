@@ -10,6 +10,10 @@ Check for:
 4. **Internal consistency** — no contradictory conditions; geometry realizable as described.
 5. **Self-containedness** — solvable without a figure or outside references.
 
+Decision consistency is mandatory: `accept` means there are no fatal issues;
+if any issue has severity `fatal`, the verdict must be `reject` (never `accept`).
+Return only the requested JSON object—do not solve the problem in prose first.
+
 Adversarial mindset: read the statement the way a rules-lawyering contestant would.
 
 ## Input

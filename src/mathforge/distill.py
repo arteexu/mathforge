@@ -173,17 +173,39 @@ def _to_int_answer(raw: Optional[str]) -> Optional[str]:
     return str(val) if 0 <= val <= 999 else None
 
 
-_JSON_RE = re.compile(r"\{.*\}", re.DOTALL)
-
-
 def _extract_json(text: str) -> Optional[dict]:
-    m = _JSON_RE.search(text or "")
-    if not m:
-        return None
-    try:
-        return json.loads(m.group())
-    except json.JSONDecodeError:
-        return None
+    """Return the last complete JSON object embedded in ``text``.
+
+    Model responses may contain prose, TeX groups such as ``x^{2}``, or a
+    Markdown code fence before the JSON payload.  Trying to parse everything
+    from the first ``{`` through the last ``}`` makes those earlier braces part
+    of one invalid, greedy match.  Instead, try the JSON decoder at each object
+    opener; ``raw_decode`` stops exactly at the end of a valid object and
+    therefore also tolerates fences or trailing prose.  The last valid object
+    wins because judges sometimes include an illustrative JSON object before
+    their final verdict.
+    """
+    decoder = json.JSONDecoder()
+    source = text or ""
+    result: Optional[dict] = None
+    start = 0
+    while start < len(source):
+        start = source.find("{", start)
+        if start < 0:
+            break
+        try:
+            value, end = decoder.raw_decode(source, start)
+        except json.JSONDecodeError:
+            start += 1
+            continue
+        if isinstance(value, dict):
+            result = value
+            # Do not reinterpret nested dictionaries inside this complete
+            # top-level object as later payloads.
+            start = end
+        else:
+            start += 1
+    return result
 
 
 # --------------------------------------------------------------------------- #
@@ -227,6 +249,7 @@ def verify_answer(
     """
     answers: list[Optional[str]] = []
     solutions: list[str] = []
+    verdicts: list[dict] = []
     cost = 0.0
     for _ in range(k):
         resp = solver.complete(
@@ -236,6 +259,7 @@ def verify_answer(
         )
         cost += resp.cost_usd
         verdict = parse_solver_verdict(resp.text)
+        verdicts.append(verdict)
         answers.append(verdict["final_answer"])
         solutions.append(resp.text)
 
@@ -245,7 +269,13 @@ def verify_answer(
         top, n = counts.most_common(1)[0]
         if n > k // 2:  # strict majority
             consensus = top
-    return {"consensus": consensus, "answers": answers, "solutions": solutions, "cost": cost}
+    return {
+        "consensus": consensus,
+        "answers": answers,
+        "solutions": solutions,
+        "verdicts": verdicts,
+        "cost": cost,
+    }
 
 
 def _solution_for_answer(vr: dict, answer: str) -> str:

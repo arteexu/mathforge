@@ -1,0 +1,343 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}\usepackage{amsmath,amssymb}\usepackage{parskip}\usepackage{longtable}
+
+\setlength{\parindent}{0pt}
+
+\title{MathForge 7B: blind 30-pair benchmark (fine-tuned SLM vs.\ baseline), judged by Opus 4.8}\date{}
+
+\begin{document}\maketitle
+
+\section*{Aggregate results (blind, statements only, $n=30$)}
+
+\begin{tabular}{lrr}
+
+metric & fine-tuned SLM & baseline \\ \hline
+
+well-posed rate & 0.07 & 0.10 \\
+
+problem elegance (0--5) & 0.82 & 0.65 \\
+
+difficulty (1--10) & 2.75 & 1.83 \\
+
+\end{tabular}
+
+\medskip
+
+Pairwise (blind, randomized A/B): \textbf{SLM 12 / baseline 13 / tie 5}.
+
+\medskip
+
+Judge: \texttt{claude-opus-4-8}. Source labels hidden; pairwise order randomized per problem.
+
+\section*{Per-pair winners}
+
+\begin{tabular}{clc}
+
+\# & topic & winner \\ \hline
+
+1 & Number Theory & Baseline \\
+
+2 & Combinatorics & Baseline \\
+
+3 & Algebra & Baseline \\
+
+4 & Geometry & Model A \\
+
+5 & Precalculus & Model A \\
+
+6 & Number Theory & Model A \\
+
+7 & Combinatorics & tie \\
+
+8 & Algebra & Baseline \\
+
+9 & Geometry & Model A \\
+
+10 & Precalculus & Model A \\
+
+11 & Number Theory & Baseline \\
+
+12 & Combinatorics & Baseline \\
+
+13 & Algebra & Model A \\
+
+14 & Geometry & Baseline \\
+
+15 & Precalculus & Baseline \\
+
+16 & Number Theory & Baseline \\
+
+17 & Combinatorics & Baseline \\
+
+18 & Algebra & Model A \\
+
+19 & Geometry & tie \\
+
+20 & Precalculus & Model A \\
+
+21 & Number Theory & Baseline \\
+
+22 & Combinatorics & Model A \\
+
+23 & Algebra & tie \\
+
+24 & Geometry & Model A \\
+
+25 & Precalculus & Model A \\
+
+26 & Number Theory & Baseline \\
+
+27 & Combinatorics & tie \\
+
+28 & Algebra & Model A \\
+
+29 & Geometry & Baseline \\
+
+30 & Precalculus & tie \\
+
+\end{tabular}
+
+\section*{The 30 problems (verbatim statements)}
+
+\subsection*{Problem 1 --- Number Theory \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Determine all positive integers $n$ with the following property: there exist distinct positive integers $\{ x_{i} \}_{1 \leq i \leq n}$ such that $x_{i}-x_{j}=\operatorname{lcm}(x_{1},x_{2}, \ldots, x_{m})+\cdots+\operatorname{lcm}(x_{1}, \ldots, x_{r})$ for some strictly increasing sequences of positive integers $m>r>n$.
+
+\medskip
+
+\textbf{Baseline.} Find all positive integers $n \geq 2$ such that $n^2 + 1$ is divisible by both $n+2$ and $n+3$.
+
+\subsection*{Problem 2 --- Combinatorics \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Two players play the following game on an infinite grid in which two horizontal rows, labeled $R_{2}$ and $R_{3}$, are blocked off; no stones may be placed in these two cells. A valid move consists of placing a white or black stone in any cell adjacent to both of the previously-placed stones. In how many ways can the first player place stones until the second player cannot make another move?
+
+\medskip
+
+\textbf{Baseline.} In how many ways can we arrange the numbers $2, 3, 4, 5, 6$ in a row such that no two consecutive numbers are used more than once?
+
+\subsection*{Problem 3 --- Algebra \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Let $A$ be an integral domain in which no nonzero element is invertible. Let $\mathbb{N}$ denote the set of positive integers; let $S=\{s_1,\ldots,s_k\}\subset \mathbb N^{+}$ with $(s_{i+1}, s_i)=1$ for all $1\leq i\leq k-1$. Find the number of subsets $T$ of $S$ such that $|AT|=|TA|$.
+
+\medskip
+
+\textbf{Baseline.} Let $f(x)$ be defined for all real numbers $x$ such that $f(1+x) + f(1-x) = 4x^2$. Find $f(x)$.
+
+\subsection*{Problem 4 --- Geometry \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Two circles with centers $A$ and $B$ meet at point $P$. Let $\ell_1$ be the line tangent to both circles and parallel to segment $AB$, let $\ell_2$ be another line through $P$ which is perpendicular to $\ell_1$. If all points of intersection between $\ell_2$ and circle $A$ lie inside angle $APB$, find all possible values of $\angle APB$.
+
+\medskip
+
+\textbf{Baseline.} Let $ABC$ be a triangle with circumradius $\rho$. Define points $P$, $Q$, $R$ inside $ABC$ such that $AP$, $BQ$, $CR$ do not intersect the interior of $ABC$. Let $M$, $N$ be the midpoints of $AB$, $BC$. Prove that if $\angle P = \angle Q = \angle R$, then $\rho^2 + 8\sqrt{r/s} = (a+b+c)^2/(bc)$.
+
+\subsection*{Problem 5 --- Precalculus \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Let $x$ be an angle such that $7 \tan x + 5 \cot^6 x = 4$. Find $\cos 2x$.
+
+\medskip
+
+\textbf{Baseline.} In triangle $ABC$, let $AB=c$, $AC=b$, $BC=a$. Given that $c = \frac{a+b}{\sqrt{ab}}$ and $b^2 + c^2 - ac = bc$, prove that $\sin(A) = \cos(A)$, where $\cos(A) = \frac{\sqrt{2}-\sqrt{6}}{4}$.
+
+\subsection*{Problem 6 --- Number Theory \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Call a positive integer good if no matter how its digits are permuted the resulting number is not divisible by any of $\pm1,\pm2,\ldots,\pm9$. How many of the numbers $1^{2}, 2^{2}, \cdots, 9^{2}$ are good?
+
+\medskip
+
+\textbf{Baseline.} Let $n \geq 3$, and let $S(n)$ denote the set of all integers from 1 to $n$. Determine whether there exists an infinite subset $T \subseteq S(n)$ such that for every pair of elements in $T$, their greatest common divisor is either 2 or 3.
+
+\subsection*{Problem 7 --- Combinatorics \quad (blind winner: tie)}
+
+\textbf{Fine-tuned SLM.} A $7\times7$ grid of squares has been colored like an I-sandwich, with all colors being used exactly once and two colors appearing in each row and column. How many such colorings exist?
+
+\medskip
+
+\textbf{Baseline.} In a deck of cards consisting of $n$ distinct cards, each labeled with a unique letter from the set $\{A, B, C\}$ for the first card up to $\{P, Q, R\}$ for the last card, find an expression in terms of $n$, the number of cards.
+
+\subsection*{Problem 8 --- Algebra \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Given $m$ real numbers $\{y_{k}\}_{k \in Z}$ satisfying $y_{n+2}=1+\sum_{i=0}^{k-1} y_{n+i}-2 x$, $n \geq k$. Find all such sequences if there exists an integer $x$ so that for every $k$, the values of $y_{k}, y_{k+1}, y_{k+2}$ can be represented as squares in base $8$.
+
+\medskip
+
+\textbf{Baseline.} Let $f$ be a quadratic polynomial such that for all real numbers $x$, $(x - a)(x + b)(x - c) f(x) = (x^2 + ax + b)(x^2 - cx + d)$, with $a,b,c,d \in \mathbb{R}$ and $b \neq c$. Given that $f(a) = 0$ and $f(b) = 0$, find the value of $c$.
+
+\subsection*{Problem 9 --- Geometry \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Let $ABC$ be a triangle with $\angle A=90^{\circ}$. Let $D,E,F$ trisect $\overline{AB}$, $\overline{BC}$, $\overline{CA}$ respectively. The circles inscribed inside triangles $BDE, CDF, DAF$ touch $BC, CA, AB$ at $K,L,M$. If $BK=144$ and $BL=\frac{x}{\sqrt{a}}$ where $x,\sqrt{a}\in \mathbb{N}$, find $x+\sqrt{a}$.
+
+\medskip
+
+\textbf{Baseline.} In a circle with center $O$, point $A$ is at $(0,0)$, point $B$ is at $(6,0)$, and point $C$ is inside the circle such that $BC = \sqrt{3}$ and $AC + AB = 8$. Let $P$ be any point on the circumference distinct from $A$ and $B$. Determine whether there exists an angle $\theta$ between $AP$ and the horizontal axis such that for all points $P$, $|OP - AP| \leq \frac{\pi}{3}$.
+
+\subsection*{Problem 10 --- Precalculus \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Let $x$ be a real number. Evaluate $\lfloor\log_{\sin x}(\cos^2 x+3x)\rfloor$.
+
+\medskip
+
+\textbf{Baseline.} Let $S$ be a set of 20 integers that includes every integer from 1 to 60 exactly once. Define $f(A) = \prod_{x \in A} x$ for each subset $A \subseteq S$ with an even number of elements. Find the sum of all possible values of $f(A)$ over all subsets $A$ containing 18 numbers from $S$.
+
+\subsection*{Problem 11 --- Number Theory \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} A positive integer is called good if its base $10$ representation $b_{k} b_{k - 1}\cdots b_{1}b_{0}$ has all distinct digits from left to right, and there exist some index $j \neq k$ such that $b_{k - j + 1} = \max (b_{k - j}, b_{k - j + 1})$ and $b_{j} = \min (b_{k}, b_{k - j})$. Compute the number of good integers with $12 \leq n \leq 25$.
+
+\medskip
+
+\textbf{Baseline.} Let $p$ be a prime number such that $3 \cdot 2^p - p = n$, where $n$ is an integer. Find all possible values of $n$.
+
+\subsection*{Problem 12 --- Combinatorics \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Let $N$ denote the number of ways to select four distinct numbers from $\{2023,\dots,2080\}$ such that the sum of these four numbers is at least as large as their product. Find the remainder when this number is divided by $1000$.
+
+\medskip
+
+\textbf{Baseline.} In how many ways can we place three distinct coins, labeled $A$, $B$, and $C$, in four different slots numbered $1$ through $4$ so that each slot contains at most one coin, given that coins $A$ and $B$ must be placed together?
+
+\subsection*{Problem 13 --- Algebra \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} For which $n \in\mathbb{N}$ do there exist two $n\times n$ matrices with entries from $\{-2,-1,0,1,2\}$ with only positive determinant?
+
+\medskip
+
+\textbf{Baseline.} Given three real numbers $x$, $y$, $z$ such that $\frac{xy}{z} = z + y - x$ and $xyz = xy + zx + zy$, find all possible values of $n$ for which $x^{2} + y^2 + z^n$ is positive.
+
+\subsection*{Problem 14 --- Geometry \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} For some positive integers $n$, let $\overline{r} s t u v \overline{w}$ be an $n$-digit number with all digits being nonzero such that $\frac{\lfloor r^{2} s t^{2} u v w\rfloor}{r+s+t+u+v+w}<6$. Determine all possible values of $v/w$ in terms of $(\frac{\sqrt[3]{8}-1}{2})$.
+
+\medskip
+
+\textbf{Baseline.} In an equilateral triangle $ABC$ with side length 6, points $D$, $E$, $F$ are chosen on sides $AB$, $BC$, $CA$ respectively such that $AD = BE = CF = x$. The area of triangle $DEF$ can be expressed as $\frac{m}{n}$, where $m$ and $n$ are coprime positive integers. Find the value of $x$ for which this expression is at its minimum.
+
+\subsection*{Problem 15 --- Precalculus \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Let $ABC$ be an equilateral triangle with side length 8. Let $\Omega$ denote its circumcircle. An equilateral triangle $A'B'C'$ is constructed in such a way that $\ell_1 = AB' = CC'$. Prove or disprove: there exists a unique point on the circumcircle such that if a line is drawn from that point to each of $B,C,A$, the resulting triangles $ABB'$ and $CC'A'$ both have equal area.
+
+\medskip
+
+\textbf{Baseline.} Let $f(x)$ be a continuously differentiable function such that for all real numbers $x,y$, $f(xy) = f(x) + xf(y)$. Given that $f(1) = 2$, find the value of $f(e^2)$.
+
+\subsection*{Problem 16 --- Number Theory \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Call two positive integers complementary if they differ by $2022$. How many pairs of complementary numbers with at least one even number between them sum to $2023$?
+
+\medskip
+
+\textbf{Baseline.} Let $N$ be a positive integer such that when divided by 7 the remainder is 3, and $4N$ has remainder 5 with respect to 12. Find the smallest possible value of $N$.
+
+\subsection*{Problem 17 --- Combinatorics \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} A set of positive integers is said to be balanced if for every element $x$ in its set, $|x-\frac{\sum_{y \in S} y}{|S|}| = m$ for some integer $m$. A subset $S$ of $\{1,2,\ldots,799\}$ whose elements are pairwise relatively prime and such that $|S|$ divides $799^{m}-1$ is called a special set. How many special sets are there?
+
+\medskip
+
+\textbf{Baseline.} In an equilateral triangle $ABC$ with side length $s$, points $D$, $E$, $F$ lie on sides $AB$, $BC$, $CA$ respectively such that triangles $\triangle BDE$, $\triangle EFA$, $\triangle FDB$ have areas in arithmetic progression. Find the minimum value of $AD^2 + BE^2 + CF^2$.
+
+\subsection*{Problem 18 --- Algebra \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Determine all integers $n$ such that $\tfrac{1}{\sqrt{n^{2}-4}+\sqrt{(n+1)^{2}-4}}$ is an integer.
+
+\medskip
+
+\textbf{Baseline.} Let $f(x)$ be an odd function defined for all real numbers such that $f(1)=1$. Define a sequence of functions $\{g_n\}$ where $g_1(x) = f(x)$ and $g_{n+1}(x) = g_n(f(x))$ for $n \geq 1$. If $g_6(1)=2$, find the value of $g_8(1)$.
+
+\subsection*{Problem 19 --- Geometry \quad (blind winner: tie)}
+
+\textbf{Fine-tuned SLM.} The points $A, B, C$ lie in that order on a circle of radius 6; the line through $B$ parallel to $AC$ meets the circle at $X$, where $\angle AXC = 90^\circ$. Compute $\frac{AX}{BX}$.
+
+\medskip
+
+\textbf{Baseline.} In triangle $ABC$, let $D, E, F$ be the midpoints of sides $BC, CA, AB$ respectively. The incircle is tangent to these sides at points $P, Q, R$. If $M$ is the midpoint of segment $DE$, prove that $M$ lies on the altitude from $C$ to $AB$.
+
+\subsection*{Problem 20 --- Precalculus \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Find all real numbers $x$ satisfying $\{\begin{aligned} x^{3}-2 x+2 y & <y-x \\ x-y-y-x^{3}+2 x & <y \end{aligned}.$
+
+\medskip
+
+\textbf{Baseline.} Let $f(x)$ be a function defined for all real numbers such that $f(x + y) = f(x)f(y)$ for all $x, y$, where $f(0) = 0$. Suppose further that $f(x) > 0$ for some $x \in [0, 1]$. Show that $f(f^{-1}(x)) = e^{\log_3{x}}$.
+
+\subsection*{Problem 21 --- Number Theory \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} A sequence of $n$ positive integers is given such that for each positive integer $k$, there exist distinct indices $i,j$ satisfying $\frac{a_i}{a_j}=k$. Find all possible values of $\prod_{j=1}^{100}\frac{a_i}{a_j}$.
+
+\medskip
+
+\textbf{Baseline.} Determine all positive integers $n$ such that for every prime number $p$, there exists an even integer $e > 0$ where $\phi(n)$ is divisible by $p^{e}$, where $\phi$ denotes Euler's totient function.
+
+\subsection*{Problem 22 --- Combinatorics \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} For $n \geqslant 2$, let $\mathcal{S}$ be the set of sequences of positive integers satisfying (i) the first term is $1$, and (ii) for all $m > 1$, either the sum of the digits in the sequence up to term $m-1$ is at least $m - 1$, or the last term is $1$. How many such sequences have length exactly $2n+1$?
+
+\medskip
+
+\textbf{Baseline.} In a town, there are $n$ people who each independently decide whether to participate in a project. The number of ways these $n$ individuals can choose their participation is given by $\binom{n}{k} + \binom{n}{k+1}$ for all positive integers $k$. Find the value of $n$ such that the total number of ways equals $1024$.
+
+\subsection*{Problem 23 --- Algebra \quad (blind winner: tie)}
+
+\textbf{Fine-tuned SLM.} Compute $(1+\frac{1}{1})(1+\frac{1}{2})(1-\frac{1}{3})\cdots(1-\frac{1}{80})$ in closed form.
+
+\medskip
+
+\textbf{Baseline.} Let $f(x)$ be a polynomial of degree 4 such that $f(3) = 7$, $f(-1) = -7$, and $f(1) = -1$. Suppose $g(x) = x^2 + bx + c$ for some integers $b$ and $c$. Determine all possible values of $f(5)$.
+
+\subsection*{Problem 24 --- Geometry \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} An isosceles trapezoid with bases $BC$ and $AD$ has area 6. If point $X \neq B$ lies on side $\overline{BC}$ and point $Y \neq D$ lies on side $\overline{AD}$ such that triangles $CXY$ and trapezoid $BXYD$ have equal areas, what is the length of diagonal $AC$?
+
+\medskip
+
+\textbf{Baseline.} In an acute triangle $ABC$, let $D$ be the midpoint of $BC$. A circle with center $O$ touches $AB$ at point $P$ and is tangent to $AC$ at $Q$, such that $OP = OQ$. Prove that if the radius is exactly $\frac{AB}{4}$, then $DE = \sqrt{AD^2 - AD + 1}$.
+
+\subsection*{Problem 25 --- Precalculus \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Let $x$ and $y$ be real numbers satisfying $0<x<\frac{\pi}{6}$, $\sin x+y=\cos x$, and $\tan y-\tan x=2$. Find the value of $\sin x+\cos x$.
+
+\medskip
+
+\textbf{Baseline.} Let $f(x) = \sqrt{x}$ if $x \geq 0$ and $-x+6$ otherwise. Define $g(x) = \frac{f(x)}{\cos(\pi x)}$ where $\cos(\pi x) \neq 0$. Determine the value of $g(0.1)$ given that $\cos(\pi x) = -\cos(\pi y)$ for some specific values of $x$ and $y$, but $x \neq y$.
+
+\subsection*{Problem 26 --- Number Theory \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Determine whether there exist positive integers $x_{0}, x_{1}, \ldots$ satisfying: (a) for every integer $k$ there exists an index $i$ with $|3^{x_{i}}-7^{y_{i}}| \leq k$ where $(x_{i}, y_{i})=(3^{m}, 2^{n})$ or $(2^{p}, 3^{q})$; (b) no two such sequences of indices correspond to distinct triples; (c) the number $\sum_{i=0}^{\infty}(3^{x_{i}}+7^{y_{i}})$ is finite.
+
+\medskip
+
+\textbf{Baseline.} Let $p$ be an odd prime number. Consider $x = \sqrt{p} + \frac{\sqrt{p}}{2}$. Determine whether there exists any integer $n$ such that $x^n \cdot (\sqrt{p} - \frac{\sqrt{p}}{2}) = k(6k^3 + 6k)$ for some integer $k \geq 1$.
+
+\subsection*{Problem 27 --- Combinatorics \quad (blind winner: tie)}
+
+\textbf{Fine-tuned SLM.} How many $n$-tuples $(x_1,x_2,\ldots,x_n)$ with nonnegative integer entries add up to exactly $\overline{m}$ when summed in base 2?
+
+\medskip
+
+\textbf{Baseline.} Let $S$ be the set of all positive integers that do not contain any zeros in their representation when written in base 3. Among these numbers, there is exactly one number that ends with 1. Find this number.
+
+\subsection*{Problem 28 --- Algebra \quad (blind winner: Model A)}
+
+\textbf{Fine-tuned SLM.} Let $\mathbb{Z}_{>0}$ be the set of positive integers. Find all functions $f : \mathbb{Z}_{>0} arrow \mathbb{Z}_{>0}$ such that $f(mn) = f(n)\big(f(m+1)-1\big)$ for every two coprime positive integers $m,n$.
+
+\medskip
+
+\textbf{Baseline.} Given a sequence $\{a_n\}$ where $a_1 = \sqrt{2}$ and $a_{n+1} = \sqrt{2 + (3 - \frac{1}{a_n})}$ for all positive integers $n$. Determine the limit of this sequence as $n \to \infty$, or show that it diverges.
+
+\subsection*{Problem 29 --- Geometry \quad (blind winner: Baseline)}
+
+\textbf{Fine-tuned SLM.} Let $ABC$ be a triangle with $BA=19$, $CA=20$, $CB=21$. Let $\omega_{c}$ denote the circle centered at $C$ tangent to $AB$. Let $I$ be the incenter, and let $\Gamma_{d}$ be the circle through $D,I,E$ where $D$ is the foot from $I$ to $AB$ and $E$ is such that $AIDE$ is cyclic and touches $\omega_{c}$. Let $O$ be the circumcenter. Compute $\frac{r}{R}\cdot( (\frac{AB}{OC}-1)^{2}+(\frac{BC}{OA}-1)^{2})$.
+
+\medskip
+
+\textbf{Baseline.} In triangle $ABC$, angle bisectors meet at point $D$. The incircle touches sides $AB$, $BC$, $CA$ at $P$, $Q$, $R$. If $AP = 3x$, $BQ = 2y$, $CR = \frac{z}{3}$, prove that $x^2 + y^2 + z^2$ is minimized when $AP = BQ = CR$.
+
+\subsection*{Problem 30 --- Precalculus \quad (blind winner: tie)}
+
+\textbf{Fine-tuned SLM.} Find all complex numbers of the form $x + yi$, where $x$ and $y$ are real and positive, such that $(2\sqrt{2}+i)(x+y)^6 = 8 + 18i$ and $8(x-y)^7 = -10 - 8i$.
+
+\medskip
+
+\textbf{Baseline.} Let $f(n) = n^2 + n - 2$. Consider the sequence $a_1 = 1$, $a_{n+1} = f(a_n)$ for $n \geq 1$. Find the value of $a_{10}$.
+
+\end{document}

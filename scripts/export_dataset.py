@@ -13,12 +13,20 @@ prompt/completion). Run: PYTHONPATH=src python scripts/export_dataset.py
 from __future__ import annotations
 
 import json
-import re
+from collections import defaultdict
 from pathlib import Path
 
 from sqlmodel import select
 
 from mathforge import db
+from mathforge.integrity import (
+    answer_type,
+    deduplicated_training_problems,
+    is_export_eligible,
+    normalize_aime_answer,
+    normalize_solution_text,
+    preferred_solution,
+)
 from mathforge.schema import Evaluation, Problem, Solution
 
 OUT_DIR = Path("data")
@@ -71,47 +79,43 @@ def _source_tag(p) -> str:
     return str(p.source).split(".")[-1].lower() if p.source else "other"
 
 
-def _answer_type(answer) -> str:
-    if answer is None:
-        return "none"
-    a = str(answer).strip()
-    if re.fullmatch(r"-?\d+", a):
-        v = int(a)
-        return "integer" if 0 <= v <= 999 else "integer_other"
-    return "symbolic"
-
-
 def main() -> None:
     db.init_db()
     OUT_DIR.mkdir(exist_ok=True)
     chat_rows, pt_rows = [], []
     with db.session_scope() as ses:
-        problems = ses.exec(select(Problem)).all()
         # Preload solutions + evaluations once (avoids per-problem queries over ~5k rows).
-        sols: dict = {}
+        sols: dict[str, list[Solution]] = defaultdict(list)
         for s in ses.exec(select(Solution)).all():
-            sols.setdefault(s.problem_id, s)  # first solution per problem
+            sols[s.problem_id].append(s)
         evals_by: dict = {}
         for e in ses.exec(select(Evaluation)).all():
             evals_by.setdefault(e.problem_id, []).append(e)
 
-        for p in problems:
+        for p in deduplicated_training_problems(ses):
+            if not is_export_eligible(p):
+                continue
             status = p.review_status.value if p.review_status else ""
             is_rich = p.id.startswith("distill-rich-")
-            sol = sols.get(p.id)
+            sol = preferred_solution(p, sols.get(p.id, []))
             pe, se = _elegance(p.provenance or {}, evals_by.get(p.id, []))
             has_elegance = pe is not None or se is not None
-            # Include: accepted problems, the rich set, and any problem we have both
-            # an elegance label AND a written solution for (the labeled Omni-Math etc).
-            keep = status == "accepted" or is_rich or (has_elegance and sol is not None)
+            # Official/human rows need a quality label; synthetic rows have already
+            # passed verified+accepted in is_export_eligible().
+            keep = status == "accepted" or (has_elegance and sol is not None)
             if not keep or sol is None:
                 continue
+            normalized_answer = normalize_aime_answer(p.answer)
+            if normalized_answer is None:
+                continue
             prompt = build_prompt(p.topic, p.difficulty, pe, se)
-            completion = build_completion(p.statement, sol.text if sol else None, p.answer)
+            completion = build_completion(
+                p.statement, normalize_solution_text(sol.text), normalized_answer
+            )
             meta = {"id": p.id, "source": _source_tag(p), "topic": p.topic,
                     "difficulty": p.difficulty, "problem_elegance": pe,
-                    "solution_elegance": se, "answer": p.answer,
-                    "answer_type": _answer_type(p.answer), "rich": is_rich}
+                    "solution_elegance": se, "answer": normalized_answer,
+                    "answer_type": answer_type(normalized_answer), "rich": is_rich}
             chat_rows.append({"messages": [
                 {"role": "user", "content": prompt},
                 {"role": "assistant", "content": completion}], "meta": meta})

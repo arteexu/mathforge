@@ -20,6 +20,7 @@ Colab (see notebooks/mathforge_qlora_colab.ipynb):
 from __future__ import annotations
 
 import os
+from collections import Counter
 
 import torch
 from datasets import load_dataset
@@ -36,9 +37,9 @@ def _env(name, default, cast=str):
 
 # --- config (all overridable via env) -------------------------------------- #
 BASE_MODEL = _env("BASE_MODEL", "Qwen/Qwen2.5-Math-7B-Instruct")  # math-specialized 7B; needs A100/L4
-# Default to the elegance+difficulty-WEIGHTED set (scripts/export_weighted.py):
-# curated to elegant+hard problems and oversampled by priority, with the crux/idea
-# foregrounded and correctness de-emphasized. Curation is baked in, so no PE re-filter.
+# Default to the integrity-safe creativity set (scripts/export_creative.py): one
+# unique, TRAIN-only AIME example per row with the actual crux in the input prompt.
+# Curation is baked in, so no second elegance filter is required.
 DATA = _env("DATA", "data/train_creative.jsonl")
 OUT = _env("OUT", "mathforge-qlora")                 # set to a Drive path to persist
 MIN_PROBLEM_ELEGANCE = _env("MIN_PROBLEM_ELEGANCE", 0.0, float)
@@ -86,13 +87,27 @@ def main() -> None:
     if ANSWER_TYPE:
         ds = ds.filter(lambda r: r["meta"].get("answer_type") == ANSWER_TYPE)
 
+    # Integrity guard: weighting must not be implemented as repeated JSONL rows,
+    # otherwise identical problems leak into both sides of train_test_split.
+    ids = [str((row.get("meta") or {}).get("id") or "") for row in ds]
+    duplicates = [pid for pid, count in Counter(ids).items() if not pid or count > 1]
+    if duplicates:
+        raise ValueError(
+            f"dataset contains {len(duplicates)} missing/duplicate problem ids; "
+            "rebuild it with the integrity-safe exporters before training"
+        )
+
+    # Split unique problem IDs before formatting/removing metadata.
+    split = ds.train_test_split(test_size=EVAL_FRACTION, seed=SEED)
+    train_ids = {row["meta"]["id"] for row in split["train"]}
+    eval_ids = {row["meta"]["id"] for row in split["test"]}
+    if train_ids & eval_ids:
+        raise AssertionError("train/eval problem-id overlap")
+
     def fmt(r):
         return {"text": tok.apply_chat_template(r["messages"], tokenize=False)}
-    ds = ds.map(fmt, remove_columns=ds.column_names)
-
-    # small held-out eval split to watch for overfitting overnight
-    split = ds.train_test_split(test_size=EVAL_FRACTION, seed=SEED)
-    train_ds, eval_ds = split["train"], split["test"]
+    train_ds = split["train"].map(fmt, remove_columns=split["train"].column_names)
+    eval_ds = split["test"].map(fmt, remove_columns=split["test"].column_names)
     print(f"data: {n_all} total -> {len(ds)} after filters "
           f"(PE>={MIN_PROBLEM_ELEGANCE}, answer_type='{ANSWER_TYPE or 'any'}') "
           f"-> train {len(train_ds)} / eval {len(eval_ds)}", flush=True)

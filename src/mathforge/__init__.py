@@ -1,6 +1,10 @@
 """MathForge: a pipeline for generating elegant competition math problems."""
 
 from mathforge.schema import (
+    CombinationJob,
+    CombinationJobStatus,
+    CombinationStatementClaim,
+    CombinationStorageLock,
     DataSplit,
     DifficultyBand,
     Evaluation,
@@ -20,6 +24,10 @@ __version__ = "0.1.0"
 
 __all__ = [
     "Problem",
+    "CombinationJob",
+    "CombinationJobStatus",
+    "CombinationStatementClaim",
+    "CombinationStorageLock",
     "Solution",
     "Evaluation",
     "Insight",

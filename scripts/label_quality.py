@@ -68,7 +68,7 @@ def _select(limit, prefixes):
         pe_eval = {e.problem_id: e.elegance_score for e in ses.exec(select(Evaluation)).all()
                    if e.elegance_score is not None}
         rows = []
-        for p in ses.exec(select(Problem)).all():
+        for p in ses.exec(db.training_problems_select()).all():
             prov = p.provenance or {}
             if p.id not in sols or not prov.get("crux") or prov.get("quality"):
                 continue

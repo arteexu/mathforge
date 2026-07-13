@@ -31,6 +31,7 @@ __all__ = [
     "SolverRole",
     "SolverClassification",
     "ReviewStatus",
+    "CombinationJobStatus",
     "DEFAULT_TIER_THRESHOLD",
     "tier_for_difficulty",
     "difficulty_band",
@@ -38,6 +39,9 @@ __all__ = [
     "Solution",
     "Evaluation",
     "Insight",
+    "CombinationJob",
+    "CombinationStatementClaim",
+    "CombinationStorageLock",
     "LLMCall",
     "SolverAttempt",
     "SolverPanel",
@@ -195,6 +199,16 @@ class ReviewStatus(str, Enum):
     ACCEPTED = "accepted"  # human approved
     REJECTED = "rejected"  # human rejected (or failed verification)
     NEEDS_EDIT = "needs_edit"  # good candidate, but the problem needs fixing
+
+
+class CombinationJobStatus(str, Enum):
+    """Lifecycle state for one durable technique-pair generation attempt."""
+
+    PENDING = "pending"
+    INFLIGHT = "inflight"
+    STORED = "stored"
+    REJECTED = "rejected"
+    EXHAUSTED = "exhausted"
 
 
 # Default Omni-MATH difficulty cutoff: < 4 is easy, >= 4 is hard.
@@ -356,6 +370,83 @@ class Insight(SQLModel, table=True):
     )
 
     created_at: datetime = Field(default_factory=utcnow)
+
+
+class CombinationJob(SQLModel, table=True):
+    """Checkpoint for one bridge-first technique-combination attempt.
+
+    Full parsed artifacts live here so a stopped run can resume without placing
+    incomplete placeholder rows in :class:`Problem` or relying on truncated
+    :class:`LLMCall` previews.
+    """
+
+    __table_args__ = (
+        UniqueConstraint("run_id", "ordinal", name="uq_combination_job_run_ordinal"),
+    )
+
+    id: str = Field(default_factory=new_id, primary_key=True)
+    run_id: str = Field(index=True)
+    ordinal: int = Field(index=True)
+    seed: int = 0
+
+    pair_key: str = Field(index=True)
+    technique_ids: list[str] = Field(default_factory=list, sa_column=Column(JSON))
+    technique_snapshot: list[dict[str, Any]] = Field(
+        default_factory=list, sa_column=Column(JSON)
+    )
+    taxonomy_sha256: str = ""
+    sampler_metadata: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    config: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+
+    stage: str = Field(default="pair_selected", index=True)
+    status: CombinationJobStatus = Field(default=CombinationJobStatus.PENDING, index=True)
+    bridge_candidates: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    bridge_judgment: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    selected_bridge: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    # V2 shell proposals, blind audits, and draft lineage. Kept separate from
+    # ``preflight`` so existing exporters can continue consuming its v1 shape.
+    design_artifacts: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    draft: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    preflight: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+
+    attempts: dict[str, int] = Field(default_factory=dict, sa_column=Column(JSON))
+    call_ids: dict[str, list[int]] = Field(default_factory=dict, sa_column=Column(JSON))
+    failures: list[dict[str, Any]] = Field(default_factory=list, sa_column=Column(JSON))
+    rejection_reason: Optional[str] = None
+    lease_started_at: Optional[datetime] = None
+    lease_owner: Optional[str] = Field(default=None, index=True)
+    problem_id: Optional[str] = Field(default=None, index=True)
+
+    created_at: datetime = Field(default_factory=utcnow)
+    updated_at: datetime = Field(default_factory=utcnow)
+
+
+class CombinationStatementClaim(SQLModel, table=True):
+    """Durable uniqueness claim for a combination draft's canonical statement.
+
+    ``Problem`` predates canonical hashes, so it cannot enforce this constraint
+    directly without a destructive migration.  Combination workers reserve the
+    hash here before inserting a candidate.  The primary key makes that reserve
+    atomic across processes, including concurrent SQLite workers.
+    """
+
+    __table_args__ = (
+        UniqueConstraint("job_id", name="uq_combination_statement_claim_job"),
+    )
+
+    canonical_hash: str = Field(primary_key=True)
+    statement_hash: str = Field(index=True)
+    job_id: str = Field(foreign_key="combinationjob.id", index=True)
+    problem_id: Optional[str] = Field(default=None, index=True)
+    claimed_at: datetime = Field(default_factory=utcnow)
+
+
+class CombinationStorageLock(SQLModel, table=True):
+    """Singleton row used to serialize final duplicate checks and insertion."""
+
+    id: int = Field(default=1, primary_key=True)
+    owner_job_id: Optional[str] = Field(default=None, index=True)
+    updated_at: datetime = Field(default_factory=utcnow)
 
 
 class LLMCall(SQLModel, table=True):

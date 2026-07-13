@@ -21,6 +21,17 @@ Versioned prompt files for the factory. Conventions:
 | `wellposedness_v1` | 4–5 | Ambiguity / missing constraints / answer-format check |
 | `difficulty_judge_v1` | 2, 4–6 | Difficulty band from solutions + features + solve rates |
 | `elegance_judge_v1` | 2, 4–6 | Elegance 0–5 (overall) with step-stacking as a named failure |
+| `combo_bridge_generation_v1` | combination | Propose three fused technique bridges before drafting |
+| `combo_bridge_judge_v1` | combination | Hard-gate bridges for soundness, essentiality, and stapling |
+| `combo_problem_generation_v1` | combination | Compose one strict AIME draft from the selected bridge |
+| `combo_faithfulness_v1` | combination | Preliminary load-bearing/bypass check before candidate storage |
+| `combo_shell_generation_v1` | combination v2 | Diversify one sound bridge into four non-canonical shells |
+| `combo_shell_judge_v1` | combination v2 | Select a validity-passing shell lexicographically by novelty and necessity |
+| `combo_problem_generation_v2` | combination v2 | Compose from both the accepted bridge and selected shell |
+| `combo_blind_audit_v1` | combination v2 | Solve the statement alone; expose bypasses and independently rate difficulty |
+| `combo_faithfulness_v2` | combination v2 | Reconcile the blind shortest route with intended technique necessity |
+| `combo_creativity_repair_v1` | combination v2 | Perform the single allowed feedback-guided structural rewrite |
+| `combo_corpus_novelty_v1` | combination v2 | Compare the final draft with retrieved corpus neighbors and reject reused mathematical kernels |
 
 ## Calibration protocol (applies to difficulty & elegance judges)
 
